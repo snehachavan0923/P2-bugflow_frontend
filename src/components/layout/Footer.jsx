@@ -55,7 +55,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link to="/" className="hover:text-white transition-colors">
-                  API
+                  APIS
                 </Link>
               </li>
             </ul>
