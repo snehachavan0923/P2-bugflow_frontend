@@ -1,141 +1,171 @@
-import React from 'react';
+import { motion } from 'framer-motion';
 
 const About = () => {
-  const stats = [
-    { number: '10,000+', label: 'Active Users' },
-    { number: '50,000+', label: 'Issues Tracked' },
-    { number: '99.9%', label: 'Uptime' },
-    { number: '24/7', label: 'Support' },
-  ];
 
-  const team = [
+  const features = [
     {
-      name: 'Sarah Johnson',
-      role: 'CEO & Founder',
-      bio: 'Former engineering lead at TechCorp with 10+ years in software development.',
+      title: 'Smart Bug Tracking',
+      desc: 'Easily report, track, and manage bugs with priorities, statuses, and detailed descriptions.',
+      icon: '🐛',
     },
     {
-      name: 'Mike Chen',
-      role: 'CTO',
-      bio: 'Ex-Google engineer specializing in scalable systems and user experience.',
+      title: 'Project Management',
+      desc: 'Organize multiple projects and tasks in a structured and efficient way.',
+      icon: '📁',
     },
     {
-      name: 'Emily Davis',
-      role: 'Head of Product',
-      bio: 'Product manager with experience at leading SaaS companies.',
+      title: 'Kanban Workflow',
+      desc: 'Visualize your workflow with drag-and-drop Kanban boards.',
+      icon: '📋',
+    },
+    {
+      title: 'Team Collaboration',
+      desc: 'Assign tasks, update progress, and collaborate in real-time.',
+      icon: '👥',
+    },
+    {
+      title: 'Analytics & Reports',
+      desc: 'Gain insights into productivity and project performance.',
+      icon: '📊',
+    },
+    {
+      title: 'Secure Authentication',
+      desc: 'JWT-based authentication ensures secure access and data protection.',
+      icon: '🔐',
     },
   ];
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white py-20 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">About BugFlow</h1>
-          <p className="text-xl text-indigo-100 max-w-2xl mx-auto">
-            We're on a mission to make bug tracking simple, efficient, and collaborative for teams worldwide.
-          </p>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-100">
+
+      {/* HERO */}
+      <section className="py-20 px-6 text-center">
+        <motion.h1
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-4xl md:text-5xl font-bold text-gray-900 mb-6"
+        >
+          About <span className="text-indigo-600">BugFlow</span>
+        </motion.h1>
+
+        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          BugFlow is a modern bug tracking and task management platform designed
+          to simplify development workflows, improve collaboration, and help teams
+          deliver better software faster.
+        </p>
       </section>
 
-      {/* Story Section */}
-      <section className="py-16 px-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Story</h2>
-              <p className="text-gray-600 mb-4">
-                BugFlow was born from the frustration of dealing with complex, expensive bug tracking tools
-                that didn't meet the needs of modern development teams. Our founders experienced firsthand
-                the pain of managing issues across multiple projects and teams.
-              </p>
-              <p className="text-gray-600 mb-4">
-                In 2020, we set out to build a better solution. We focused on simplicity, collaboration,
-                and powerful features that actually help teams ship better software faster.
-              </p>
-              <p className="text-gray-600">
-                Today, BugFlow serves thousands of teams worldwide, from startups to Fortune 500 companies,
-                helping them track bugs, manage projects, and improve their development workflows.
-              </p>
-            </div>
-            <div className="bg-gray-100 rounded-lg p-8">
-              <div className="text-center">
-                <div className="text-6xl mb-4">🎯</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Our Mission</h3>
-                <p className="text-gray-600">
-                  To empower development teams with the best tools for tracking and resolving issues,
-                  fostering collaboration and driving software quality.
-                </p>
-              </div>
-            </div>
+      {/* WHAT IS BUGFLOW */}
+      <section className="py-16 px-6">
+        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-10 items-center">
+
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              🚀 What is BugFlow?
+            </h2>
+
+            <p className="text-gray-600 mb-4">
+              BugFlow is a SaaS-based platform that helps developers and teams
+              efficiently track bugs, manage tasks, and organize projects in one place.
+            </p>
+
+            <p className="text-gray-600 mb-4">
+              It eliminates the need for multiple tools by combining bug tracking,
+              task management, and collaboration into a single, easy-to-use system.
+            </p>
+
+            <p className="text-gray-600">
+              With a clean interface and powerful features, BugFlow helps teams
+              stay organized, reduce errors, and improve productivity.
+            </p>
           </div>
+
+          <div className="bg-white/70 backdrop-blur-xl p-8 rounded-xl shadow-lg text-center">
+            <div className="text-5xl mb-4">⚡</div>
+            <h3 className="text-lg font-semibold mb-2">Our Goal</h3>
+            <p className="text-gray-600 text-sm">
+              To provide a simple, powerful, and efficient solution for managing bugs and tasks.
+            </p>
+          </div>
+
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="bg-gray-50 py-16 px-4">
+      {/* FEATURES / SERVICES */}
+      <section className="py-20 px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-3xl font-bold text-indigo-600 mb-2">{stat.number}</div>
-                <div className="text-gray-600">{stat.label}</div>
-              </div>
+
+          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
+            Our Services & Features
+          </h2>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+            {features.map((item, i) => (
+              <motion.div
+                key={i}
+                whileHover={{ y: -10 }}
+                className="bg-white/70 backdrop-blur-xl p-6 rounded-xl shadow-md hover:shadow-xl transition"
+              >
+                <div className="text-3xl mb-3">{item.icon}</div>
+                <h3 className="font-semibold text-lg">{item.title}</h3>
+                <p className="text-gray-600 text-sm">{item.desc}</p>
+              </motion.div>
             ))}
+
           </div>
         </div>
       </section>
 
-      {/* Team Section */}
-      <section className="py-16 px-4">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">Meet Our Team</h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            {team.map((member, index) => (
-              <div key={index} className="bg-white rounded-lg shadow-lg p-6 text-center">
-                <div className="w-24 h-24 bg-indigo-100 rounded-full mx-auto mb-4 flex items-center justify-center">
-                  <span className="text-2xl">👤</span>
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-1">{member.name}</h3>
-                <p className="text-indigo-600 font-medium mb-3">{member.role}</p>
-                <p className="text-gray-600 text-sm">{member.bio}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Values Section */}
-      <section className="bg-indigo-600 text-white py-16 px-4">
+      {/* WHY CHOOSE */}
+      <section className="py-16 px-6 bg-white/60 backdrop-blur-xl">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-8">Our Values</h2>
-          <div className="grid md:grid-cols-3 gap-8">
+
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">
+            Why Choose BugFlow?
+          </h2>
+
+          <div className="grid md:grid-cols-3 gap-6 text-sm">
+
             {[
-              {
-                title: 'Simplicity',
-                description: 'We believe great tools should be intuitive and easy to use.',
-                icon: '🎨',
-              },
-              {
-                title: 'Collaboration',
-                description: 'Teamwork is at the heart of everything we build.',
-                icon: '🤝',
-              },
-              {
-                title: 'Innovation',
-                description: 'We continuously improve and adapt to meet evolving needs.',
-                icon: '🚀',
-              },
-            ].map((value, index) => (
-              <div key={index} className="text-center">
-                <div className="text-4xl mb-4">{value.icon}</div>
-                <h3 className="text-xl font-semibold mb-2">{value.title}</h3>
-                <p className="text-indigo-100">{value.description}</p>
+              'All-in-one bug tracking solution',
+              'Simple and intuitive interface',
+              'Improves team productivity',
+              'Real-time updates and collaboration',
+              'Scalable for projects of any size',
+              'Secure and reliable system',
+            ].map((item, i) => (
+              <div key={i} className="bg-indigo-100 text-indigo-700 p-4 rounded-lg">
+                {item}
               </div>
             ))}
+
           </div>
+
         </div>
       </section>
+
+      {/* CTA */}
+     <section className="bg-indigo-600 text-white py-16 px-4">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-2xl font-bold mb-4">
+            Start Using BugFlow 🚀
+          </h2>
+
+          <p className="mb-6 text-indigo-100">
+            Simplify your workflow and manage bugs efficiently with BugFlow.
+          </p>
+
+          <a
+            href="/signup"
+            className="bg-white text-indigo-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition"
+          >
+            Get Started
+          </a>
+
+        </div>
+      </section>
+
     </div>
   );
 };
