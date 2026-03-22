@@ -19,7 +19,10 @@ const Login = () => {
         navigate('/dashboard');
       }
     } catch (error) {
-      alert('Login failed');
+      const message =
+        error.response?.data?.message || "Login failed";
+
+      alert(message);
     }
   };
 

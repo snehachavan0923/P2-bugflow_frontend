@@ -16,8 +16,11 @@ const Signup = () => {
       await signupUser({ name, email, password });
       navigate('/login');
     } catch (error) {
-      alert('Signup failed');
-    } finally {
+      const message =
+        error.response?.data?.message || "Signup failed";
+
+      alert(message);
+    }finally {
       setLoading(false);
     }
   };
