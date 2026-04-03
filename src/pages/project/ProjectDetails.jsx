@@ -1,37 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import axios from '../../api/axios';
 
 const ProjectDetails = () => {
   const { projectId } = useParams();
-  const [activeTab, setActiveTab] = useState('overview');
+  const [project, setProject] = useState(null);
 
-  const project = { id: projectId, name: 'Sample Project', description: 'A sample project description.' };
+  useEffect(() => {
+    const fetchProject = async () => {
+      try {
+        const res = await axios.get(`/projects/${projectId}`);
+        setProject(res.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
 
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case 'overview':
-        return <div><h2>Overview</h2><p>{project.description}</p></div>;
-      case 'issues':
-        return <div><Link to="issues" className="bg-blue-500 text-white px-4 py-2 rounded">View Issues</Link></div>;
-      case 'team':
-        return <div><Link to="team" className="bg-green-500 text-white px-4 py-2 rounded">Manage Team</Link></div>;
-      case 'settings':
-        return <div><h2>Settings</h2><p>Project settings here.</p></div>;
-      default:
-        return null;
-    }
-  };
+    fetchProject();
+  }, [projectId]);
+
+  if (!project) return <div>Loading...</div>;
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">{project.name}</h1>
-      <div className="mb-4">
-        <button onClick={() => setActiveTab('overview')} className={`px-4 py-2 ${activeTab === 'overview' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>Overview</button>
-        <button onClick={() => setActiveTab('issues')} className={`px-4 py-2 ${activeTab === 'issues' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>Issues</button>
-        <button onClick={() => setActiveTab('team')} className={`px-4 py-2 ${activeTab === 'team' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>Team</button>
-        <button onClick={() => setActiveTab('settings')} className={`px-4 py-2 ${activeTab === 'settings' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>Settings</button>
+      {/* Project Info */}
+      <h1 className="text-2xl font-bold mb-2">{project.name}</h1>
+      <p className="text-gray-600 mb-6">{project.description}</p>
+
+      {/* ACTION BUTTONS 🔥 */}
+      <div className="flex gap-4 mb-6">
+        
+        {/* View Issues */}
+        <Link
+          to={`/projects/${projectId}/issues`}
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          View Issues
+        </Link>
+
+        {/* Create Issue */}
+        <Link
+          to={`/projects/${projectId}/create-issue`}
+          className="bg-green-500 text-white px-4 py-2 rounded"
+        >
+          Create Issue
+        </Link>
+
       </div>
-      <div>{renderTabContent()}</div>
+
+      {/* OPTIONAL: quick stats later */}
+      <div className="bg-white p-4 rounded shadow">
+    <p>Project ID: {projectId}</p>
+      </div>
     </div>
   );
 };
