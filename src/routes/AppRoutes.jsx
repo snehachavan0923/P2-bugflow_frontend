@@ -24,6 +24,7 @@ import PublicLayout from '../layouts/PublicLayout';
 import AdminLayout from '../layouts/AdminLayout';
 import OwnerLayout from '../layouts/OwnerLayout';
 import PrivateRoute from './PrivateRoute';
+import CreateIssue from '../pages/issues/CreateIssue';
 
 const AppRoutes = () => {
   return (
@@ -49,13 +50,15 @@ const AppRoutes = () => {
         <Route path="projects" element={<ProjectList />} />
         <Route path="projects/create" element={<CreateProject />} />
         <Route path="projects/:projectId" element={<ProjectDetails />} />
-        <Route path="projects/:projectId/issues" element={<IssueBoard />} />
+         <Route path="projects/:projectId/issues" element={<IssueBoard />} />
+         <Route path="projects/:projectId/create-issue" element={<CreateIssue  />} />
+
         <Route path="projects/:projectId/team" element={<TeamManagement />} />
         <Route path="my-tasks" element={<MyTasks />} />
         <Route path="verify-issues" element={<VerifyIssue />} />
         <Route path="profile" element={<Profile />} />
         <Route path="settings" element={<Settings />} />
-      </Route>
+      </Route>  
 
       {/* Admin Routes */}
       <Route
