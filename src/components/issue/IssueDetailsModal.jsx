@@ -1,4 +1,4 @@
-import React from 'react';
+
 import Modal from '../common/Modal';
 
 const IssueDetailsModal = ({ isOpen, onClose, issue }) => {
