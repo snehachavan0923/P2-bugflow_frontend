@@ -8,7 +8,7 @@ const ProjectDetails = () => {
   const { projectId } = useParams();
   const [project, setProject] = useState(null);
 
-  // ✅ Modal state
+  // Modal state
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -25,7 +25,7 @@ const ProjectDetails = () => {
     fetchProject();
   }, [projectId]);
 
-  // ✅ Create issue handler
+  // Create issue handler
   const handleCreateIssue = async (data) => {
     try {
       setLoading(true);
@@ -57,7 +57,7 @@ const ProjectDetails = () => {
           Open Board
         </Link>
 
-        {/* ✅ Create Issue → MODAL */}
+        {/* Create Issue → MODAL */}
         <button
           onClick={() => setShowModal(true)}
           className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
@@ -72,7 +72,7 @@ const ProjectDetails = () => {
         <p>Project ID: {projectId}</p>
       </div>
 
-      {/* ✅ MODAL */}
+      {/* MODAL */}
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
           
