@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 const IssueCard = ({ issue, onStatusChange }) => {
   const handleStatusChange = (newStatus) => {
