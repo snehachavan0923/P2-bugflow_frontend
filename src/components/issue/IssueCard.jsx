@@ -1,6 +1,5 @@
 
-
-const IssueCard = ({ issue, onStatusChange }) => {
+{/* const IssueCard = ({ issue, onStatusChange }) => {
   const handleStatusChange = (newStatus) => {
     onStatusChange(issue.id, newStatus);
   };
@@ -9,7 +8,7 @@ const IssueCard = ({ issue, onStatusChange }) => {
     <div className="bg-white p-4 mb-2 rounded shadow">
       <h3 className="font-bold">{issue.title}</h3>
       <p>Priority: {issue.priority}</p>
-      <p>Assigned to: {issue.assignedUser}</p>
+      <p>Assigned to: {issue.assignedTo}</p>
       <p>Status: {issue.status}</p>
       <div className="mt-2">
         {issue.status !== 'Open' && (
@@ -29,4 +28,4 @@ const IssueCard = ({ issue, onStatusChange }) => {
   );
 };
 
-export default IssueCard;
+export default IssueCard;   */}

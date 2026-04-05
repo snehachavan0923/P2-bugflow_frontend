@@ -1,22 +1,39 @@
-import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import IssueForm from '../../components/issue/IssueForm';
 import { createIssue } from '../../api/issueApi';
+import Modal from '../../components/common/Modal';
 
 const CreateIssue = () => {
   const { projectId } = useParams();
-  const navigate = useNavigate();
+  const [open, setOpen] = useState(true); 
 
-  const handleSubmit = async (data) => {
-    await createIssue(projectId, data);
-    navigate(`/projects/${projectId}/issues`);
-  };
+const handleSubmit = async (data, file) => {
+  try {
+    const formData = new FormData();
 
+    formData.append("data", JSON.stringify(data));
+
+    if (file) {
+      formData.append("file", file);
+    }
+
+    await createIssue(projectId, formData);
+    setOpen(false);
+
+  } catch (err) {
+    console.error(err);
+    alert("Error creating issue");
+  }
+};
   return (
-    <div>
-      <h1 className="text-xl font-bold mb-4">Create Issue</h1>
+    <Modal
+      isOpen={open}
+      onClose={() => setOpen(false)}
+      title="Create Issue"
+    >
       <IssueForm onSubmit={handleSubmit} />
-    </div>
+    </Modal>
   );
 };
 

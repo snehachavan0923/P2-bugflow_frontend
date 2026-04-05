@@ -1,4 +1,4 @@
-import React from 'react';
+/* import React from 'react';
 import IssueCard from '../issue/IssueCard';
 
 const KanbanColumn = ({ title, issues, onStatusChange }) => {
@@ -14,4 +14,4 @@ const KanbanColumn = ({ title, issues, onStatusChange }) => {
   );
 };
 
-export default KanbanColumn;
+export default KanbanColumn; */
