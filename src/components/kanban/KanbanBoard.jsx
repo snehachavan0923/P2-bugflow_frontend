@@ -1,4 +1,4 @@
-import React from 'react';
+/* import React from 'react';
 import KanbanColumn from './KanbanColumn';
 
 const KanbanBoard = ({ issues, onStatusChange }) => {
@@ -22,4 +22,4 @@ const KanbanBoard = ({ issues, onStatusChange }) => {
   );
 };
 
-export default KanbanBoard;
+export default KanbanBoard; */
