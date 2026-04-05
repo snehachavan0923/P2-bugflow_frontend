@@ -7,11 +7,8 @@ import { createIssue } from '../../api/issueApi';
 const ProjectDetails = () => {
   const { projectId } = useParams();
   const [project, setProject] = useState(null);
-
-  // Modal state
   const [showModal, setShowModal] = useState(false);
-  const [loading, setLoading] = useState(false);
-
+  
   useEffect(() => {
     const fetchProject = async () => {
       try {
@@ -26,17 +23,25 @@ const ProjectDetails = () => {
   }, [projectId]);
 
   // Create issue handler
-  const handleCreateIssue = async (data) => {
-    try {
-      setLoading(true);
-      await createIssue(projectId, data);
-      setShowModal(false);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
+ const handleCreateIssue = async (data, file) => {
+  try {
+    const formData = new FormData();
+
+    formData.append("data", JSON.stringify(data));
+
+    if (file) {
+      formData.append("file", file);
     }
-  };
+
+    await createIssue(projectId, formData);
+
+    setShowModal(false);
+
+  } catch (err) {
+    console.error(err);
+    alert("Error creating issue");
+  }
+};
 
   if (!project) return <div>Loading...</div>;
 
@@ -77,24 +82,14 @@ const ProjectDetails = () => {
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
           
           <div className="bg-white w-full max-w-lg rounded-xl shadow-lg p-6 relative">
-            
-            {/* Close Button */}
             <button
               onClick={() => setShowModal(false)}
               className="absolute top-2 right-3 text-gray-500 hover:text-black text-xl"
             >
               ✕
             </button>
-
-            {/* Title */}
             <h2 className="text-xl font-semibold mb-4">Create Issue</h2>
-
-            {/* Form */}
             <IssueForm onSubmit={handleCreateIssue} />
-
-            {loading && (
-              <p className="text-sm text-gray-500 mt-2">Creating...</p>
-            )}
           </div>
         </div>
       )}
