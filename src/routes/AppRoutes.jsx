@@ -5,7 +5,6 @@ import Pricing from '../pages/public/Pricing';
 import About from '../pages/public/About';
 import Login from '../auth/Login';
 import Signup from '../auth/Signup';
-import OwnerDashboard from '../pages/owner/OwnerDashboard';
 import ProjectList from '../pages/project/ProjectList';
 import CreateProject from '../pages/project/CreateProject';
 import ProjectDetails from '../pages/project/ProjectDetails';
@@ -25,6 +24,7 @@ import AdminLayout from '../layouts/AdminLayout';
 import OwnerLayout from '../layouts/OwnerLayout';
 import PrivateRoute from './PrivateRoute';
 import CreateIssue from '../pages/issues/CreateIssue';
+import DashboardRouter from '../pages/dashboard/DashboardRouter';
 
 const AppRoutes = () => {
   return (
@@ -46,7 +46,10 @@ const AppRoutes = () => {
           </PrivateRoute>
         }
       >
-        <Route path="dashboard" element={<OwnerDashboard />} />
+        <Route
+          path="dashboard"
+          element={<DashboardRouter />}
+        />
         <Route path="projects" element={<ProjectList />} />
         <Route path="projects/create" element={<CreateProject />} />
         <Route path="projects/:projectId" element={<ProjectDetails />} />
