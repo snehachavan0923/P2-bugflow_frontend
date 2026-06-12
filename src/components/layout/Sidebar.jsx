@@ -14,30 +14,68 @@ const Sidebar = () => {
       ];
     }
 
-    if (role === 'Owner') {
+      if (role === "Owner") {
       return [
-        { label: 'Dashboard', to: '/dashboard', icon: '🏠' },
-        { label: 'Projects', to: '/projects', icon: '📁' },
-        { label: 'Team', to: '/team', icon: '👥' },
-        { label: 'Issues', to: '/issues', icon: '🐛' },
-        { label: 'My Tasks', to: '/my-tasks', icon: '✅' },
-        { label: 'Settings', to: '/settings', icon: '⚙️' },
+        {
+          label: "Dashboard",
+          to: "/dashboard",
+          icon: "🏠",
+        },
+        {
+          label: "Projects",
+          to: "/projects",
+          icon: "📁",
+        },
+        {
+          label: "Task Overview",
+          to: "/my-tasks",
+          icon: "📊",
+        },
+        {
+          label: "Settings",
+          to: "/settings",
+          icon: "⚙️",
+        },
       ];
     }
 
-    if (role === 'Developer') {
+      if (role === "Developer") {
       return [
-        { label: 'Dashboard', to: '/dashboard', icon: '🏠' },
-        { label: 'My Tasks', to: '/my-tasks', icon: '✅' },
-        { label: 'Issues', to: '/issues', icon: '🐛' },
+        {
+          label: "Dashboard",
+          to: "/dashboard",
+          icon: "🏠",
+        },
+        {
+          label: "My Tasks",
+          to: "/my-tasks",
+          icon: "✅",
+        },
+        {
+          label: "Projects",
+          to: "/projects",
+          icon: "📁",
+        },
       ];
     }
 
-    if (role === 'Tester') {
+      if (role === "Tester") {
       return [
-        { label: 'Dashboard', to: '/dashboard', icon: '🏠' },
-        { label: 'Create Issue', to: '/create-issue', icon: '➕' },
-        { label: 'Verify Issue', to: '/verify-issues', icon: '🔍' },
+        {
+          label: "Dashboard",
+          to: "/dashboard",
+          icon: "🏠",
+        },
+        {
+          label: "Verify Issues",
+          to: "/verify-issues",
+          icon: "🔍",
+        },
+        {
+          label: "Projects",
+          to: "/projects",
+          icon: "📁",
+        },
       ];
     }
 
