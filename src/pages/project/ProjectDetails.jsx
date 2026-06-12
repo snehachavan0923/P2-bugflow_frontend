@@ -1,19 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import axios from '../../api/axios';
-import IssueForm from '../../components/issue/IssueForm';
-import { createIssue } from '../../api/issueApi';
+import React, { useState, useEffect } from "react";
+import {
+  useParams,
+  Link,
+  useNavigate,
+} from "react-router-dom";
+
+import axios from "../../api/axios";
+
+import IssueForm from "../../components/issue/IssueForm";
+
+import { createIssue } from "../../api/issueApi";
 
 const ProjectDetails = () => {
   const { projectId } = useParams();
+
+  const navigate = useNavigate();
+
   const [project, setProject] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-  
+
+  const [showModal, setShowModal] =
+    useState(false);
+
   useEffect(() => {
     const fetchProject = async () => {
       try {
-        const res = await axios.get(`/projects/${projectId}`);
+        const res = await axios.get(
+          `/projects/${projectId}`
+        );
+
         setProject(res.data);
+
       } catch (err) {
         console.error(err);
       }
@@ -22,75 +38,165 @@ const ProjectDetails = () => {
     fetchProject();
   }, [projectId]);
 
-  // Create issue handler
- const handleCreateIssue = async (data, file) => {
-  try {
-    const formData = new FormData();
+  const handleCreateIssue = async (
+    data,
+    file
+  ) => {
+    try {
+      const formData = new FormData();
 
-    formData.append("data", JSON.stringify(data));
+      formData.append(
+        "data",
+        JSON.stringify(data)
+      );
 
-    if (file) {
-      formData.append("file", file);
+      if (file) {
+        formData.append("file", file);
+      }
+
+      await createIssue(
+        projectId,
+        formData
+      );
+
+      alert("Issue created successfully");
+
+      setShowModal(false);
+
+    } catch (err) {
+      console.error(err);
+
+      alert("Error creating issue");
     }
+  };
 
-    await createIssue(projectId, formData);
-
-    setShowModal(false);
-
-  } catch (err) {
-    console.error(err);
-    alert("Error creating issue");
+  if (!project) {
+    return (
+      <div className="p-6">
+        Loading Project...
+      </div>
+    );
   }
-};
-
-  if (!project) return <div>Loading...</div>;
 
   return (
-    <div className="p-4">
-      {/* Project Info */}
-      <h1 className="text-2xl font-bold mb-2">{project.name}</h1>
-      <p className="text-gray-600 mb-6">{project.description}</p>
+    <div className="p-6">
 
-      {/* ACTION BUTTONS */}
-      <div className="flex gap-4 mb-6">
-        
-        {/* View Issues */}
+      {/* Header */}
+      <div className="mb-6">
+
+        <h1 className="text-3xl font-bold mb-2">
+          {project.name}
+        </h1>
+
+        <p className="text-gray-600">
+          {project.description}
+        </p>
+
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex flex-wrap gap-4 mb-8">
+
+        {/* Open Board */}
         <Link
           to={`/projects/${projectId}/issues`}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg"
         >
           Open Board
         </Link>
 
-        {/* Create Issue → MODAL */}
+        {/* Team Management */}
         <button
-          onClick={() => setShowModal(true)}
-          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+          onClick={() =>
+            navigate(
+              `/projects/${projectId}/team`
+            )
+          }
+          className="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-lg"
+        >
+          Manage Team
+        </button>
+
+        {/* Create Issue */}
+        <button
+          onClick={() =>
+            setShowModal(true)
+          }
+          className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg"
         >
           + Create Issue
         </button>
 
       </div>
 
-      {/* Project Info Box */}
-      <div className="bg-white p-4 rounded shadow">
-        <p>Project ID: {projectId}</p>
+      {/* Project Information */}
+      <div className="bg-white shadow rounded-xl p-6">
+
+        <h2 className="text-xl font-semibold mb-4">
+          Project Information
+        </h2>
+
+        <div className="space-y-3">
+
+          <p>
+            <span className="font-semibold">
+              Project ID:
+            </span>{" "}
+            {projectId}
+          </p>
+
+          <p>
+            <span className="font-semibold">
+              Name:
+            </span>{" "}
+            {project.name}
+          </p>
+
+          <p>
+            <span className="font-semibold">
+              Description:
+            </span>{" "}
+            {project.description}
+          </p>
+
+          {project.ownerId && (
+            <p>
+              <span className="font-semibold">
+                Owner:
+              </span>{" "}
+              {project.ownerId}
+            </p>
+          )}
+
+        </div>
+
       </div>
 
-      {/* MODAL */}
+      {/* Create Issue Modal */}
       {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
-          
-          <div className="bg-white w-full max-w-lg rounded-xl shadow-lg p-6 relative">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+
+          <div className="bg-white w-full max-w-xl rounded-xl shadow-xl p-6 relative">
+
             <button
-              onClick={() => setShowModal(false)}
-              className="absolute top-2 right-3 text-gray-500 hover:text-black text-xl"
+              onClick={() =>
+                setShowModal(false)
+              }
+              className="absolute top-3 right-4 text-xl text-gray-500 hover:text-black"
             >
               ✕
             </button>
-            <h2 className="text-xl font-semibold mb-4">Create Issue</h2>
-            <IssueForm onSubmit={handleCreateIssue} />
+
+            <h2 className="text-2xl font-semibold mb-5">
+              Create New Issue
+            </h2>
+
+            <IssueForm
+              onSubmit={handleCreateIssue}
+            />
+
           </div>
+
         </div>
       )}
     </div>

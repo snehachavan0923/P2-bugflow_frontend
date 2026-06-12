@@ -26,7 +26,15 @@ const Navbar = () => {
                     {user.name ? user.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
                   </span>
                 </div>
-                <span className="text-gray-700 font-medium">{user.name || user.email}</span>
+                <div className="flex flex-col items-start">
+                <span className="text-gray-700 font-medium">
+                  {user.name || user.email}
+                </span>
+
+                <span className="text-xs font-semibold text-indigo-600">
+                  {user.role}
+                </span>
+              </div>
                 <svg
                   className={`w-4 h-4 text-gray-500 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`}
                   fill="none"
@@ -41,9 +49,20 @@ const Navbar = () => {
               {dropdownOpen && (
                 <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
                   <div className="py-2">
-                    <div className="px-4 py-2 border-b border-gray-100">
-                      <p className="text-sm font-medium text-gray-900">{user.name || 'User'}</p>
-                      <p className="text-sm text-gray-500">{user.email}</p>
+                   <div className="px-4 py-2 border-b border-gray-100">
+
+                      <p className="text-sm font-medium text-gray-900">
+                        {user.name || "User"}
+                      </p>
+
+                      <p className="text-sm text-gray-500">
+                        {user.email}
+                      </p>
+
+                      <span className="inline-block mt-2 px-2 py-1 text-xs rounded-full bg-indigo-100 text-indigo-700 font-semibold">
+                        {user.role}
+                      </span>
+
                     </div>
                     <button
                       onClick={() => {

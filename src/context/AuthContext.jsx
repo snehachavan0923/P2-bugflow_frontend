@@ -29,26 +29,49 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token, user]);
 
-  const login = async (credentials) => {
-    setLoading(true);
-    try {
-      const data = await loginUser(credentials);
-      const loggedInUser = data.user || { email: credentials.email, role: 'Owner' };
+    const login = async (credentials) => {
+      setLoading(true);
 
-      setUser(loggedInUser);
-      setRole(loggedInUser.role || 'Owner');
-      setToken(data.token);
+      try {
 
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(loggedInUser));
-      return loggedInUser;
-    } catch (error) {
-      console.error('Login failed:', error);
-      throw error;
-    } finally {
-      setLoading(false);
-    }
-  };
+        const data = await loginUser(credentials);
+
+        const loggedInUser = {
+          id: data.id,
+          name: data.name,
+          email: data.email,
+          role: data.role,
+        };
+
+        setUser(loggedInUser);
+        setRole(data.role);
+        setToken(data.token);
+
+        localStorage.setItem(
+          "token",
+          data.token
+        );
+
+        localStorage.setItem(
+          "user",
+          JSON.stringify(loggedInUser)
+        );
+
+        return loggedInUser;
+
+      } catch (error) {
+
+        console.error(
+          "Login failed:",
+          error
+        );
+
+        throw error;
+
+      } finally {
+        setLoading(false);
+      }
+    };
 
   const logout = () => {
     setUser(null);
