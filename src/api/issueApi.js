@@ -36,3 +36,83 @@ export const resolveIssue = async (projectId, issueId, formData) => {
   );
   return res.data;
 };
+
+/*
+export const getMyTasks = async () => {
+
+  const res = await axios.get(
+    `/projects/dummy/issues/my-tasks`
+  );
+
+  return res.data;
+};
+*/
+
+export const moveIssueStatus = async (
+  projectId,
+  issueId,
+  status
+) => {
+  const res = await axios.put(
+    `/projects/${projectId}/issues/${issueId}/status`,
+    null,
+    {
+      params: { status }
+    }
+  );
+
+  return res.data;
+};
+
+/*
+  export const getReviewIssues = async () => {
+  const res = await axios.get(
+    `/projects/dummy/issues/review`
+  );
+
+  return res.data;
+};
+*/
+
+export const approveIssue = async (
+  projectId,
+  issueId
+) => {
+  const res = await axios.put(
+    `/projects/${projectId}/issues/${issueId}/approve`
+  );
+
+  return res.data;
+};
+
+export const rejectIssue = async (
+  projectId,
+  issueId
+) => {
+  const res = await axios.put(
+    `/projects/${projectId}/issues/${issueId}/reject`
+  );
+
+  return res.data;
+};
+
+export const getProjectTasks = async (
+  projectId
+) => {
+
+  const res = await axios.get(
+    `/projects/${projectId}/issues/project-my-tasks`
+  );
+
+  return res.data;
+};
+
+export const getProjectReviewIssues =
+  async (projectId) => {
+
+  const res = await axios.get(
+    `/projects/${projectId}/issues/project-review`
+  );
+
+  return res.data;
+};

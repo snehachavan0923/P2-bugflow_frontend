@@ -77,8 +77,13 @@ const IssueBoard = () => {
                 <td>{issue.title}</td>
                 <td>{issue.description}</td>
                 <td>{issue.priority}</td>
-                <td>{issue.assignedTo}</td>
-
+                <td>{issue.assignedToName} 
+                  <br />
+                  <span className="text-xs text-gray-500">
+                    {issue.assignedToRole}
+                  </span>
+                </td>
+ 
                 {/* Image */}
                 <td>
                   {issue.imageUrl ? (
