@@ -11,7 +11,12 @@ import IssueForm from "../../components/issue/IssueForm";
 
 import { createIssue } from "../../api/issueApi";
 
+import { useAuth } from "../../context/AuthContext";
+
 const ProjectDetails = () => {
+
+  const { role } = useAuth();
+
   const { projectId } = useParams();
 
   const navigate = useNavigate();
@@ -22,8 +27,11 @@ const ProjectDetails = () => {
     useState(false);
 
   useEffect(() => {
+
     const fetchProject = async () => {
+
       try {
+
         const res = await axios.get(
           `/projects/${projectId}`
         );
@@ -31,19 +39,25 @@ const ProjectDetails = () => {
         setProject(res.data);
 
       } catch (err) {
+
         console.error(err);
+
       }
     };
 
     fetchProject();
+
   }, [projectId]);
 
   const handleCreateIssue = async (
     data,
     file
   ) => {
+
     try {
-      const formData = new FormData();
+
+      const formData =
+        new FormData();
 
       formData.append(
         "data",
@@ -51,7 +65,10 @@ const ProjectDetails = () => {
       );
 
       if (file) {
-        formData.append("file", file);
+        formData.append(
+          "file",
+          file
+        );
       }
 
       await createIssue(
@@ -59,18 +76,24 @@ const ProjectDetails = () => {
         formData
       );
 
-      alert("Issue created successfully");
+      alert(
+        "Issue created successfully"
+      );
 
       setShowModal(false);
 
     } catch (err) {
+
       console.error(err);
 
-      alert("Error creating issue");
+      alert(
+        "Error creating issue"
+      );
     }
   };
 
   if (!project) {
+
     return (
       <div className="p-6">
         Loading Project...
@@ -97,35 +120,57 @@ const ProjectDetails = () => {
       {/* Action Buttons */}
       <div className="flex flex-wrap gap-4 mb-8">
 
-        {/* Open Board */}
-        <Link
-          to={`/projects/${projectId}/issues`}
+        {/* OWNER */}
+        {role === "Owner" && (
+          <>
+            <Link
+              to={`/projects/${projectId}/issues`}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg"
+            >
+              Open Board
+            </Link>
+
+            <button
+              onClick={() =>
+                navigate(
+                  `/projects/${projectId}/team`
+                )
+              }
+              className="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-lg"
+            >
+              Manage Team
+            </button>
+
+            <button
+              onClick={() =>
+                setShowModal(true)
+              }
+              className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg"
+            >
+              + Create Issue
+            </button>
+          </>
+        )}
+
+        {/* DEVELOPER */}
+        {role === "Developer" && (
+         <button
+          onClick={() => navigate(`/projects/${projectId}/my-tasks`)}
           className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg"
         >
-          Open Board
-        </Link>
-
-        {/* Team Management */}
-        <button
-          onClick={() =>
-            navigate(
-              `/projects/${projectId}/team`
-            )
-          }
-          className="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-lg"
-        >
-          Manage Team
+          My Tasks
         </button>
+        )}
 
-        {/* Create Issue */}
-        <button
-          onClick={() =>
-            setShowModal(true)
-          }
+        {/* TESTER */}
+        {role === "Tester" && (
+       <button
+          onClick={() => navigate(`/projects/${projectId}/verify-issues`)}
           className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg"
         >
-          + Create Issue
+          Verify Issues
         </button>
+        )}
 
       </div>
 
@@ -172,8 +217,10 @@ const ProjectDetails = () => {
 
       </div>
 
-      {/* Create Issue Modal */}
-      {showModal && (
+      {/* CREATE ISSUE MODAL */}
+      {role === "Owner" &&
+        showModal && (
+
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
 
           <div className="bg-white w-full max-w-xl rounded-xl shadow-xl p-6 relative">
@@ -192,13 +239,17 @@ const ProjectDetails = () => {
             </h2>
 
             <IssueForm
-              onSubmit={handleCreateIssue}
+              projectId={projectId}
+              onSubmit={
+                handleCreateIssue
+              }
             />
 
           </div>
 
         </div>
       )}
+
     </div>
   );
 };

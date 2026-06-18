@@ -11,7 +11,7 @@ const IssueDetailsModal = ({ isOpen, onClose, issue }) => {
       <div className="space-y-2">
         <p><strong>Priority:</strong> {issue.priority}</p>
         <p><strong>Status:</strong> {issue.status}</p>
-        <p><strong>Assigned To:</strong> {issue.assignedTo}</p>
+        <p><strong>Assigned To:</strong> {issue.assignedToName} </p>
         <p><strong>Created:</strong> {new Date(issue.createdAt).toLocaleDateString()}</p>
       </div>
     </Modal>
