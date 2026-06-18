@@ -47,11 +47,6 @@ const Sidebar = () => {
           icon: "🏠",
         },
         {
-          label: "My Tasks",
-          to: "/my-tasks",
-          icon: "✅",
-        },
-        {
           label: "Projects",
           to: "/projects",
           icon: "📁",
@@ -59,17 +54,12 @@ const Sidebar = () => {
       ];
     }
 
-      if (role === "Tester") {
+    if (role === "Tester") {
       return [
         {
           label: "Dashboard",
           to: "/dashboard",
           icon: "🏠",
-        },
-        {
-          label: "Verify Issues",
-          to: "/verify-issues",
-          icon: "🔍",
         },
         {
           label: "Projects",
