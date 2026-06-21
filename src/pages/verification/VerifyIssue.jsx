@@ -1,243 +1,79 @@
-import React,
-{
-  useEffect,
-  useState,
-  useCallback
-} from "react";
-
-import {
-   getProjectReviewIssues,
-  approveIssue,
-  rejectIssue
-} from "../../api/issueApi";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Loader2 } from "lucide-react";
 import { useParams } from "react-router-dom";
+
+import KanbanBoard from "../../components/kanban/KanbanBoard";
+import { getProjectReviewIssues } from "../../api/issueApi";
+
 const VerifyIssue = () => {
-
-  const [issues, setIssues] =
-    useState([]);
- 
-  const [loading, setLoading] =
-    useState(true);
-    
   const { projectId } = useParams();
+  const [issues, setIssues] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const [previewImage,
-    setPreviewImage] =
-      useState(null);
-
- const loadIssues =
-  useCallback(async () => {
-
+  const loadIssues = useCallback(async () => {
     try {
+      setError("");
 
-      const data =
-        await getProjectReviewIssues(
-          projectId
-        );
-
+      const data = await getProjectReviewIssues(projectId);
       setIssues(data);
-
     } catch (err) {
-
       console.error(err);
 
+      setError(
+        err?.response?.data?.message ||
+          "Unable to load issues for verification."
+      );
     } finally {
-
       setLoading(false);
     }
-
   }, [projectId]);
 
   useEffect(() => {
-
     loadIssues();
+  }, [loadIssues]);
 
- }, [loadIssues, projectId]);
+  const reviewIssues = useMemo(
+    () => issues.filter((issue) => issue.status === "Review"),
+    [issues]
+  );
 
-  const handleApprove =
-    async (issue) => {
+  if (loading) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center p-6">
+        <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-6 py-4 shadow-sm">
+          <Loader2
+            className="h-5 w-5 animate-spin text-blue-600"
+            aria-hidden="true"
+          />
+          <span className="text-sm font-medium text-slate-700">
+            Loading issues...
+          </span>
+        </div>
+      </div>
+    );
+  }
 
-      await approveIssue(
-        issue.projectId,
-        issue.id
-      );
-
-      loadIssues();
-    };
-
-  const handleReject =
-    async (issue) => {
-
-      await rejectIssue(
-        issue.projectId,
-        issue.id
-      );
-
-      loadIssues();
-    };
-
-  if(loading){
+  if (error) {
     return (
       <div className="p-6">
-        Loading Issues...
+        <div className="rounded-2xl border border-red-200 bg-white p-6 text-red-700 shadow-sm">
+          {error}
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="p-6">
-
-      <h1 className="text-3xl font-bold mb-6">
-        Verify Issues
-      </h1>
-
-      {issues.length === 0 && (
-
-        <div className="bg-white p-6 rounded-xl shadow">
-
-          No Issues Waiting For Verification
-
-        </div>
-
-      )}
-
-      <div className="grid gap-4">
-
-        {issues.map(issue => (
-
-          <div
-            key={issue.id}
-            className="bg-white p-5 rounded-xl shadow"
-          >
-
-            <div className="flex justify-between">
-
-              <div>
-
-                <h2 className="font-bold text-xl">
-                  {issue.title}
-                </h2>
-
-                <p className="text-gray-500">
-                  {issue.projectName}
-                </p>
-
-              </div>
-
-              <span className="font-semibold">
-                {issue.priority}
-              </span>
-
-            </div>
-
-            <p className="mt-3">
-              {issue.description}
-            </p>
-
-            <div className="mt-4">
-
-              <strong>Assigned:</strong>{" "}
-
-              {issue.assignedToName}
-              {" "}
-              ({issue.assignedToRole})
-
-            </div>
-
-            {issue.imageUrl && (
-
-              <div className="mt-4">
-
-                <button
-                  onClick={() =>
-                    setPreviewImage(
-                      issue.imageUrl
-                    )
-                  }
-                  className="bg-blue-500 text-white px-4 py-2 rounded"
-                >
-                  View Bug Image
-                </button>
-
-              </div>
-
-            )}
-
-            {issue.resolutionImageUrl && (
-
-              <div className="mt-4">
-
-                <button
-                  onClick={() =>
-                    setPreviewImage(
-                      issue.resolutionImageUrl
-                    )
-                  }
-                  className="bg-green-500 text-white px-4 py-2 rounded"
-                >
-                  View Resolution Proof
-                </button>
-
-              </div>
-
-            )}
-
-            <div className="flex gap-3 mt-6">
-
-              <button
-                onClick={() =>
-                  handleApprove(issue)
-                }
-                className="bg-green-600 text-white px-5 py-2 rounded"
-              >
-                Approve
-              </button>
-
-              <button
-                onClick={() =>
-                  handleReject(issue)
-                }
-                className="bg-red-600 text-white px-5 py-2 rounded"
-              >
-                Reject
-              </button>
-
-            </div>
-
-          </div>
-
-        ))}
-
-      </div>
-
-      {previewImage && (
-
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
-          onClick={() =>
-            setPreviewImage(null)
-          }
-        >
-
-          <div
-            className="bg-white p-4 rounded-xl"
-            onClick={(e) =>
-              e.stopPropagation()
-            }
-          >
-
-            <img
-              src={previewImage}
-              alt="preview"
-              className="max-h-[80vh]"
-            />
-
-          </div>
-
-        </div>
-
-      )}
-
+    <div className="p-4 sm:p-6 lg:p-8">
+      <KanbanBoard
+        mode="tester"
+        projectId={projectId}
+        issues={reviewIssues}
+        onRefresh={loadIssues}
+        title="Verify Issues"
+        subtitle="Review submitted fixes and approve or reject resolution proof"
+      />
     </div>
   );
 };
