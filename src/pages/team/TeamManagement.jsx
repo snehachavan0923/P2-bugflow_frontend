@@ -3,7 +3,7 @@ import React, {
   useState,
   useCallback,
 } from "react";
-
+import Swal from "sweetalert2";
 import { useParams } from "react-router-dom";
 
 import InviteMemberModal from "../../components/team/InviteMemberModal";
@@ -62,28 +62,50 @@ const TeamManagement = () => {
         memberData
       );
 
+      Swal.fire({
+        icon: "success",
+        title: "Member Added",
+        text: "Team member added successfully",
+        timer: 1800,
+        showConfirmButton: false,
+      });
+
       setShowModal(false);
 
       loadMembers();
 
     } catch (error) {
+
       console.error(error);
 
-      alert(
-        error?.response?.data?.message ||
-          "Error adding member"
-      );
+      const message =
+      error?.response?.data?.message ||
+      error?.response?.data ||
+      "Error adding member";
+
+    Swal.fire({
+      icon: "error",
+      title: "Cannot Add Member",
+      text: message,
+      confirmButtonColor: "#2563eb",
+    });   
     }
   };
 
   const handleRemoveMember =
     async (memberId) => {
 
-      const confirmed = window.confirm(
-        "Remove this member?"
-      );
+      const result = await Swal.fire({
+      title: "Remove Member?",
+      text: "This action cannot be undone.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Remove",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#dc2626",
+    });
 
-      if (!confirmed) return;
+    if (!result.isConfirmed) return;
 
       try {
 
@@ -91,12 +113,30 @@ const TeamManagement = () => {
           projectId,
           memberId
         );
+        
+        Swal.fire({
+        icon: "success",
+        title: "Removed",
+        text: "Member removed successfully",
+        timer: 1800,
+        showConfirmButton: false,
+      });
 
         loadMembers();
 
       } catch (error) {
-        console.error(error);
-      }
+
+          console.error(error);
+
+          Swal.fire({
+            icon: "error",
+            title: "Remove Failed",
+            text:
+              error?.response?.data?.message ||
+              "Unable to remove member",
+            confirmButtonColor: "#2563eb",
+          });
+        }
     };
 
   if (loading) {

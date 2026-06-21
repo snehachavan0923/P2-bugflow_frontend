@@ -11,6 +11,7 @@ import Signup from "../auth/Signup";
 import ProjectList from "../pages/project/ProjectList";
 import CreateProject from "../pages/project/CreateProject";
 import ProjectDetails from "../pages/project/ProjectDetails";
+import CreateOrganization from "../pages/organization/CreateOrganization";
 
 import IssueBoard from "../pages/issues/IssueBoard";
 import CreateIssue from "../pages/issues/CreateIssue";
@@ -37,6 +38,9 @@ import OwnerLayout from "../layouts/OwnerLayout";
 import PrivateRoute from "./PrivateRoute";
 
 import DashboardRouter from "../pages/dashboard/DashboardRouter";
+import OrganizationGuard from "../components/guards/OrganizationGuard";
+import OrganizationSettings from "../pages/organization/OrganizationSettings";
+import MembersDirectory from "../pages/organization/MembersDirectory";
 
 const AppRoutes = () => {
   return (
@@ -52,21 +56,36 @@ const AppRoutes = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
 
+        <Route
+          path="create-organization"
+          element={
+            <PrivateRoute
+              allowedRoles={["Owner"]}
+            >
+              <CreateOrganization />
+            </PrivateRoute>
+          }
+        />
+
       {/* MAIN APP LAYOUT */}
       <Route
-        element={
-          <PrivateRoute
-            allowedRoles={[
-              "Owner",
-              "Developer",
-              "Tester",
-              "Viewer",
-            ]}
-          >
-            <OwnerLayout />
-          </PrivateRoute>
-        }
-      >
+          element={
+            <PrivateRoute
+              allowedRoles={[
+                "Owner",
+                "Developer",
+                "Tester",
+                "Viewer",
+              ]}
+            >
+              <OrganizationGuard>
+
+                <OwnerLayout />
+
+              </OrganizationGuard>
+            </PrivateRoute>
+          }
+        >
         {/* SHARED */}
         <Route
           path="dashboard"
@@ -144,7 +163,26 @@ const AppRoutes = () => {
             </PrivateRoute>
           }
         />
-
+        <Route
+          path="organization/settings"
+          element={
+            <PrivateRoute
+              allowedRoles={["Owner"]}
+            >
+              <OrganizationSettings />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="organization/members"
+          element={
+            <PrivateRoute
+              allowedRoles={["Owner"]}
+            >
+              <MembersDirectory />
+            </PrivateRoute>
+          }
+        />
         {/* DEVELOPER ONLY */}
 
       <Route
