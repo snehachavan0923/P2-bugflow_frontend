@@ -5,11 +5,13 @@ import Navbar from '../components/layout/Navbar';
 
 const OwnerLayout = () => {
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen overflow-hidden">
       <Sidebar />
-      <div className="flex-1 flex flex-col">
+
+      <div className="flex flex-1 min-w-0 flex-col">
         <Navbar />
-        <main className="flex-1 p-6 overflow-auto">
+
+        <main className="flex-1 min-w-0 overflow-auto p-6">
           <Outlet />
         </main>
       </div>
