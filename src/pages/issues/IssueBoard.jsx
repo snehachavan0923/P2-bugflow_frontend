@@ -2,11 +2,12 @@ import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   getIssues,
-  updateIssue,
+  //updateIssue,
   editIssue,
   resolveIssue
 } from '../../api/issueApi';
 import './IssueBoard.css';
+import { getTeamMembers } from "../../api/teamApi";
 
 const tabs = ["Open", "In Progress", "Review", "Done"];
 
@@ -22,20 +23,41 @@ const IssueBoard = () => {
   const [editModal, setEditModal] = useState(null);
   const [resolveModal, setResolveModal] = useState(null);
   const [resolveFile, setResolveFile] = useState(null);
+  const [members, setMembers] = useState([]);
 
   const fetchIssues = useCallback(async () => {
     const data = await getIssues(projectId);
     setIssues(data);
   }, [projectId]);
 
-  useEffect(() => {
-    fetchIssues();
-  }, [fetchIssues]);
+useEffect(() => {
 
+  fetchIssues();
+
+  const loadMembers = async () => {
+    try {
+
+      const data =
+        await getTeamMembers(projectId);
+
+      setMembers(data);
+
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  loadMembers();
+
+}, [fetchIssues, projectId]);
+
+/*
   const handleStatusChange = async (issueId, status) => {
     await updateIssue(projectId, issueId, status);
     fetchIssues();
   };
+
+*/
 
   const filtered = issues.filter(i => i.status === activeTab);
 
@@ -66,7 +88,7 @@ const IssueBoard = () => {
               <th>Priority</th>
               <th>Assigned</th>
               <th>Image</th>
-              <th>Move</th>
+              {/* <th>Move</th> */}
               <th>Action</th>
             </tr>
           </thead>
@@ -96,7 +118,7 @@ const IssueBoard = () => {
                   ) : "-"}
                 </td>
 
-                {/* Status */}
+                {/* Status 
                 <td>
                   <select
                     value={issue.status}
@@ -109,13 +131,20 @@ const IssueBoard = () => {
                     ))}
                   </select>
                 </td>
+                */}
 
                 {/* ACTIONS */}
                 <td>
                   {issue.status !== "Done" && (
                     <button
                       className="btn-edit"
-                      onClick={() => setEditModal(issue)}
+                      onClick={() =>
+                        setEditModal({
+                          ...issue,
+                          assignedToUserId:
+                            issue.assignedToUserId
+                        })
+                      }
                     >
                       Edit
                     </button>
@@ -190,10 +219,26 @@ const IssueBoard = () => {
                 <div className="field-box">{detailsModal.status}</div>
               </div>
 
-              <div className="field">
-                <label>Assigned</label>
-                <div className="field-box">{detailsModal.assignedTo}</div>
-              </div>
+             <div className="field">
+            <label>Assigned To</label>
+            <div className="field-box">
+              {detailsModal.assignedToName}
+            </div>
+          </div>
+
+          <div className="field">
+            <label>Role</label>
+            <div className="field-box">
+              {detailsModal.assignedToRole}
+            </div>
+          </div>
+
+          <div className="field">
+            <label>Email</label>
+            <div className="field-box">
+              {detailsModal.assignedToEmail}
+            </div>
+          </div>
 
               {detailsModal.imageUrl && (
                 <div className="field">
@@ -267,17 +312,47 @@ const IssueBoard = () => {
               </div>
 
               <div className="field">
-                <label>Assigned</label>
-                <input
-                  className="input"
-                  value={editModal.assignedTo}
-                  onChange={(e) =>
-                    setEditModal({ ...editModal, assignedTo: e.target.value })
-                  }
-                />
+                <label>Current Assignee</label>
+
+                <div className="field-box">
+                  {editModal.assignedToName}
+                  {" "}
+                  ({editModal.assignedToRole})
+                </div>
               </div>
 
-              {/* 🔥 Existing Image */}
+              <div className="field">
+                <label>Reassign To</label>
+
+                <select
+                  className="input"
+                  value={editModal.assignedToUserId || ""}
+                  onChange={(e) =>
+                    setEditModal({
+                      ...editModal,
+                      assignedToUserId:
+                        e.target.value
+                    })
+                  }
+                >
+                  <option value="">
+                    Select Member
+                  </option>
+
+                  {members.map(member => (
+                    <option
+                      key={member.id}
+                      value={member.userId}
+                    >
+                      {member.name}
+                      {" "}
+                      ({member.role})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Existing Image */}
               {editModal.imageUrl && (
                 <div className="field">
                   <label>Bug Image</label>
@@ -290,7 +365,24 @@ const IssueBoard = () => {
               <button
                 className="btn-save"
                 onClick={async () => {
-                  await editIssue(projectId, editModal.id, editModal);
+                  
+                  await editIssue(
+                    projectId,
+                    editModal.id,
+                    {
+                      title:
+                        editModal.title,
+
+                      description:
+                        editModal.description,
+
+                      priority:
+                        editModal.priority,
+
+                      assignedToUserId:
+                        editModal.assignedToUserId
+                    }
+                  );
                   setEditModal(null);
                   fetchIssues();
                 }}
