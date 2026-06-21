@@ -92,7 +92,7 @@ const KanbanBoard = ({
   };
 
   return (
-    <div className="relative w-full h-full">
+    <div className="w-full h-full">
       <div className="space-y-6">
         {(title || subtitle) && (
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -114,34 +114,67 @@ const KanbanBoard = ({
           </div>
         )}
 
-        <div className="w-full overflow-x-auto pb-4">
-        <div className="flex gap-4 min-w-fit">
-            {columns.map((column) => (
-              <KanbanColumn
-                key={column}
-                title={column}
-                issues={issuesByStatus[column] || []}
-                selectedIssueId={selectedIssueId}
-                onSelectIssue={setSelectedIssue}
-              />
-            ))}
+        <div className="w-full pb-4">
+          <div className="flex gap-4">
+            <div
+              className={`flex-1 transition-all duration-200 ${
+                selectedIssue ? "" : ""
+              }`}
+            >
+              <div className="w-full overflow-x-auto">
+                <div className="flex gap-4 min-w-fit">
+                  {columns.map((column) => (
+                    <KanbanColumn
+                      key={column}
+                      title={column}
+                      issues={issuesByStatus[column] || []}
+                      selectedIssueId={selectedIssueId}
+                      onSelectIssue={setSelectedIssue}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Embedded drawer for tablet/desktop: occupies space so board shrinks */}
+            {selectedIssue && (
+              <div className="hidden sm:block">
+                <IssueDetailsDrawer
+                  embedded
+                  issue={selectedIssue}
+                  mode={mode}
+                  members={members}
+                  onClose={() => setSelectedIssue(null)}
+                  onEditIssue={handleEditIssue}
+                  onMoveIssue={handleMoveIssue}
+                  onResolveIssue={handleResolveIssue}
+                  onApproveIssue={handleApproveIssue}
+                  onRejectIssue={handleRejectIssue}
+                />
+              </div>
+            )}
           </div>
+
+          {/* Mobile overlay drawer */}
+          {selectedIssue && (
+            <div className="sm:hidden">
+              <IssueDetailsDrawer
+                issue={selectedIssue}
+                mode={mode}
+                members={members}
+                onClose={() => setSelectedIssue(null)}
+                onEditIssue={handleEditIssue}
+                onMoveIssue={handleMoveIssue}
+                onResolveIssue={handleResolveIssue}
+                onApproveIssue={handleApproveIssue}
+                onRejectIssue={handleRejectIssue}
+              />
+            </div>
+          )}
         </div>
       </div>
 
-      {selectedIssue && (
-        <IssueDetailsDrawer
-          issue={selectedIssue}
-          mode={mode}
-          members={members}
-          onClose={() => setSelectedIssue(null)}
-          onEditIssue={handleEditIssue}
-          onMoveIssue={handleMoveIssue}
-          onResolveIssue={handleResolveIssue}
-          onApproveIssue={handleApproveIssue}
-          onRejectIssue={handleRejectIssue}
-        />
-      )}
+      
     </div>
   );
 };

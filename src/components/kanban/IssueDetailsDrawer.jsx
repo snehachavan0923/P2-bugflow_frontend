@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   CheckCircle2,
-  Image,
   Pencil,
   Play,
   RotateCcw,
@@ -33,13 +32,16 @@ const IssueDetailsDrawer = ({
   onResolveIssue,
   onApproveIssue,
   onRejectIssue,
+  embedded = false,
 }) => {
-  const [isEditing, setIsEditing] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [showReassign, setShowReassign] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [showResolve, setShowResolve] = useState(false);
-  const [showImages, setShowImages] = useState(false);
+  
   const [saving, setSaving] = useState(false);
   const [proofFile, setProofFile] = useState(null);
+  const [reassignUser, setReassignUser] = useState("");
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -77,9 +79,9 @@ const IssueDetailsDrawer = ({
       return;
     }
 
-    setIsEditing(false);
+    setShowEditForm(false);
+    setShowReassign(false);
     setShowResolve(false);
-    setShowImages(false);
     setProofFile(null);
     setFormData({
       title: issue.title || "",
@@ -87,6 +89,7 @@ const IssueDetailsDrawer = ({
       priority: issue.priority || "Medium",
       assignedToUserId: issue.assignedToUserId || "",
     });
+    setReassignUser(issue.assignedToUserId || "");
   }, [issue]);
 
   const canEdit = mode === "owner" && issue?.status !== "Done";
@@ -113,7 +116,7 @@ const IssueDetailsDrawer = ({
 
     try {
       await onEditIssue(issue, formData);
-      setIsEditing(false);
+      setShowEditForm(false);
     } finally {
       setSaving(false);
     }
@@ -137,13 +140,16 @@ const IssueDetailsDrawer = ({
       setSaving(false);
     }
   };
+  const containerClass = embedded
+    ? `flex flex-col border-l border-slate-200 bg-white shadow-2xl transition-opacity duration-200 ${isVisible ? "opacity-100" : "opacity-0"}`
+    : `fixed inset-y-0 right-0 z-30 flex w-full max-w-full flex-col border-l border-slate-200 bg-white shadow-2xl transition-transform duration-200 sm:w-[420px] ${isVisible ? "translate-x-0" : "translate-x-full"}`;
+
+  const containerStyle = embedded
+    ? { width: 420, minWidth: 360, height: "calc(100vh - 64px)" }
+    : undefined;
 
   return (
-    <aside
-      className={`fixed inset-y-0 right-0 z-30 flex w-full max-w-full flex-col border-l border-slate-200 bg-white shadow-2xl transition-transform duration-200 sm:w-[420px] ${
-        isVisible ? "translate-x-0" : "translate-x-full"
-      }`}
-    >
+    <aside className={containerClass} style={containerStyle}>
       <div className="flex items-start justify-between gap-4 border-b border-slate-200 px-5 py-4">
         <div className="min-w-0">
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
@@ -213,59 +219,52 @@ const IssueDetailsDrawer = ({
           </div>
         </section>
 
-        <section className="space-y-3">
-          <div className="flex items-center justify-between gap-3">
-            <h3 className="text-sm font-semibold text-slate-950">
-              Images
-            </h3>
-            <button
-              type="button"
-              onClick={() => setShowImages((current) => !current)}
-              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
-            >
-              <Image className="h-4 w-4" aria-hidden="true" />
-              View Images
-            </button>
+        <section className="space-y-4">
+          <h3 className="text-sm font-semibold text-slate-950">Images</h3>
+
+          <div>
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">Bug Screenshot</p>
+            {issue.imageUrl ? (
+              <img src={issue.imageUrl} alt="Bug screenshot" className="max-h-64 w-full rounded-2xl border border-slate-200 object-contain" />
+            ) : (
+              <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center text-sm text-slate-400">No image available</div>
+            )}
           </div>
 
-          {showImages && (
-            <div className="space-y-4">
-              <div>
-                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
-                  Bug Screenshot
-                </p>
-                {issue.imageUrl ? (
-                  <img
-                    src={issue.imageUrl}
-                    alt="Bug screenshot"
-                    className="max-h-64 w-full rounded-2xl border border-slate-200 object-contain"
-                  />
-                ) : (
-                  <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center text-sm text-slate-400">
-                    No bug screenshot
-                  </div>
-                )}
-              </div>
-
-              <div>
-                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
-                  Resolution Proof
-                </p>
-                {issue.resolutionImageUrl ? (
-                  <img
-                    src={issue.resolutionImageUrl}
-                    alt="Resolution proof"
-                    className="max-h-64 w-full rounded-2xl border border-slate-200 object-contain"
-                  />
-                ) : (
-                  <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center text-sm text-slate-400">
-                    No resolution proof
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
+          <div>
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">Resolution Proof</p>
+            {issue.resolutionImageUrl ? (
+              <img src={issue.resolutionImageUrl} alt="Resolution proof" className="max-h-64 w-full rounded-2xl border border-slate-200 object-contain" />
+            ) : (
+              <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center text-sm text-slate-400">No image available</div>
+            )}
+          </div>
         </section>
+
+        {/* Compact reassign dropdown */}
+        {showReassign && (
+          <section className="space-y-3 rounded-2xl border border-slate-200 bg-white p-4">
+            <p className="text-xs font-semibold text-slate-500">Assign To:</p>
+            <select className={fieldClassName} value={reassignUser} onChange={(e) => setReassignUser(e.target.value)}>
+              <option value="">Unassigned</option>
+              {members.map((m) => (
+                <option key={m.id || m.userId} value={m.userId || m.id}>{m.name} ({m.role})</option>
+              ))}
+            </select>
+            <div className="flex gap-2">
+              <button type="button" disabled={saving} onClick={async () => {
+                setSaving(true);
+                try {
+                  await onEditIssue(issue, { assignedToUserId: reassignUser });
+                  setShowReassign(false);
+                } finally {
+                  setSaving(false);
+                }
+              }} className={`${actionButtonClassName} bg-blue-600 text-white hover:bg-blue-700`}>Save</button>
+              <button type="button" onClick={() => setShowReassign(false)} className={`${actionButtonClassName} border border-slate-200 bg-white text-slate-700 hover:bg-slate-50`}>Cancel</button>
+            </div>
+          </section>
+        )}
 
         <section className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4">
           <h3 className="text-sm font-semibold text-slate-950">
@@ -276,7 +275,7 @@ const IssueDetailsDrawer = ({
           </p>
         </section>
 
-        {isEditing && (
+        {showEditForm && (
           <section className="space-y-3 rounded-2xl border border-blue-100 bg-blue-50/40 p-4">
             <h3 className="text-sm font-semibold text-slate-950">
               Edit Issue
@@ -321,26 +320,7 @@ const IssueDetailsDrawer = ({
               <option>High</option>
             </select>
 
-            <select
-              className={fieldClassName}
-              value={formData.assignedToUserId}
-              onChange={(event) =>
-                setFormData({
-                  ...formData,
-                  assignedToUserId: event.target.value,
-                })
-              }
-            >
-              <option value="">Select Member</option>
-              {members.map((member) => (
-                <option
-                  key={member.id || member.userId}
-                  value={member.userId || member.id}
-                >
-                  {member.name} ({member.role})
-                </option>
-              ))}
-            </select>
+            {/* Assignee editing intentionally omitted in edit form per UX requirements */}
 
             <div className="flex gap-2">
               <button
@@ -353,7 +333,7 @@ const IssueDetailsDrawer = ({
               </button>
               <button
                 type="button"
-                onClick={() => setIsEditing(false)}
+                onClick={() => setShowEditForm(false)}
                 className={`${actionButtonClassName} border border-slate-200 bg-white text-slate-700 hover:bg-slate-50`}
               >
                 Cancel
@@ -400,7 +380,7 @@ const IssueDetailsDrawer = ({
               <>
                 <button
                   type="button"
-                  onClick={() => setIsEditing(true)}
+                  onClick={() => setShowEditForm((s) => !s)}
                   className={`${actionButtonClassName} bg-slate-900 text-white hover:bg-slate-800`}
                 >
                   <Pencil className="h-4 w-4" aria-hidden="true" />
@@ -408,7 +388,7 @@ const IssueDetailsDrawer = ({
                 </button>
                 <button
                   type="button"
-                  onClick={() => setIsEditing(true)}
+                  onClick={() => setShowReassign((s) => !s)}
                   className={`${actionButtonClassName} border border-slate-200 bg-white text-slate-700 hover:bg-slate-50`}
                 >
                   <UserPlus className="h-4 w-4" aria-hidden="true" />
