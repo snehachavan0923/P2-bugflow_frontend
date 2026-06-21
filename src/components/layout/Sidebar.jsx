@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { Building2, Users } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 const Sidebar = () => {
@@ -110,6 +111,42 @@ const Sidebar = () => {
             <span className="font-medium">{item.label}</span>
           </NavLink>
         ))}
+
+        {role === "Owner" && (
+          <div className="pt-4">
+            <p className="px-4 pb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">
+              Organization
+            </p>
+
+            <NavLink
+              to="/organization/settings"
+              className={({ isActive }) =>
+                `flex items-center space-x-3 py-3 px-4 rounded-lg transition-all duration-200 ${
+                  isActive
+                    ? 'bg-indigo-50 text-indigo-700 border-r-2 border-indigo-600'
+                    : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600'
+                }`
+              }
+            >
+              <Building2 className="h-5 w-5" />
+              <span className="font-medium">Organization Settings</span>
+            </NavLink>
+
+            <NavLink
+              to="/organization/members"
+              className={({ isActive }) =>
+                `flex items-center space-x-3 py-3 px-4 rounded-lg transition-all duration-200 ${
+                  isActive
+                    ? 'bg-indigo-50 text-indigo-700 border-r-2 border-indigo-600'
+                    : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600'
+                }`
+              }
+            >
+              <Users className="h-5 w-5" />
+              <span className="font-medium">Members Directory</span>
+            </NavLink>
+          </div>
+        )}
       </nav>
 
       {/* User Role Badge */}
