@@ -1,267 +1,87 @@
-import React, {
-  useEffect,
-  useState,
-  useCallback
-} from "react";
-
-import {
-  getProjectTasks,
-  moveIssueStatus,
-  resolveIssue
-} from "../../api/issueApi";
-
-import { useAuth }
-from "../../context/AuthContext";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Loader2 } from "lucide-react";
 import { useParams } from "react-router-dom";
 
-const MyTasks = () => {
+import KanbanBoard from "../../components/kanban/KanbanBoard";
+import { getProjectTasks } from "../../api/issueApi";
+import { useAuth } from "../../context/AuthContext";
 
+const MyTasks = () => {
   const { user } = useAuth();
   const { projectId } = useParams();
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-
-  const [tasks, setTasks] =
-    useState([]);
-
-  const [loading, setLoading] =
-    useState(true);
-
-  const [resolveModal,
-    setResolveModal] =
-      useState(null);
-
-  const [proofFile,
-    setProofFile] =
-      useState(null);
-
-const loadTasks =
-  useCallback(async () => {
-
+  const loadTasks = useCallback(async () => {
     try {
+      setError("");
 
-      const data =
-        await getProjectTasks(
-          projectId
-        );
-
+      const data = await getProjectTasks(projectId);
       setTasks(data);
-
     } catch (err) {
-
       console.error(err);
 
+      setError(
+        err?.response?.data?.message ||
+          "Unable to load your tasks."
+      );
     } finally {
-
       setLoading(false);
     }
-
   }, [projectId]);
 
   useEffect(() => {
-
-    if(user?.email){
+    if (user?.id) {
       loadTasks();
     }
+  }, [loadTasks, user?.id]);
 
- }, [loadTasks, user, projectId]);
+  const assignedTasks = useMemo(
+    () =>
+      tasks.filter(
+        (task) =>
+          String(task.assignedToUserId) === String(user?.id)
+      ),
+    [tasks, user?.id]
+  );
 
-  const handleMove =
-    async (task, status) => {
+  if (loading) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center p-6">
+        <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-6 py-4 shadow-sm">
+          <Loader2
+            className="h-5 w-5 animate-spin text-blue-600"
+            aria-hidden="true"
+          />
+          <span className="text-sm font-medium text-slate-700">
+            Loading tasks...
+          </span>
+        </div>
+      </div>
+    );
+  }
 
-      await moveIssueStatus(
-        task.projectId,
-        task.id,
-        status
-      );
-
-      loadTasks();
-    };
-
-  const handleProofSubmit =
-    async () => {
-
-      if(!proofFile){
-        alert("Upload proof image");
-        return;
-      }
-
-      const formData =
-        new FormData();
-
-      formData.append(
-        "file",
-        proofFile
-      );
-
-      await resolveIssue(
-        resolveModal.projectId,
-        resolveModal.id,
-        formData
-      );
-
-      setResolveModal(null);
-      setProofFile(null);
-
-      loadTasks();
-    };
-
-  if(loading){
+  if (error) {
     return (
       <div className="p-6">
-        Loading Tasks...
+        <div className="rounded-2xl border border-red-200 bg-white p-6 text-red-700 shadow-sm">
+          {error}
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="p-6">
-
-      <h1 className="text-3xl font-bold mb-6">
-        My Tasks
-      </h1>
-
-      <div className="grid gap-4">
-
-        {tasks.map(task => (
-
-          <div
-            key={task.id}
-            className="bg-white rounded-xl shadow p-5"
-          >
-
-            <div className="flex justify-between">
-
-              <div>
-
-                <h2 className="font-bold text-xl">
-                  {task.title}
-                </h2>
-
-                <p className="text-gray-600">
-                  {task.projectName}
-                </p>
-
-              </div>
-
-              <span>
-                {task.priority}
-              </span>
-
-            </div>
-
-            <p className="mt-3">
-              {task.description}
-            </p>
-
-            <div className="mt-4">
-
-              <strong>
-                Status:
-              </strong>{" "}
-              {task.status}
-
-            </div>
-
-            <div className="flex gap-3 mt-5">
-
-              {task.status === "Open" && (
-                <button
-                  onClick={() =>
-                    handleMove(
-                      task,
-                      "In Progress"
-                    )
-                  }
-                  className="bg-blue-600 text-white px-4 py-2 rounded"
-                >
-                  Start Work
-                </button>
-              )}
-
-              {task.status ===
-                "In Progress" && (
-
-                <button
-                  onClick={() =>
-                    setResolveModal(task)
-                  }
-                  className="bg-green-600 text-white px-4 py-2 rounded"
-                >
-                  Submit Fix
-                </button>
-              )}
-
-              {task.status ===
-                "Review" && (
-
-                <span className="text-orange-600 font-semibold">
-                  Waiting For Tester
-                </span>
-              )}
-
-              {task.status ===
-                "Done" && (
-
-                <span className="text-green-600 font-semibold">
-                  Completed
-                </span>
-              )}
-
-            </div>
-
-          </div>
-
-        ))}
-
-      </div>
-
-      {resolveModal && (
-
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-
-          <div className="bg-white p-6 rounded-xl w-[500px]">
-
-            <h2 className="text-xl font-bold mb-4">
-              Upload Resolution Proof
-            </h2>
-
-            <input
-              type="file"
-              onChange={(e) =>
-                setProofFile(
-                  e.target.files[0]
-                )
-              }
-            />
-
-            <div className="flex gap-3 mt-6">
-
-              <button
-                onClick={
-                  handleProofSubmit
-                }
-                className="bg-green-600 text-white px-4 py-2 rounded"
-              >
-                Submit
-              </button>
-
-              <button
-                onClick={() =>
-                  setResolveModal(null)
-                }
-                className="bg-gray-300 px-4 py-2 rounded"
-              >
-                Cancel
-              </button>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      )}
-
+    <div className="p-4 sm:p-6 lg:p-8">
+      <KanbanBoard
+        mode="developer"
+        projectId={projectId}
+        issues={assignedTasks}
+        onRefresh={loadTasks}
+        title="My Tasks"
+        subtitle="Track your assigned issues from start to verification"
+      />
     </div>
   );
 };
