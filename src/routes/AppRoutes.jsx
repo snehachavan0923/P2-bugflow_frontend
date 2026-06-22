@@ -14,6 +14,7 @@ import ProjectDetails from "../pages/project/ProjectDetails";
 import CreateOrganization from "../pages/organization/CreateOrganization";
 
 import IssueBoard from "../pages/issues/IssueBoard";
+import IssueDetails from "../pages/issues/IssueDetails";
 import CreateIssue from "../pages/issues/CreateIssue";
 
 import TeamManagement from "../pages/team/TeamManagement";
@@ -127,6 +128,17 @@ const AppRoutes = () => {
               allowedRoles={["Owner"]}
             >
               <IssueBoard />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="projects/:projectId/issues/:issueId"
+          element={
+            <PrivateRoute
+              allowedRoles={["Owner"]}
+            >
+              <IssueDetails />
             </PrivateRoute>
           }
         />

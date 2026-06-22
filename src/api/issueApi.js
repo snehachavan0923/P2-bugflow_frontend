@@ -5,6 +5,13 @@ export const getIssues = async (projectId) => {
   return res.data;
 };
 
+export const getIssue = async (projectId, issueId) => {
+  const res = await axios.get(
+    `/projects/${projectId}/issues/${issueId}`
+  );
+  return res.data;
+};
+
 export const createIssue = async (projectId, formData) => {
   const res = await axios.post(
     `/projects/${projectId}/issues`,
