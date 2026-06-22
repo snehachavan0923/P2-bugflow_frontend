@@ -114,51 +114,51 @@ const KanbanBoard = ({
           </div>
         )}
 
-        <div className="w-full pb-4">
-          <div className="flex gap-4">
-            <div
-              className={`flex-1 transition-all duration-200 ${
-                selectedIssue ? "" : ""
-              }`}
-            >
-              <div className="w-full overflow-x-auto">
-                <div className="flex gap-4 min-w-fit">
-                  {columns.map((column) => (
-                    <KanbanColumn
-                      key={column}
-                      title={column}
-                      issues={issuesByStatus[column] || []}
-                      selectedIssueId={selectedIssueId}
-                      onSelectIssue={setSelectedIssue}
-                    />
-                  ))}
-                </div>
+        {/* Container for board and optional embedded drawer */}
+        <div className="relative w-full pb-4">
+          {/* Board area – keep full width, add right padding when drawer is open */}
+          <div
+            className={`flex-1 transition-all duration-200 ${selectedIssue ? "pr-[420px]" : ""}`}
+          >
+            <div className="w-full overflow-x-auto">
+              <div className="flex gap-4 min-w-fit">
+                {columns.map((column) => (
+                  <KanbanColumn
+                    key={column}
+                    title={column}
+                    issues={issuesByStatus[column] || []}
+                    selectedIssueId={selectedIssueId}
+                    onSelectIssue={setSelectedIssue}
+                  />
+                ))}
               </div>
             </div>
-
-            {/* Embedded drawer for tablet/desktop: occupies space so board shrinks */}
-            {selectedIssue && (
-              <div className="hidden sm:block">
-                <IssueDetailsDrawer
-                  embedded
-                  issue={selectedIssue}
-                  mode={mode}
-                  members={members}
-                  onClose={() => setSelectedIssue(null)}
-                  onEditIssue={handleEditIssue}
-                  onMoveIssue={handleMoveIssue}
-                  onResolveIssue={handleResolveIssue}
-                  onApproveIssue={handleApproveIssue}
-                  onRejectIssue={handleRejectIssue}
-                />
-              </div>
-            )}
           </div>
+
+          {/* Embedded drawer for tablet/desktop – positioned absolutely so it does not shrink the board */}
+          {selectedIssue && (
+            <div className="hidden sm:block absolute inset-y-0 right-0 w-[420px]">
+              <IssueDetailsDrawer
+                embedded
+                projectId={projectId}
+                issue={selectedIssue}
+                mode={mode}
+                members={members}
+                onClose={() => setSelectedIssue(null)}
+                onEditIssue={handleEditIssue}
+                onMoveIssue={handleMoveIssue}
+                onResolveIssue={handleResolveIssue}
+                onApproveIssue={handleApproveIssue}
+                onRejectIssue={handleRejectIssue}
+              />
+            </div>
+          )}
 
           {/* Mobile overlay drawer */}
           {selectedIssue && (
             <div className="sm:hidden">
               <IssueDetailsDrawer
+                projectId={projectId}
                 issue={selectedIssue}
                 mode={mode}
                 members={members}

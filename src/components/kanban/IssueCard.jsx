@@ -15,11 +15,7 @@ const IssueCard = ({ issue, isSelected, onClick }) => {
     <button
       type="button"
       onClick={() => onClick(issue)}
-      className={`w-full rounded-xl border bg-white p-4 text-left shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md ${
-        isSelected
-          ? "border-blue-400 ring-4 ring-blue-50"
-          : "border-slate-200"
-      }`}
+      className={`w-full rounded-xl border bg-white p-4 text-left shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md border-slate-200 ring-4 ${isSelected ? "border-blue-400 ring-blue-50" : "ring-transparent"}`}
     >
       <h3 className="text-sm font-semibold leading-5 text-slate-950">
         {issue.title}
@@ -38,9 +34,7 @@ const IssueCard = ({ issue, isSelected, onClick }) => {
 
         <span className="flex min-w-0 items-center gap-1.5 text-xs font-medium text-slate-500">
           <UserRound className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-          <span className="truncate">
-            Assigned: {issue.assignedToName || "Unassigned"}
-          </span>
+          <span className="truncate">{issue.assignedToName || "Unassigned"}</span>
         </span>
       </div>
     </button>
