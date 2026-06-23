@@ -29,7 +29,7 @@ const Sidebar = () => {
         },
         {
           label: "Task Overview",
-          to: "/my-tasks",
+          to: "/task-overview",
           icon: "📊",
         },
         {
@@ -84,7 +84,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="w-64 bg-white border-r border-gray-200 h-screen overflow-auto shadow-sm">
+    <div className="w-64 bg-white border-r border-gray-200 h-screen shadow-sm flex flex-col">
       {/* Logo */}
       <div className="p-6 border-b border-gray-200">
         <NavLink to="/dashboard" className="text-2xl font-bold text-indigo-600 hover:text-indigo-700 transition-colors">
@@ -94,7 +94,7 @@ const Sidebar = () => {
       </div>
 
       {/* Navigation */}
-      <nav className="p-4 space-y-2">
+      <nav className="p-4 space-y-2 flex-1 overflow-y-auto">
         {menuItems().map((item) => (
           <NavLink
             key={item.to}
@@ -150,12 +150,42 @@ const Sidebar = () => {
       </nav>
 
       {/* User Role Badge */}
-      <div className="absolute bottom-4 left-4 right-4">
-        <div className="bg-gray-50 rounded-lg p-3 text-center">
-          <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-            {role || 'User'}
-          </span>
+         
+
+      <div className="p-4 border-t border-gray-200">
+
+        <div className="flex items-center gap-3">
+
+          <div
+            className="
+              h-10
+              w-10
+              rounded-full
+              bg-indigo-100
+              flex
+              items-center
+              justify-center
+              font-semibold
+              text-indigo-600
+            "
+          >
+            {role?.charAt(0)}
+          </div>
+
+          <div>
+
+            <p className="text-sm font-semibold">
+              {role}
+            </p>
+
+            <p className="text-xs text-gray-500">
+              BugFlow User
+            </p>
+
+          </div>
+
         </div>
+
       </div>
     </div>
   );

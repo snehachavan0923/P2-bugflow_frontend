@@ -61,7 +61,7 @@ const KanbanBoard = ({
     setSelectedIssue((current) => ({
       ...current,
       status,
-    }));
+    })); 
   };
 
   const handleResolveIssue = async (issue, formData) => {
@@ -92,7 +92,7 @@ const KanbanBoard = ({
   };
 
   return (
-    <div className="w-full h-full">
+    <div className="h-full w-full">
       <div className="space-y-6">
         {(title || subtitle) && (
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -114,14 +114,9 @@ const KanbanBoard = ({
           </div>
         )}
 
-        {/* Container for board and optional embedded drawer */}
         <div className="relative w-full pb-4">
-          {/* Board area – keep full width, add right padding when drawer is open */}
-          <div
-            className={`flex-1 transition-all duration-200 ${selectedIssue ? "pr-[420px]" : ""}`}
-          >
-            <div className="w-full overflow-x-auto">
-              <div className="flex gap-4 min-w-fit">
+          <div className="w-full overflow-x-auto pb-2">
+              <div className="grid min-w-[1120px] grid-cols-4 gap-3 lg:gap-4">
                 {columns.map((column) => (
                   <KanbanColumn
                     key={column}
@@ -132,12 +127,10 @@ const KanbanBoard = ({
                   />
                 ))}
               </div>
-            </div>
           </div>
 
-          {/* Embedded drawer for tablet/desktop – positioned absolutely so it does not shrink the board */}
           {selectedIssue && (
-            <div className="hidden sm:block absolute inset-y-0 right-0 w-[420px]">
+            <div className="absolute inset-y-0 right-0 z-20 hidden w-full max-w-[440px] sm:block">
               <IssueDetailsDrawer
                 embedded
                 projectId={projectId}
@@ -154,7 +147,6 @@ const KanbanBoard = ({
             </div>
           )}
 
-          {/* Mobile overlay drawer */}
           {selectedIssue && (
             <div className="sm:hidden">
               <IssueDetailsDrawer
@@ -173,8 +165,6 @@ const KanbanBoard = ({
           )}
         </div>
       </div>
-
-      
     </div>
   );
 };
