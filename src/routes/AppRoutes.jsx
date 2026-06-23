@@ -19,8 +19,8 @@ import CreateIssue from "../pages/issues/CreateIssue";
 
 import TeamManagement from "../pages/team/TeamManagement";
 
-import MyTasks from "../pages/tasks/MyTasks";
-import VerifyIssue from "../pages/verification/VerifyIssue";
+import MyTasks from "../pages/developer/MyTasks";
+import VerifyIssue from "../pages/tester/VerifyIssue";
 
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import ProjectManagement from "../pages/admin/ProjectManagement";
@@ -42,6 +42,8 @@ import DashboardRouter from "../pages/dashboard/DashboardRouter";
 import OrganizationGuard from "../components/guards/OrganizationGuard";
 import OrganizationSettings from "../pages/organization/OrganizationSettings";
 import MembersDirectory from "../pages/organization/MembersDirectory";
+import TaskOverview from "../pages/tasks/TaskOverview";
+import ViewerBoard from "../pages/viewer/ViewerBoard";
 
 const AppRoutes = () => {
   return (
@@ -87,6 +89,7 @@ const AppRoutes = () => {
             </PrivateRoute>
           }
         >
+          
         {/* SHARED */}
         <Route
           path="dashboard"
@@ -164,6 +167,14 @@ const AppRoutes = () => {
             </PrivateRoute>
           }
         />
+        <Route
+          path="task-overview"
+          element={
+            <PrivateRoute allowedRoles={["Owner"]}>
+              <TaskOverview />
+            </PrivateRoute>
+          }
+        />
 
         <Route
           path="settings"
@@ -218,7 +229,20 @@ const AppRoutes = () => {
             </PrivateRoute>
           }
         />
+
+         <Route
+        path="projects/:projectId/view-board"
+        element={
+          <PrivateRoute
+            allowedRoles={["Viewer"]}
+          >
+            <ViewerBoard />
+          </PrivateRoute>
+        }
+      />
       </Route>
+
+     
 
       {/* ADMIN ROUTES */}
 

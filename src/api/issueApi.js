@@ -123,3 +123,12 @@ export const getProjectReviewIssues =
 
   return res.data;
 };
+
+export const getOrganizationIssues = async () => {
+
+  const res = await axios.get(
+    "/dashboard/issues"
+  );
+
+  return res.data;
+};

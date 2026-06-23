@@ -5,13 +5,12 @@ import {
   Play,
   RotateCcw,
   Send,
-  UserPlus,
   X,
   XCircle,
 } from "lucide-react";
 
 const fieldClassName =
-  "rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-50";
+  "w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-50";
 
 const priorityStyles = {
   High: "bg-red-50 text-red-700 ring-red-200",
@@ -35,13 +34,11 @@ const IssueDetailsDrawer = ({
   embedded = false,
 }) => {
   const [showEditForm, setShowEditForm] = useState(false);
-  const [showReassign, setShowReassign] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [showResolve, setShowResolve] = useState(false);
   
   const [saving, setSaving] = useState(false);
   const [proofFile, setProofFile] = useState(null);
-  const [reassignUser, setReassignUser] = useState("");
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -80,7 +77,6 @@ const IssueDetailsDrawer = ({
     }
 
     setShowEditForm(false);
-    setShowReassign(false);
     setShowResolve(false);
     setProofFile(null);
     setFormData({
@@ -89,7 +85,6 @@ const IssueDetailsDrawer = ({
       priority: issue.priority || "Medium",
       assignedToUserId: issue.assignedToUserId || "",
     });
-    setReassignUser(issue.assignedToUserId || "");
   }, [issue]);
 
   const canEdit = mode === "owner" && issue?.status !== "Done";
@@ -141,21 +136,18 @@ const IssueDetailsDrawer = ({
     }
   };
   const containerClass = embedded
-    ? `flex flex-col border-l border-slate-200 bg-white shadow-2xl transition-opacity duration-200 ${isVisible ? "opacity-100" : "opacity-0"}`
-    : `fixed inset-y-0 right-0 z-30 flex w-full max-w-full flex-col border-l border-slate-200 bg-white shadow-2xl transition-transform duration-200 sm:w-[420px] ${isVisible ? "translate-x-0" : "translate-x-full"}`;
-
-  const containerStyle = embedded
-    ? { width: 420, minWidth: 360, height: "calc(100vh - 64px)" }
-    : undefined;
+    ? `flex h-full w-full flex-col overflow-hidden rounded-l-2xl border border-r-0 border-slate-200 bg-white shadow-[-12px_0_32px_rgba(15,23,42,0.14)] transition-all duration-200 ${isVisible ? "translate-x-0 opacity-100" : "translate-x-4 opacity-0"}`
+    : `fixed inset-y-0 right-0 z-30 flex w-full flex-col border-l border-slate-200 bg-white shadow-2xl transition-transform duration-200 sm:max-w-[440px] ${isVisible ? "translate-x-0" : "translate-x-full"}`;
 
   return (
-    <aside className={containerClass} style={containerStyle}>
-      <div className="flex items-start justify-between gap-4 border-b border-slate-200 px-5 py-4">
+    <>
+    <aside className={containerClass}>
+      <div className="flex items-start justify-between gap-4 border-b border-slate-200 px-6 py-5">
         <div className="min-w-0">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+          <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400">
             Issue Details
           </p>
-          <h2 className="mt-1 text-xl font-bold leading-7 text-slate-950">
+          <h2 className="mt-1.5 text-xl font-bold leading-7 text-slate-950">
             {issue.title}
           </h2>
         </div>
@@ -170,18 +162,9 @@ const IssueDetailsDrawer = ({
         </button>
       </div>
 
-      <div className="flex-1 space-y-6 overflow-y-auto px-5 py-5">
-        <section>
-          <h3 className="text-sm font-semibold text-slate-950">
-            Description
-          </h3>
-          <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-slate-600">
-            {issue.description || "No description provided."}
-          </p>
-        </section>
-
+      <div className="flex-1 space-y-5 overflow-y-auto px-6 py-5">
         <section className="grid grid-cols-2 gap-3">
-          <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+          <div className="rounded-lg border border-slate-200 bg-slate-50/80 p-3">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
               Status
             </p>
@@ -190,7 +173,7 @@ const IssueDetailsDrawer = ({
             </p>
           </div>
 
-          <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+          <div className="rounded-lg border border-slate-200 bg-slate-50/80 p-3">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
               Priority
             </p>
@@ -202,11 +185,20 @@ const IssueDetailsDrawer = ({
           </div>
         </section>
 
-        <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-          <h3 className="text-sm font-semibold text-slate-950">
+        <section className="border-b border-slate-100 pb-5">
+          <h3 className="text-xs font-bold uppercase tracking-wide text-slate-500">
+            Description
+          </h3>
+          <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-slate-700">
+            {issue.description || "No description provided."}
+          </p>
+        </section>
+
+        <section className="rounded-xl border border-slate-200 bg-slate-50/60 p-4">
+          <h3 className="text-xs font-bold uppercase tracking-wide text-slate-500">
             Assignee
           </h3>
-          <div className="mt-3 space-y-2 text-sm">
+          <div className="mt-2.5 space-y-1 text-sm">
             <p className="font-semibold text-slate-900">
               {issue.assignedToName || "Unassigned"}
             </p>
@@ -219,128 +211,36 @@ const IssueDetailsDrawer = ({
           </div>
         </section>
 
-        <section className="space-y-4">
-          <h3 className="text-sm font-semibold text-slate-950">Images</h3>
+        <section className="space-y-4 border-b border-slate-100 pb-5">
+          <h3 className="text-xs font-bold uppercase tracking-wide text-slate-500">Images</h3>
 
           <div>
             <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">Bug Screenshot</p>
             {issue.imageUrl ? (
-              <img src={issue.imageUrl} alt="Bug screenshot" className="max-h-64 w-full rounded-2xl border border-slate-200 object-contain" />
+              <img src={issue.imageUrl} alt="Bug screenshot" className="max-h-64 w-full rounded-xl border border-slate-200 bg-slate-50 object-contain" />
             ) : (
-              <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center text-sm text-slate-400">No image available</div>
+              <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-center text-sm text-slate-400">No image available</div>
             )}
           </div>
 
           <div>
             <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">Resolution Proof</p>
             {issue.resolutionImageUrl ? (
-              <img src={issue.resolutionImageUrl} alt="Resolution proof" className="max-h-64 w-full rounded-2xl border border-slate-200 object-contain" />
+              <img src={issue.resolutionImageUrl} alt="Resolution proof" className="max-h-64 w-full rounded-xl border border-slate-200 bg-slate-50 object-contain" />
             ) : (
-              <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center text-sm text-slate-400">No image available</div>
+              <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-center text-sm text-slate-400">No image available</div>
             )}
           </div>
         </section>
 
-        {/* Compact reassign dropdown */}
-        {showReassign && (
-          <section className="space-y-3 rounded-2xl border border-slate-200 bg-white p-4">
-            <p className="text-xs font-semibold text-slate-500">Assign To:</p>
-            <select className={fieldClassName} value={reassignUser} onChange={(e) => setReassignUser(e.target.value)}>
-              <option value="">Unassigned</option>
-              {members.map((m) => (
-                <option key={m.id || m.userId} value={m.userId || m.id}>{m.name} ({m.role})</option>
-              ))}
-            </select>
-            <div className="flex gap-2">
-              <button type="button" disabled={saving} onClick={async () => {
-                setSaving(true);
-                try {
-                  await onEditIssue(issue, { assignedToUserId: reassignUser });
-                  setShowReassign(false);
-                } finally {
-                  setSaving(false);
-                }
-              }} className={`${actionButtonClassName} bg-blue-600 text-white hover:bg-blue-700`}>Save</button>
-              <button type="button" onClick={() => setShowReassign(false)} className={`${actionButtonClassName} border border-slate-200 bg-white text-slate-700 hover:bg-slate-50`}>Cancel</button>
-            </div>
-          </section>
-        )}
-
-        <section className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4">
-          <h3 className="text-sm font-semibold text-slate-950">
+        <section className="rounded-xl border border-slate-200 bg-slate-50/60 p-4">
+          <h3 className="text-xs font-bold uppercase tracking-wide text-slate-500">
             Activity
           </h3>
           <p className="mt-2 text-sm leading-6 text-slate-500">
             Activity history will appear here as the workflow expands.
           </p>
         </section>
-
-        {showEditForm && (
-          <section className="space-y-3 rounded-2xl border border-blue-100 bg-blue-50/40 p-4">
-            <h3 className="text-sm font-semibold text-slate-950">
-              Edit Issue
-            </h3>
-
-            <input
-              className={fieldClassName}
-              value={formData.title}
-              onChange={(event) =>
-                setFormData({
-                  ...formData,
-                  title: event.target.value,
-                })
-              }
-              placeholder="Title"
-            />
-
-            <textarea
-              className={`${fieldClassName} min-h-24`}
-              value={formData.description}
-              onChange={(event) =>
-                setFormData({
-                  ...formData,
-                  description: event.target.value,
-                })
-              }
-              placeholder="Description"
-            />
-
-            <select
-              className={fieldClassName}
-              value={formData.priority}
-              onChange={(event) =>
-                setFormData({
-                  ...formData,
-                  priority: event.target.value,
-                })
-              }
-            >
-              <option>Low</option>
-              <option>Medium</option>
-              <option>High</option>
-            </select>
-
-            {/* Assignee editing intentionally omitted in edit form per UX requirements */}
-
-            <div className="flex gap-2">
-              <button
-                type="button"
-                disabled={saving}
-                onClick={handleEditSubmit}
-                className={`${actionButtonClassName} bg-blue-600 text-white hover:bg-blue-700`}
-              >
-                Save Changes
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowEditForm(false)}
-                className={`${actionButtonClassName} border border-slate-200 bg-white text-slate-700 hover:bg-slate-50`}
-              >
-                Cancel
-              </button>
-            </div>
-          </section>
-        )}
 
         {showResolve && (
           <section className="space-y-3 rounded-2xl border border-emerald-100 bg-emerald-50/40 p-4">
@@ -374,27 +274,17 @@ const IssueDetailsDrawer = ({
       </div>
 
       {!isReadOnly && (
-        <div className="border-t border-slate-200 bg-white px-5 py-4">
+        <div className="border-t border-slate-200 bg-slate-50/80 px-6 py-4 backdrop-blur">
           <div className="flex flex-wrap gap-2">
             {canEdit && (
-              <>
-                <button
-                  type="button"
-                  onClick={() => setShowEditForm((s) => !s)}
-                  className={`${actionButtonClassName} bg-slate-900 text-white hover:bg-slate-800`}
-                >
-                  <Pencil className="h-4 w-4" aria-hidden="true" />
-                  Edit Issue
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowReassign((s) => !s)}
-                  className={`${actionButtonClassName} border border-slate-200 bg-white text-slate-700 hover:bg-slate-50`}
-                >
-                  <UserPlus className="h-4 w-4" aria-hidden="true" />
-                  Reassign Issue
-                </button>
-              </>
+              <button
+                type="button"
+                onClick={() => setShowEditForm(true)}
+                className={`${actionButtonClassName} bg-slate-900 text-white shadow-sm hover:bg-slate-800 hover:shadow`}
+              >
+                <Pencil className="h-4 w-4" aria-hidden="true" />
+                Edit Issue
+              </button>
             )}
 
             {canStartWork && (
@@ -462,6 +352,104 @@ const IssueDetailsDrawer = ({
         </div>
       )}
     </aside>
+    {showEditForm && (
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4 backdrop-blur-[1px]"
+        onClick={() => setShowEditForm(false)}
+      >
+        <div
+          className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-slate-200 bg-white shadow-2xl"
+          onClick={(event) => event.stopPropagation()}
+        >
+          <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400">
+                Issue details
+              </p>
+              <h2 className="mt-1 text-lg font-bold text-slate-950">Edit Issue</h2>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowEditForm(false)}
+              className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+              aria-label="Close edit issue"
+            >
+              <X className="h-5 w-5" aria-hidden="true" />
+            </button>
+          </div>
+
+          <div className="space-y-4 px-6 py-5">
+            <label className="block">
+              <span className="mb-1.5 block text-sm font-semibold text-slate-700">Title</span>
+              <input
+                className={fieldClassName}
+                value={formData.title}
+                onChange={(event) => setFormData({ ...formData, title: event.target.value })}
+              />
+            </label>
+
+            <label className="block">
+              <span className="mb-1.5 block text-sm font-semibold text-slate-700">Description</span>
+              <textarea
+                className={`${fieldClassName} min-h-28 resize-y`}
+                value={formData.description}
+                onChange={(event) => setFormData({ ...formData, description: event.target.value })}
+              />
+            </label>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <label className="block">
+                <span className="mb-1.5 block text-sm font-semibold text-slate-700">Priority</span>
+                <select
+                  className={fieldClassName}
+                  value={formData.priority}
+                  onChange={(event) => setFormData({ ...formData, priority: event.target.value })}
+                >
+                  <option>Low</option>
+                  <option>Medium</option>
+                  <option>High</option>
+                </select>
+              </label>
+
+              <label className="block">
+                <span className="mb-1.5 block text-sm font-semibold text-slate-700">Reassign To</span>
+                <select
+                  className={fieldClassName}
+                  value={formData.assignedToUserId || ""}
+                  onChange={(event) => setFormData({ ...formData, assignedToUserId: event.target.value })}
+                >
+                  <option value="">Select Member</option>
+                  {members.map((member) => (
+                    <option key={member.id || member.userId} value={member.userId}>
+                      {member.name} ({member.role})
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-2 border-t border-slate-200 bg-slate-50/70 px-6 py-4">
+            <button
+              type="button"
+              onClick={() => setShowEditForm(false)}
+              className={`${actionButtonClassName} border border-slate-200 bg-white text-slate-700 hover:bg-slate-50`}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              disabled={saving}
+              onClick={handleEditSubmit}
+              className={`${actionButtonClassName} bg-blue-600 text-white shadow-sm hover:bg-blue-700`}
+            >
+              {saving ? "Saving..." : "Save Changes"}
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+    </>
   );
 };
 

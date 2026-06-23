@@ -172,6 +172,28 @@ const ProjectDetails = () => {
         </button>
         )}
 
+        {role === "Viewer" && (
+
+      <button
+        onClick={() =>
+          navigate(
+            `/projects/${projectId}/view-board`
+          )
+        }
+        className="
+          bg-slate-700
+          hover:bg-slate-800
+          text-white
+          px-5
+          py-2
+          rounded-lg
+        "
+      >
+        View Board
+      </button>
+
+    )}
+
       </div>
 
       {/* Project Information */}

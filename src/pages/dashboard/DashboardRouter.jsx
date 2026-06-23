@@ -4,6 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import OwnerDashboard from "../owner/OwnerDashboard";
 import DeveloperDashboard from "./DeveloperDashboard";
 import TesterDashboard from "./TesterDashboard";
+import ViewerDashboard from "./ViewerDashboard";
 
 const DashboardRouter = () => {
   const { role } = useAuth();
@@ -19,7 +20,7 @@ const DashboardRouter = () => {
       return <TesterDashboard />;
 
     case "Viewer":
-      return <DeveloperDashboard />;
+      return <ViewerDashboard />;
 
     default:
       return <OwnerDashboard />;
