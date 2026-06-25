@@ -143,6 +143,8 @@ const OwnerWorkspace = () => {
       refreshWorkspace,
     ]
   );
+  const workspacePath = (tab) =>
+    `/projects/${projectId}/${tab}`;
 
   if (loading) {
     return <WorkspaceLoader label="Loading project workspace..." />;
@@ -167,12 +169,18 @@ const OwnerWorkspace = () => {
             />
           }
         >
-          <Route index element={<Navigate to="overview" replace />} />
+          <Route
+            index
+            element={<Navigate to={workspacePath("overview")} replace />}
+          />
           <Route path="overview" element={<ProjectOverview />} />
           <Route path="kanban" element={<ProjectKanban />} />
           <Route path="team" element={<ProjectTeam />} />
           <Route path="reports" element={<ProjectReports />} />
-          <Route path="*" element={<Navigate to="overview" replace />} />
+          <Route
+            path="*"
+            element={<Navigate to={workspacePath("overview")} replace />}
+          />
         </Route>
       </Routes>
     </ProjectWorkspaceProvider>

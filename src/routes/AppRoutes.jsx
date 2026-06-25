@@ -1,5 +1,10 @@
 import React from "react";
-import { Navigate, Routes, Route } from "react-router-dom";
+import {
+  Navigate,
+  Routes,
+  Route,
+  useParams,
+} from "react-router-dom";
 
 import Home from "../pages/public/Home";
 import Pricing from "../pages/public/Pricing";
@@ -40,6 +45,17 @@ import OrganizationSettings from "../pages/organization/OrganizationSettings";
 import MembersDirectory from "../pages/organization/MembersDirectory";
 import TaskOverview from "../pages/tasks/TaskOverview";
 import ViewerBoard from "../pages/viewer/ViewerBoard";
+
+const ProjectSectionRedirect = ({ section }) => {
+  const { projectId } = useParams();
+
+  return (
+    <Navigate
+      to={`/projects/${projectId}/${section}`}
+      replace
+    />
+  );
+};
 
 const AppRoutes = () => {
   return (
@@ -122,7 +138,7 @@ const AppRoutes = () => {
 
         <Route
           path="projects/:projectId/issues"
-          element={<Navigate to="../kanban" replace />}
+          element={<ProjectSectionRedirect section="kanban" />}
         />
 
         <Route
@@ -138,12 +154,7 @@ const AppRoutes = () => {
 
         <Route
           path="projects/:projectId/create-issue"
-          element={<Navigate to="../kanban" replace />}
-        />
-
-        <Route
-          path="projects/:projectId/team"
-          element={<Navigate to="../team" replace />}
+          element={<ProjectSectionRedirect section="kanban" />}
         />
         <Route
           path="task-overview"

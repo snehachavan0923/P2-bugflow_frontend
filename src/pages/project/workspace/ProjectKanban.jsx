@@ -4,7 +4,7 @@ import { X } from "lucide-react";
 import IssueBoard from "../../issues/IssueBoard";
 import IssueForm from "../../../components/issue/IssueForm";
 import { createIssue } from "../../../api/issueApi";
-import { useProjectWorkspace } from "../../../context/ProjectWorkspaceContext";
+import { useProjectWorkspace } from "./WorkspaceContext";
 
 const ProjectKanban = () => {
   const { projectId, refreshWorkspace } =
