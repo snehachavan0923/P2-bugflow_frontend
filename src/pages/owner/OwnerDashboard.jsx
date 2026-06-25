@@ -157,7 +157,7 @@ const OwnerDashboard = () => {
     },
     {
       title: "Create Team",
-      path: "/projects/6a36e2a5f9201330ccba657d/team",
+      path: "/projects",
       icon: Users,
       gradient: "from-violet-600 to-indigo-500",
     },

@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Navigate, Routes, Route } from "react-router-dom";
 
 import Home from "../pages/public/Home";
 import Pricing from "../pages/public/Pricing";
@@ -10,14 +10,14 @@ import Signup from "../auth/Signup";
 
 import ProjectList from "../pages/project/ProjectList";
 import CreateProject from "../pages/project/CreateProject";
-import ProjectDetails from "../pages/project/ProjectDetails";
+import ProjectWorkspace from "../pages/project/ProjectWorkspace";
+import ProjectOverview from "../pages/project/workspace/ProjectOverview";
+import ProjectKanban from "../pages/project/workspace/ProjectKanban";
+import ProjectTeam from "../pages/project/workspace/ProjectTeam";
+import ProjectReports from "../pages/project/workspace/ProjectReports";
 import CreateOrganization from "../pages/organization/CreateOrganization";
 
-import IssueBoard from "../pages/issues/IssueBoard";
 import IssueDetails from "../pages/issues/IssueDetails";
-import CreateIssue from "../pages/issues/CreateIssue";
-
-import TeamManagement from "../pages/team/TeamManagement";
 
 import MyTasks from "../pages/developer/MyTasks";
 import VerifyIssue from "../pages/tester/VerifyIssue";
@@ -103,8 +103,43 @@ const AppRoutes = () => {
 
         <Route
           path="projects/:projectId"
-          element={<ProjectDetails />}
-        />
+          element={<ProjectWorkspace />}
+        >
+          <Route
+            index
+            element={
+              <Navigate to="overview" replace />
+            }
+          />
+          <Route
+            path="overview"
+            element={<ProjectOverview />}
+          />
+          <Route
+            path="kanban"
+            element={
+              <PrivateRoute
+                allowedRoles={["Owner"]}
+              >
+                <ProjectKanban />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="team"
+            element={
+              <PrivateRoute
+                allowedRoles={["Owner"]}
+              >
+                <ProjectTeam />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="reports"
+            element={<ProjectReports />}
+          />
+        </Route>
 
         <Route
           path="profile"
@@ -126,13 +161,7 @@ const AppRoutes = () => {
 
         <Route
           path="projects/:projectId/issues"
-          element={
-            <PrivateRoute
-              allowedRoles={["Owner"]}
-            >
-              <IssueBoard />
-            </PrivateRoute>
-          }
+          element={<Navigate to="../kanban" replace />}
         />
 
         <Route
@@ -148,24 +177,12 @@ const AppRoutes = () => {
 
         <Route
           path="projects/:projectId/create-issue"
-          element={
-            <PrivateRoute
-              allowedRoles={["Owner"]}
-            >
-              <CreateIssue />
-            </PrivateRoute>
-          }
+          element={<Navigate to="../kanban" replace />}
         />
 
         <Route
           path="projects/:projectId/team"
-          element={
-            <PrivateRoute
-              allowedRoles={["Owner"]}
-            >
-              <TeamManagement />
-            </PrivateRoute>
-          }
+          element={<Navigate to="../team" replace />}
         />
         <Route
           path="task-overview"
