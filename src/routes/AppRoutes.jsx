@@ -1,5 +1,10 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import {
+  Navigate,
+  Routes,
+  Route,
+  useParams,
+} from "react-router-dom";
 
 import Home from "../pages/public/Home";
 import Pricing from "../pages/public/Pricing";
@@ -10,14 +15,10 @@ import Signup from "../auth/Signup";
 
 import ProjectList from "../pages/project/ProjectList";
 import CreateProject from "../pages/project/CreateProject";
-import ProjectDetails from "../pages/project/ProjectDetails";
+import ProjectWorkspace from "../pages/project/ProjectWorkspace";
 import CreateOrganization from "../pages/organization/CreateOrganization";
 
-import IssueBoard from "../pages/issues/IssueBoard";
 import IssueDetails from "../pages/issues/IssueDetails";
-import CreateIssue from "../pages/issues/CreateIssue";
-
-import TeamManagement from "../pages/team/TeamManagement";
 
 import MyTasks from "../pages/developer/MyTasks";
 import VerifyIssue from "../pages/tester/VerifyIssue";
@@ -44,6 +45,17 @@ import OrganizationSettings from "../pages/organization/OrganizationSettings";
 import MembersDirectory from "../pages/organization/MembersDirectory";
 import TaskOverview from "../pages/tasks/TaskOverview";
 import ViewerBoard from "../pages/viewer/ViewerBoard";
+
+const ProjectSectionRedirect = ({ section }) => {
+  const { projectId } = useParams();
+
+  return (
+    <Navigate
+      to={`/projects/${projectId}/${section}`}
+      replace
+    />
+  );
+};
 
 const AppRoutes = () => {
   return (
@@ -102,8 +114,8 @@ const AppRoutes = () => {
         />
 
         <Route
-          path="projects/:projectId"
-          element={<ProjectDetails />}
+          path="projects/:projectId/*"
+          element={<ProjectWorkspace />}
         />
 
         <Route
@@ -126,13 +138,7 @@ const AppRoutes = () => {
 
         <Route
           path="projects/:projectId/issues"
-          element={
-            <PrivateRoute
-              allowedRoles={["Owner"]}
-            >
-              <IssueBoard />
-            </PrivateRoute>
-          }
+          element={<ProjectSectionRedirect section="kanban" />}
         />
 
         <Route
@@ -148,24 +154,7 @@ const AppRoutes = () => {
 
         <Route
           path="projects/:projectId/create-issue"
-          element={
-            <PrivateRoute
-              allowedRoles={["Owner"]}
-            >
-              <CreateIssue />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="projects/:projectId/team"
-          element={
-            <PrivateRoute
-              allowedRoles={["Owner"]}
-            >
-              <TeamManagement />
-            </PrivateRoute>
-          }
+          element={<ProjectSectionRedirect section="kanban" />}
         />
         <Route
           path="task-overview"

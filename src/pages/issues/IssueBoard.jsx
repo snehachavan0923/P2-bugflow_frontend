@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Loader2, X } from "lucide-react";
+import { Loader2, Plus, X } from "lucide-react";
 import { useParams } from "react-router-dom";
 
 import KanbanBoard from "../../components/kanban/KanbanBoard";
@@ -17,7 +17,7 @@ const buttonBase =
 const inputClassName =
   "w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-50";
 
-const IssueBoard = () => {
+const IssueBoard = ({ onCreateIssue }) => {
   const { projectId } = useParams();
   const [issues, setIssues] = useState([]);
   const [members, setMembers] = useState([]);
@@ -121,38 +121,42 @@ const IssueBoard = () => {
   }
 
   return (
-    <div className="relative flex h-full w-full flex-col bg-slate-50 p-4 sm:p-6 lg:p-8">
-      <div className="flex min-h-0 flex-1 flex-col space-y-6">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-normal text-slate-950 sm:text-4xl">
-              Issue Board
-            </h1>
-            <p className="mt-2 text-sm leading-6 text-slate-600 sm:text-base">
-              Manage project issues with a Jira-style kanban board or table view
-            </p>
-          </div>
+  <div className="relative flex h-full min-h-0 w-full flex-col bg-white">
+      <div className="flex min-h-0 flex-1 flex-col">
+        <div className="flex min-h-11 items-center justify-between gap-3 border-b border-slate-200 bg-white px-3 py-1.5">
+          {onCreateIssue ? (
+            <button
+              type="button"
+              onClick={onCreateIssue}
+              className="inline-flex h-8 items-center justify-center gap-1.5 rounded-md bg-blue-600 px-3 text-xs font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-100"
+            >
+              <Plus className="h-3.5 w-3.5" />
+              Create Issue
+            </button>
+          ) : (
+            <div />
+          )}
 
-          <div className="inline-flex rounded-2xl border border-slate-200 bg-white p-1 shadow-sm">
+          <div className="inline-flex h-8 rounded-md border border-slate-200 bg-slate-50 p-0.5">
             {["kanban", "table"].map((mode) => (
               <button
                 key={mode}
                 type="button"
                 onClick={() => setViewMode(mode)}
-                className={`rounded-xl px-4 py-2 text-sm font-semibold transition ${
+                className={`rounded px-3 text-xs font-semibold transition ${
                   viewMode === mode
-                    ? "bg-slate-900 text-white shadow-sm"
-                    : "text-slate-600 hover:bg-slate-50"
+                    ? "bg-white text-blue-700 shadow-sm"
+                    : "text-slate-600 hover:bg-white"
                 }`}
               >
-                {mode === "kanban" ? "Kanban View" : "Table View"}
+                {mode === "kanban" ? "Kanban" : "Table"}
               </button>
             ))}
           </div>
         </div>
 
         {viewMode === "kanban" ? (
-          <div className="min-h-0 flex-1 min-w-0">
+          <div className="min-h-0 min-w-0 flex-1 bg-slate-50 p-2">
             <KanbanBoard
               mode="owner"
               projectId={projectId}
@@ -162,16 +166,16 @@ const IssueBoard = () => {
             />
           </div>
         ) : (
-          <>
-            <div className="flex flex-wrap gap-2 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
+          <div className="space-y-2 bg-slate-50 p-2">
+            <div className="flex flex-wrap gap-1 rounded-md border border-slate-200 bg-white p-1 shadow-sm">
               {tabs.map((tab) => (
                 <button
                   key={tab}
                   type="button"
                   onClick={() => setActiveTab(tab)}
-                  className={`rounded-xl px-4 py-2 text-sm font-semibold transition ${
+                  className={`rounded px-3 py-1.5 text-xs font-semibold transition ${
                     activeTab === tab
-                      ? "bg-slate-900 text-white shadow-sm"
+                      ? "bg-blue-50 text-blue-700"
                       : "text-slate-600 hover:bg-slate-50"
                   }`}
                 >
@@ -180,7 +184,7 @@ const IssueBoard = () => {
               ))}
             </div>
 
-            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div className="overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm">
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-slate-200">
                   <thead className="bg-slate-50">
@@ -291,7 +295,7 @@ const IssueBoard = () => {
                 </table>
               </div>
             </div>
-          </>
+          </div>
         )}
       </div>
 
@@ -303,17 +307,20 @@ const IssueBoard = () => {
         />
       )}
 
-      {detailsIssue && (
-        <Dialog title="Issue Details" onClose={() => setDetailsIssue(null)}>
-          <DetailsContent
-          issue={detailsIssue}
-          onViewImage={(title, url) => {
-            setModalTitle(title);
-            setModalImage(url);
-          }}
-        />
-        </Dialog>
-      )}
+     {detailsIssue && (
+  <Dialog
+    title="Issue Details"
+    onClose={() => setDetailsIssue(null)}
+  >
+    <DetailsContent
+      issue={detailsIssue}
+      onViewImage={(title, url) => {
+        setModalTitle(title);
+        setModalImage(url);
+      }}
+    />
+  </Dialog>
+)}
 
      {modalImage && (
         <div
@@ -507,6 +514,8 @@ const LabeledField = ({ label, children }) => (
     </div>
   </div>
 );
+
+
 
   const ImageDialog = ({
     imageUrl,

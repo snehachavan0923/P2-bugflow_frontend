@@ -79,7 +79,7 @@ const ProjectList = () => {
 
             <Link
               to={`/projects/${project.id}`}
-              className="mt-3 inline-block bg-blue-500 text-white px-3 py-2 rounded"
+              className="mt-3 inline-block rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
             >
               View
             </Link>

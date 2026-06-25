@@ -9,8 +9,6 @@ import {
   XCircle,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
-const fieldClassName =
-  "w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-50";
 
 const priorityStyles = {
   High: "bg-red-50 text-red-700 ring-red-200",
@@ -24,36 +22,20 @@ const actionButtonClassName =
 const IssueDetailsDrawer = ({
   issue,
   mode = "viewer",
-  members = [],
   onClose,
   onEditIssue,
   onMoveIssue,
   onResolveIssue,
   onApproveIssue,
   onRejectIssue,
+  onOpenImage,
+  onOpenEdit,
+  onOpenResolve,
   embedded = false,
 }) => {
-  const [showEditForm, setShowEditForm] = useState(false);
-  const [previewImage, setPreviewImage] =
-  useState(null);
-
-const [previewTitle, setPreviewTitle] =
-  useState("");
   const [isVisible, setIsVisible] = useState(false);
-  const [showResolve, setShowResolve] = useState(false);
   const { user } = useAuth();
-  const isAssignedToMe =
-  issue?.assignedToEmail === user?.email;
-  
-  const [saving, setSaving] = useState(false);
-  const [proofFile, setProofFile] = useState(null);
- const [formData, setFormData] = useState({
-  title: "",
-  description: "",
-  priority: "Medium",
-  developerUserId: "",
-  testerUserId: "",
-});
+  const isAssignedToMe = issue?.assignedToEmail === user?.email;
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
@@ -80,22 +62,7 @@ const [previewTitle, setPreviewTitle] =
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleClose]);
 
-  useEffect(() => {
-    if (!issue) {
-      return;
-    }
 
-    setShowEditForm(false);
-    setShowResolve(false);
-    setProofFile(null);
-   setFormData({
-  title: issue.title || "",
-  description: issue.description || "",
-  priority: issue.priority || "Medium",
-  developerUserId: issue.developerId || "",
-  testerUserId: issue.testerId || "",
-});
-  }, [issue]);
 
   const canEdit = mode === "owner" && issue?.status !== "Done";
   const canResolve =
@@ -111,14 +78,6 @@ const [previewTitle, setPreviewTitle] =
   issue?.status === "Review" &&
   isAssignedToMe;
   const isReadOnly = mode === "viewer";
-const assignableMembers =
-  issue?.status === "Review"
-    ? members.filter(
-        (member) => member.role === "Tester"
-      )
-    : members.filter(
-        (member) => member.role === "Developer"
-      );
 
   const priorityClassName = useMemo(
     () =>
@@ -131,35 +90,7 @@ const assignableMembers =
     return null;
   }
 
-  const handleEditSubmit = async () => {
-    setSaving(true);
 
-    try {
-      await onEditIssue(issue, formData);
-      setShowEditForm(false);
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const handleResolveSubmit = async () => {
-    if (!proofFile) {
-      alert("Upload resolution proof");
-      return;
-    }
-
-    const data = new FormData();
-    data.append("file", proofFile);
-    setSaving(true);
-
-    try {
-      await onResolveIssue(issue, data);
-      setShowResolve(false);
-      setProofFile(null);
-    } finally {
-      setSaving(false);
-    }
-  };
   const containerClass = embedded
     ? `flex h-full w-full flex-col overflow-hidden rounded-l-2xl border border-r-0 border-slate-200 bg-white shadow-[-12px_0_32px_rgba(15,23,42,0.14)] transition-all duration-200 ${isVisible ? "translate-x-0 opacity-100" : "translate-x-4 opacity-0"}`
     : `fixed inset-y-0 right-0 z-30 flex w-full flex-col border-l border-slate-200 bg-white shadow-2xl transition-transform duration-200 sm:max-w-[360px] ${isVisible ? "translate-x-0" : "translate-x-full"}`;
@@ -300,10 +231,7 @@ const activity = currentActivity();
             {issue.imageUrl ? (
               <button
                 type="button"
-                onClick={() => {
-                  setPreviewTitle("Bug Image");
-                  setPreviewImage(issue.imageUrl);
-                }}
+                onClick={() => onOpenImage("Bug Image", issue.imageUrl)}
                 className="rounded-lg bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
               >
                 View
@@ -325,14 +253,7 @@ const activity = currentActivity();
             {issue.resolutionImageUrl ? (
               <button
                 type="button"
-                onClick={() => {
-                  setPreviewTitle(
-                    "Resolution Proof"
-                  );
-                  setPreviewImage(
-                    issue.resolutionImageUrl
-                  );
-                }}
+                onClick={() => onOpenImage("Resolution Proof", issue.resolutionImageUrl)}
                 className="rounded-lg bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
               >
                 View
@@ -354,35 +275,7 @@ const activity = currentActivity();
           {activity.text}
         </p>
       </section>
-        {showResolve && (
-          <section className="space-y-3 rounded-2xl border border-emerald-100 bg-emerald-50/40 p-4">
-            <h3 className="text-sm font-semibold text-slate-950">
-              Submit Resolution Proof
-            </h3>
-            <input
-              type="file"
-              className={fieldClassName}
-              onChange={(event) => setProofFile(event.target.files[0])}
-            />
-            <div className="flex gap-2">
-              <button
-                type="button"
-                disabled={saving}
-                onClick={handleResolveSubmit}
-                className={`${actionButtonClassName} bg-emerald-600 text-white hover:bg-emerald-700`}
-              >
-                Submit Proof
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowResolve(false)}
-                className={`${actionButtonClassName} border border-slate-200 bg-white text-slate-700 hover:bg-slate-50`}
-              >
-                Cancel
-              </button>
-            </div>
-          </section>
-        )}
+
       </div>
 
       {!isReadOnly && (
@@ -391,7 +284,7 @@ const activity = currentActivity();
             {canEdit && (
               <button
                 type="button"
-                onClick={() => setShowEditForm(true)}
+                onClick={() => onOpenEdit(issue)}
                 className={`${actionButtonClassName} bg-slate-900 text-white shadow-sm hover:bg-slate-800 hover:shadow`}
               >
                 <Pencil className="h-4 w-4" aria-hidden="true" />
@@ -413,7 +306,7 @@ const activity = currentActivity();
             {canResolve && (
               <button
                 type="button"
-                onClick={() => setShowResolve(true)}
+                onClick={() => onOpenResolve(issue)}
                 className={`${actionButtonClassName} bg-emerald-600 text-white hover:bg-emerald-700`}
               >
                 <Send className="h-4 w-4" aria-hidden="true" />
@@ -479,165 +372,6 @@ const activity = currentActivity();
         </div>
       )}
     </aside>
-    {showEditForm && (
-      <div
-        className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4 backdrop-blur-[1px]"
-        onClick={() => setShowEditForm(false)}
-      >
-        <div
-          className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-slate-200 bg-white shadow-2xl"
-          onClick={(event) => event.stopPropagation()}
-        >
-          <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400">
-                Issue details
-              </p>
-              <h2 className="mt-1 text-lg font-bold text-slate-950">Edit Issue</h2>
-            </div>
-            <button 
-              type="button"
-              onClick={() => setShowEditForm(false)}
-              className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
-              aria-label="Close edit issue"
-            >
-              <X className="h-5 w-5" aria-hidden="true" />
-            </button>
-          </div>
-
-          <div className="space-y-4 px-6 py-5">
-            <label className="block">
-              <span className="mb-1.5 block text-sm font-semibold text-slate-700">Title</span>
-              <input
-                className={fieldClassName}
-                value={formData.title}
-                onChange={(event) => setFormData({ ...formData, title: event.target.value })}
-              />
-            </label>
-
-            <label className="block">
-              <span className="mb-1.5 block text-sm font-semibold text-slate-700">Description</span>
-              <textarea
-                className={`${fieldClassName} min-h-28 resize-y`}
-                value={formData.description}
-                onChange={(event) => setFormData({ ...formData, description: event.target.value })}
-              />
-            </label>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              <label className="block">
-                <span className="mb-1.5 block text-sm font-semibold text-slate-700">Priority</span>
-                <select
-                  className={fieldClassName}
-                  value={formData.priority}
-                  onChange={(event) => setFormData({ ...formData, priority: event.target.value })}
-                >
-                  <option>Low</option>
-                  <option>Medium</option>
-                  <option>High</option>
-                </select>
-              </label>
-
-             <label className="block">
-              <span className="mb-1.5 block text-sm font-semibold text-slate-700">
-                Reassign To
-              </span>
-
-              <select
-                className={fieldClassName}
-                value={
-                  issue.status === "Review"
-                    ? formData.testerUserId
-                    : formData.developerUserId
-                }
-                onChange={(e) => {
-                if (issue.status === "Review") {
-                  setFormData({
-                    ...formData,
-                    testerUserId: e.target.value,
-                    developerUserId: "",
-                  });
-                } else {
-                  setFormData({
-                    ...formData,
-                    developerUserId: e.target.value,
-                    testerUserId: "",
-                  });
-                }
-                }}
-              >
-                <option value="">
-                  Select Member
-                </option>
-
-                {assignableMembers.map((member) => (
-                  <option
-                    key={member.userId}
-                    value={member.userId}
-                  >
-                    {member.name} ({member.role})
-                  </option>
-                ))}
-              </select>
-            </label>
-            </div>
-          </div>
-
-          <div className="flex justify-end gap-2 border-t border-slate-200 bg-slate-50/70 px-6 py-4">
-            <button
-              type="button"
-              onClick={() => setShowEditForm(false)}
-              className={`${actionButtonClassName} border border-slate-200 bg-white text-slate-700 hover:bg-slate-50`}
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              disabled={saving}
-              onClick={handleEditSubmit}
-              className={`${actionButtonClassName} bg-blue-600 text-white shadow-sm hover:bg-blue-700`}
-            >
-              {saving ? "Saving..." : "Save Changes"}
-            </button>
-          </div>
-        </div>
-      </div>
-    )}
-
-    {previewImage && (
-      <div
-        className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 p-4"
-        onClick={() =>
-          setPreviewImage(null)
-        }
-      >
-      <div
-        className="w-full max-w-2xl rounded-2xl bg-white p-5 shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-          <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-lg font-semibold">
-              {previewTitle}
-            </h3>
-
-            <button
-              onClick={() =>
-                setPreviewImage(null)
-              }
-              className="rounded-lg p-2 hover:bg-slate-100"
-            >
-              <X size={20} />
-            </button>
-          </div>
-
-        <img
-          src={previewImage}
-          alt={previewTitle}
-          className="max-h-[70vh] w-full rounded-xl object-contain"
-        />
-        </div>
-      </div>
-    )}
     </>
   );
 };
