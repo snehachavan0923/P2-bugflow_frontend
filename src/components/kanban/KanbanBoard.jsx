@@ -218,59 +218,63 @@ const KanbanBoard = ({
         </div>
       )}
 
-   <div className="relative flex-1 min-h-0 w-full pb-4">
-    <div className="h-full w-full overflow-auto pb-2">
-              <div className="grid min-w-[1120px] grid-cols-4 gap-3 lg:gap-4">
-                {columns.map((column) => (
-                  <KanbanColumn
-                    key={column}
-                    title={column}
-                    issues={issuesByStatus[column] || []}
-                    selectedIssueId={selectedIssueId}
-                    onSelectIssue={setSelectedIssue}
-                  />
-                ))}
-              </div>
+   <div className="flex min-h-0 flex-1 flex-col pb-4">
+      <div className="flex min-h-0 flex-1 overflow-hidden rounded-3xl bg-slate-50 shadow-sm">
+        <div className={`min-h-0 flex-1 overflow-auto transition-all duration-200 ${selectedIssue ? "lg:max-w-[calc(100%-420px)]" : ""}`}>
+          <div className="h-full min-h-0 w-full overflow-auto pb-2">
+            <div className="grid min-w-0 grid-cols-4 gap-3 lg:gap-4">
+              {columns.map((column) => (
+                <KanbanColumn
+                  key={column}
+                  title={column}
+                  issues={issuesByStatus[column] || []}
+                  selectedIssueId={selectedIssueId}
+                  onSelectIssue={setSelectedIssue}
+                />
+              ))}
+            </div>
           </div>
+        </div>
 
-          {selectedIssue && (
-            <div className="absolute inset-y-0 right-0 z-20 hidden w-full max-w-[440px] sm:block">
-              <IssueDetailsDrawer
-                embedded
-                projectId={projectId}
-                issue={selectedIssue}
-                mode={mode}
-                onClose={() => setSelectedIssue(null)}
-                onEditIssue={handleEditIssue}
-                onMoveIssue={handleMoveIssue}
-                onResolveIssue={handleResolveIssue}
-                onApproveIssue={handleApproveIssue}
-                onRejectIssue={handleRejectIssue}
-                onOpenImage={handleOpenImage}
-                onOpenEdit={handleOpenEdit}
-                onOpenResolve={handleOpenResolve}
-              />
-            </div>
-          )}
+        {selectedIssue && (
+          <div className="hidden h-full max-h-full shrink-0 overflow-hidden border-l border-slate-200 bg-white shadow-sm sm:flex sm:w-full sm:max-w-[420px] sm:flex-col">
+            <IssueDetailsDrawer
+              embedded
+              projectId={projectId}
+              issue={selectedIssue}
+              mode={mode}
+              onClose={() => setSelectedIssue(null)}
+              onEditIssue={handleEditIssue}
+              onMoveIssue={handleMoveIssue}
+              onResolveIssue={handleResolveIssue}
+              onApproveIssue={handleApproveIssue}
+              onRejectIssue={handleRejectIssue}
+              onOpenImage={handleOpenImage}
+              onOpenEdit={handleOpenEdit}
+              onOpenResolve={handleOpenResolve}
+            />
+          </div>
+        )}
+      </div>
 
-          {selectedIssue && (
-            <div className="sm:hidden">
-              <IssueDetailsDrawer
-                projectId={projectId}
-                issue={selectedIssue}
-                mode={mode}
-                onClose={() => setSelectedIssue(null)}
-                onEditIssue={handleEditIssue}
-                onMoveIssue={handleMoveIssue}
-                onResolveIssue={handleResolveIssue}
-                onApproveIssue={handleApproveIssue}
-                onRejectIssue={handleRejectIssue}
-                onOpenImage={handleOpenImage}
-                onOpenEdit={handleOpenEdit}
-                onOpenResolve={handleOpenResolve}
-              />
-            </div>
-          )}
+      {selectedIssue && (
+        <div className="sm:hidden">
+          <IssueDetailsDrawer
+            projectId={projectId}
+            issue={selectedIssue}
+            mode={mode}
+            onClose={() => setSelectedIssue(null)}
+            onEditIssue={handleEditIssue}
+            onMoveIssue={handleMoveIssue}
+            onResolveIssue={handleResolveIssue}
+            onApproveIssue={handleApproveIssue}
+            onRejectIssue={handleRejectIssue}
+            onOpenImage={handleOpenImage}
+            onOpenEdit={handleOpenEdit}
+            onOpenResolve={handleOpenResolve}
+          />
+        </div>
+      )}
 
           {showEditForm && editingIssue && (
             <div

@@ -32,8 +32,8 @@ const ProjectKanban = () => {
   };
 
   return (
-    <div>
-      <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+    <div className="flex h-full min-h-0 flex-col overflow-hidden">
+      <div className="flex-1 h-full min-h-0 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm flex flex-col">
         <IssueBoard onCreateIssue={() => setShowModal(true)} />
       </div>
 

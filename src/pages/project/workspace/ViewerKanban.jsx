@@ -44,13 +44,15 @@ const ViewerKanban = () => {
   }
 
   return (
-    <div className="bg-slate-50 p-1.5">
-      <KanbanBoard
-        mode="viewer"
-        projectId={projectId}
-        issues={issues}
-        onRefresh={loadIssues}
-      />
+    <div className="flex h-full min-h-0 flex-col overflow-hidden bg-slate-50 p-1.5">
+      <div className="flex-1 h-full min-h-0 overflow-hidden">
+        <KanbanBoard
+          mode="viewer"
+          projectId={projectId}
+          issues={issues}
+          onRefresh={loadIssues}
+        />
+      </div>
     </div>
   );
 };

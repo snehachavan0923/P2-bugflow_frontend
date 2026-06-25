@@ -41,13 +41,15 @@ const DeveloperKanban = () => {
   }
 
   return (
-    <div className="bg-slate-50 p-1.5">
-      <KanbanBoard
-        mode="developer"
-        projectId={projectId}
-        issues={tasks}
-        onRefresh={loadTasks}
-      />
+    <div className="flex h-full min-h-0 flex-col overflow-hidden bg-slate-50 p-1.5">
+      <div className="flex-1 h-full min-h-0 overflow-hidden">
+        <KanbanBoard
+          mode="developer"
+          projectId={projectId}
+          issues={tasks}
+          onRefresh={loadTasks}
+        />
+      </div>
     </div>
   );
 };

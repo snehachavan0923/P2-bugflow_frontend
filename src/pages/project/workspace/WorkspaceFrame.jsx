@@ -56,8 +56,10 @@ const WorkspaceFrame = ({ project, tabs }) => {
     </div>
   </div>
 
-<div className="flex-1 min-h-0 overflow-auto">
-    <Outlet />
+<div className="flex-1 min-h-0 overflow-hidden flex h-full">
+    <div className="flex-1 h-full min-h-0 overflow-hidden">
+      <Outlet />
+    </div>
 </div>
 </div>
   );
