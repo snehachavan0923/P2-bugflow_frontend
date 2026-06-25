@@ -92,8 +92,8 @@ const IssueDetailsDrawer = ({
 
 
   const containerClass = embedded
-    ? `flex h-full w-full flex-col overflow-hidden rounded-l-2xl border border-r-0 border-slate-200 bg-white shadow-[-12px_0_32px_rgba(15,23,42,0.14)] transition-all duration-200 ${isVisible ? "translate-x-0 opacity-100" : "translate-x-4 opacity-0"}`
-    : `fixed inset-y-0 right-0 z-30 flex w-full flex-col border-l border-slate-200 bg-white shadow-2xl transition-transform duration-200 sm:max-w-[360px] ${isVisible ? "translate-x-0" : "translate-x-full"}`;
+    ? `flex h-full min-h-0 max-h-full w-full flex-col overflow-hidden border-l border-slate-200 bg-white transition-all duration-200 ${isVisible ? "translate-x-0 opacity-100" : "translate-x-4 opacity-0"}`
+    : `fixed inset-y-0 right-0 z-30 flex h-full max-h-full w-full flex-col overflow-hidden border-l border-slate-200 bg-white shadow-2xl transition-transform duration-200 sm:max-w-[360px] ${isVisible ? "translate-x-0" : "translate-x-full"}`;
 
   const currentActivity = () => {
   switch (issue.status) {
@@ -146,7 +146,7 @@ const activity = currentActivity();
 
   return (
     <>
-    <aside className={containerClass}>
+    <aside className={`${containerClass} shadow-sm sm:shadow-none`}>
       <div className="flex items-start justify-between gap-4 border-b border-slate-200 px-6 py-5">
         <div className="min-w-0">
           <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400">
@@ -167,7 +167,7 @@ const activity = currentActivity();
         </button>
       </div>
 
-      <div className="flex-1 space-y-5 overflow-y-auto px-6 py-5">
+      <div className="flex-1 min-h-0 space-y-5 overflow-y-auto px-6 py-5">
         <section className="grid grid-cols-2 gap-3">
           <div className="rounded-lg border border-slate-200 bg-slate-50/80 p-3">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">

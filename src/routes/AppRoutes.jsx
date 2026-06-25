@@ -17,6 +17,7 @@ import ProjectList from "../pages/project/ProjectList";
 import CreateProject from "../pages/project/CreateProject";
 import ProjectWorkspace from "../pages/project/ProjectWorkspace";
 import CreateOrganization from "../pages/organization/CreateOrganization";
+import { useAuth } from "../context/AuthContext";
 
 import IssueDetails from "../pages/issues/IssueDetails";
 
@@ -55,6 +56,16 @@ const ProjectSectionRedirect = ({ section }) => {
       replace
     />
   );
+};
+
+const ProjectsRoute = () => {
+  const { role } = useAuth();
+
+  if (role === "Owner") {
+    return <ProjectList />;
+  }
+
+  return <Navigate to="/dashboard" replace />;
 };
 
 const AppRoutes = () => {
@@ -110,7 +121,7 @@ const AppRoutes = () => {
 
         <Route
           path="projects"
-          element={<ProjectList />}
+          element={<ProjectsRoute />}
         />
 
         <Route
