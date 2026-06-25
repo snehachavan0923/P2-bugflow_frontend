@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Plus, X } from "lucide-react";
+import { X } from "lucide-react";
 
 import IssueBoard from "../../issues/IssueBoard";
 import IssueForm from "../../../components/issue/IssueForm";
@@ -32,20 +32,9 @@ const ProjectKanban = () => {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-end">
-        <button
-          type="button"
-          onClick={() => setShowModal(true)}
-          className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-100"
-        >
-          <Plus className="h-4 w-4" />
-          Create Issue
-        </button>
-      </div>
-
+    <div>
       <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-        <IssueBoard />
+        <IssueBoard onCreateIssue={() => setShowModal(true)} />
       </div>
 
       {showModal && (

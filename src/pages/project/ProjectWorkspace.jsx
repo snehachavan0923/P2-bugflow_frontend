@@ -14,7 +14,6 @@ import {
 } from "react-router-dom";
 import {
   BarChart3,
-  ChevronRight,
   ClipboardList,
   LayoutDashboard,
   Users,
@@ -166,32 +165,19 @@ const ProjectWorkspace = () => {
   return (
     <ProjectWorkspaceContext.Provider value={contextValue}>
       <div className="min-h-full bg-slate-50">
-        <div className="sticky top-0 z-30 -mx-6 -mt-6 border-b border-slate-200 bg-white/95 px-6 pt-6 shadow-sm backdrop-blur">
-          <div className="mb-5 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div className="min-w-0">
-              <div className="mb-3 flex flex-wrap items-center gap-2 text-sm text-slate-500">
-                <NavLink
-                  to="/projects"
-                  className="font-medium text-slate-600 transition hover:text-blue-700"
-                >
-                  Projects
-                </NavLink>
-                <ChevronRight className="h-4 w-4" />
-                <span className="truncate font-medium text-slate-800">
-                  {project.name}
-                </span>
-              </div>
-
-              <h1 className="truncate text-3xl font-bold tracking-normal text-slate-950">
+        <div className="sticky top-0 z-30 -mx-6 -mt-6 border-b border-slate-200 bg-white/95 shadow-sm backdrop-blur">
+          <div className="flex min-h-[56px] flex-col gap-2 px-4 py-2 sm:px-5 lg:flex-row lg:items-center lg:justify-between">
+            <div className="min-w-0 flex-1">
+              <h1 className="truncate text-lg font-semibold tracking-normal text-slate-950">
                 {project.name}
               </h1>
-              <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
+              <p className="mt-0.5 max-w-3xl truncate text-xs text-slate-600">
                 {project.description ||
                   "No project description provided."}
               </p>
             </div>
 
-            <div className="grid grid-cols-3 gap-3 sm:min-w-[360px]">
+            <div className="flex shrink-0 flex-wrap items-center gap-2">
               <WorkspaceMetric
                 label="Members"
                 value={members.length}
@@ -207,7 +193,7 @@ const ProjectWorkspace = () => {
             </div>
           </div>
 
-          <nav className="flex gap-1 overflow-x-auto">
+          <nav className="flex h-9 overflow-x-auto border-t border-slate-100 px-4 sm:px-5">
             {tabs.map((tab) => {
               const Icon = tab.icon;
 
@@ -216,7 +202,7 @@ const ProjectWorkspace = () => {
                   key={tab.to}
                   to={tab.to}
                   className={({ isActive }) =>
-                    `inline-flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${
+                    `inline-flex items-center gap-1.5 border-b-2 px-3 text-xs font-semibold transition ${
                       isActive
                         ? "border-blue-600 text-blue-700"
                         : "border-transparent text-slate-600 hover:border-slate-300 hover:text-slate-950"
@@ -231,7 +217,7 @@ const ProjectWorkspace = () => {
           </nav>
         </div>
 
-        <div className="py-6">
+        <div className="py-3">
           <Outlet />
         </div>
       </div>
@@ -240,13 +226,13 @@ const ProjectWorkspace = () => {
 };
 
 const WorkspaceMetric = ({ label, value }) => (
-  <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3">
-    <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+  <div className="flex h-9 items-center gap-2 rounded-md border border-slate-200 bg-white px-3 shadow-sm">
+    <span className="text-xs font-medium text-slate-500">
       {label}
-    </p>
-    <p className="mt-1 text-2xl font-bold text-slate-950">
+    </span>
+    <span className="text-sm font-semibold text-slate-950">
       {value}
-    </p>
+    </span>
   </div>
 );
 
