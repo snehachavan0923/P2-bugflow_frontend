@@ -14,3 +14,7 @@ export const getTesterDashboard = async () => {
   const res = await axios.get("/dashboard/tester");
   return res.data;
 };
+export const getViewerDashboard = async () => {
+  const res = await axios.get("/dashboard/viewer");
+  return res.data;
+};

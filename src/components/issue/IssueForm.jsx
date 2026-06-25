@@ -3,6 +3,8 @@ import React, {
   useState,
 } from "react";
 
+import Swal from "sweetalert2";
+
 import { getTeamMembers }
 from "../../api/teamApi";
 
@@ -29,8 +31,13 @@ const IssueForm = ({
     useState([]);
 
   const [
-    assignedToUserId,
-    setAssignedToUserId,
+    developerUserId,
+    setDeveloperUserId,
+  ] = useState("");
+
+  const [
+    testerUserId,
+    setTesterUserId,
   ] = useState("");
 
   const [file, setFile] =
@@ -39,76 +46,106 @@ const IssueForm = ({
   const [loading,
     setLoading] =
     useState(false);
+    
+  const [membersLoading, setMembersLoading] =
+  useState(true);
 
   useEffect(() => {
 
-  const loadMembers = async () => {
+    const loadMembers =
+      async () => {
 
-    try {
+        try {
 
-      const data =
-        await getTeamMembers(
-          projectId
-        );
+          const data =
+            await getTeamMembers(
+              projectId
+            );
 
-      setMembers(data);
+          setMembers(data);
 
-    } catch (err) {
+        } catch (err) {
 
-      console.error(err);
+          console.error(err);
 
-    }
-  };
+        } finally {
 
-  loadMembers();
+          setMembersLoading(false);
 
-}, [projectId]);
+        }
+      };
 
-  const handleSubmit =
-    async (e) => {
+    loadMembers();
 
-      e.preventDefault();
+  }, [projectId]);
 
-      if (loading) return;
+  const developers =
+    members.filter(
+      (member) =>
+        member.role ===
+        "Developer"
+    );
 
-      try {
+  const testers =
+    members.filter(
+      (member) =>
+        member.role ===
+        "Tester"
+    );
 
-        setLoading(true);
+  useEffect(() => {
 
-        const selected =
-          members.find(
-            m =>
-              m.id ===
-              assignedToUserId
-          );
+  if (membersLoading) return;
 
-        await onSubmit(
-          {
-            title,
-            description,
-            priority,
+  if (
+    developers.length === 0 ||
+    testers.length === 0
+  ) {
 
-            assignedToUserId,
+    Swal.fire({
+      icon: "warning",
+      title: "Team Incomplete",
+      text:
+        "Please add at least one Developer and one Tester before creating issues.",
+    });
+  }
 
-            assignedToEmail:
-              selected?.email,
+}, [
+  membersLoading,
+  developers.length,
+  testers.length,
+]);
 
-            assignedToRole:
-              selected?.role,
-          },
-          file
-        );
+  const handleSubmit = async (e) => {
 
-      } catch (err) {
+  e.preventDefault();
 
-        console.error(err);
+  if (loading) return;
 
-      } finally {
+  try {
 
-        setLoading(false);
-      }
-    };
+    setLoading(true);
 
+    await onSubmit(
+      {
+        title,
+        description,
+        priority,
+        developerUserId,
+        testerUserId,
+      },
+      file
+    );
+
+  } catch (err) {
+
+    console.error(err);
+
+  } finally {
+
+    setLoading(false);
+  }
+};
   return (
     <div className="issue-container">
 
@@ -118,7 +155,9 @@ const IssueForm = ({
       >
 
         <div className="issue-group">
-          <label>Title</label>
+          <label>
+            Title
+          </label>
 
           <input
             value={title}
@@ -132,7 +171,9 @@ const IssueForm = ({
         </div>
 
         <div className="issue-group">
-          <label>Description</label>
+          <label>
+            Description
+          </label>
 
           <textarea
             rows="3"
@@ -146,7 +187,9 @@ const IssueForm = ({
         </div>
 
         <div className="issue-group">
-          <label>Priority</label>
+          <label>
+            Priority
+          </label>
 
           <select
             value={priority}
@@ -156,53 +199,99 @@ const IssueForm = ({
               )
             }
           >
-            <option>Low</option>
-            <option>Medium</option>
-            <option>High</option>
-          </select>
-        </div>
-
-        <div className="issue-group">
-
-          <label>
-            Assign To
-          </label>
-
-          <select
-            value={
-              assignedToUserId
-            }
-            onChange={(e) =>
-              setAssignedToUserId(
-                e.target.value
-              )
-            }
-            required
-          >
-
-            <option value="">
-              Select Member
+            <option>
+              Low
             </option>
 
-            {members.map(
-              (member) => (
+            <option>
+              Medium
+            </option>
 
-                <option
-                  key={member.id}
-                  value={member.id}
-                >
-                  {member.name}
-                  {" "}
-                  (
-                  {member.role}
-                  )
-                </option>
-              )
-            )}
-
+            <option>
+              High
+            </option>
           </select>
-
         </div>
+
+      <div className="issue-group">
+
+        <label>
+          Developer
+        </label>
+
+        <select
+          value={developerUserId}
+          onChange={(e) =>
+            setDeveloperUserId(
+              e.target.value
+            )
+          }
+          required
+        >
+
+          <option value="">
+            Select Developer
+          </option>
+
+          {developers.map(
+            (member) => (
+
+              <option
+                key={member.userId}
+                value={member.userId}
+              >
+                {member.name}
+                {" "}
+                (
+                {member.role}
+                )
+              </option>
+            )
+          )}
+
+        </select>
+
+      </div>
+
+      <div className="issue-group">
+
+        <label>
+          Tester
+        </label>
+
+        <select
+          value={testerUserId}
+          onChange={(e) =>
+            setTesterUserId(
+              e.target.value
+            )
+          }
+          required
+        >
+
+          <option value="">
+            Select Tester
+          </option>
+
+          {testers.map(
+            (member) => (
+
+              <option
+                key={member.userId}
+                value={member.userId}
+              >
+                {member.name}
+                {" "}
+                (
+                {member.role}
+                )
+              </option>
+            )
+          )}
+
+        </select>
+
+      </div>
 
         <div className="issue-group">
 
@@ -223,7 +312,11 @@ const IssueForm = ({
 
         <button
           className="issue-btn"
-          disabled={loading}
+          disabled={
+            loading ||
+            developers.length === 0 ||
+            testers.length === 0
+          }
         >
           {loading
             ? "Creating..."

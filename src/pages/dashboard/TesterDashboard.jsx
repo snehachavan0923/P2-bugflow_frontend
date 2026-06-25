@@ -87,24 +87,24 @@ const TesterDashboard = () => {
       >
 
         <StatCard
-          title="Created Issues"
-          value={stats.createdIssues}
-          icon={<Bug />}
-          color="bg-blue-100 text-blue-600"
+            title="Assigned Issues"
+            value={stats.assignedIssues}
+            icon={<Bug />}
+            color="bg-blue-100 text-blue-600"
         />
 
         <StatCard
-          title="Pending Verification"
-          value={stats.pendingVerification}
-          icon={<Clock3 />}
-          color="bg-amber-100 text-amber-600"
+            title="Pending Verification"
+            value={stats.pendingVerification}
+            icon={<Clock3 />}
+            color="bg-amber-100 text-amber-600"
         />
 
         <StatCard
-          title="Verified"
-          value={stats.verified}
-          icon={<CheckCircle />}
-          color="bg-green-100 text-green-600"
+            title="Verified"
+            value={stats.verified}
+            icon={<CheckCircle />}
+            color="bg-green-100 text-green-600"
         />
 
       </div>

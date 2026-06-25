@@ -6,8 +6,8 @@ import {
 import {
   ClipboardList,
   PlayCircle,
-  Clock3,
   Loader2,
+  FolderKanban,
 } from "lucide-react";
 
 import {
@@ -43,7 +43,7 @@ const DeveloperDashboard = () => {
       } finally {
 
         setLoading(false);
-      }
+      } 
     };
 
     loadData();
@@ -87,25 +87,25 @@ const DeveloperDashboard = () => {
       >
 
         <StatCard
+          title="Total Projects"
+          value={stats.totalProjects}
+          icon={<FolderKanban />}
+          color="bg-indigo-100 text-indigo-600"
+      />
+
+      <StatCard
           title="Assigned Tasks"
           value={stats.assignedTasks}
           icon={<ClipboardList />}
           color="bg-blue-100 text-blue-600"
-        />
+      />
 
-        <StatCard
+      <StatCard
           title="In Progress"
           value={stats.inProgress}
           icon={<PlayCircle />}
           color="bg-amber-100 text-amber-600"
-        />
-
-        <StatCard
-          title="Review"
-          value={stats.review}
-          icon={<Clock3 />}
-          color="bg-purple-100 text-purple-600"
-        />
+      />
 
       </div>
 

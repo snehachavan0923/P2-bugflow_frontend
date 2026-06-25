@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect,useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useParams } from "react-router-dom";
 
@@ -37,14 +37,7 @@ const MyTasks = () => {
     }
   }, [loadTasks, user?.id]);
 
-  const assignedTasks = useMemo(
-    () =>
-      tasks.filter(
-        (task) =>
-          String(task.assignedToUserId) === String(user?.id)
-      ),
-    [tasks, user?.id]
-  );
+  
 
   if (loading) {
     return (
@@ -77,7 +70,7 @@ const MyTasks = () => {
       <KanbanBoard
         mode="developer"
         projectId={projectId}
-        issues={assignedTasks}
+        issues={tasks}
         onRefresh={loadTasks}
         title="My Tasks"
         subtitle="Track your assigned issues from start to verification"

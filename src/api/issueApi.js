@@ -114,11 +114,11 @@ export const getProjectTasks = async (
   return res.data;
 };
 
-export const getProjectReviewIssues =
+export const getTesterBoardIssues =
   async (projectId) => {
 
   const res = await axios.get(
-    `/projects/${projectId}/issues/project-review`
+    `/projects/${projectId}/issues/project-tester-board`
   );
 
   return res.data;
