@@ -1,7 +1,17 @@
 import React from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import {
+  NavLink,
+  Outlet,
+  useLocation,
+  useParams,
+} from "react-router-dom";
 
 const WorkspaceFrame = ({ project, tabs }) => {
+  const { projectId } = useParams();
+  const { pathname } = useLocation();
+  const workspacePath = (tab) =>
+    `/projects/${projectId}/${tab}`;
+
   return (
     <div className="min-h-full bg-slate-50">
       <div className="sticky top-0 z-30 -mx-6 -mt-6 border-b border-slate-200 bg-white/95 backdrop-blur">
@@ -20,11 +30,18 @@ const WorkspaceFrame = ({ project, tabs }) => {
         <nav className="flex h-8 overflow-x-auto px-4 sm:px-5">
           {tabs.map((tab) => {
             const Icon = tab.icon;
+            const tabPath = workspacePath(tab.to);
 
             return (
               <NavLink
                 key={tab.to}
-                to={tab.to}
+                to={tabPath}
+                end
+                onClick={(event) => {
+                  if (pathname === tabPath) {
+                    event.preventDefault();
+                  }
+                }}
                 className={({ isActive }) =>
                   `inline-flex items-center gap-1.5 border-b-2 px-3 text-xs font-semibold transition ${
                     isActive

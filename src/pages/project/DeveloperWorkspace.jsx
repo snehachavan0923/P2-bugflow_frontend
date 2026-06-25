@@ -76,6 +76,8 @@ const DeveloperWorkspace = () => {
     }),
     [project, projectId, refreshWorkspace]
   );
+  const workspacePath = (tab) =>
+    `/projects/${projectId}/${tab}`;
 
   if (loading) {
     return <WorkspaceLoader label="Loading project workspace..." />;
@@ -100,10 +102,16 @@ const DeveloperWorkspace = () => {
             />
           }
         >
-          <Route index element={<Navigate to="overview" replace />} />
+          <Route
+            index
+            element={<Navigate to={workspacePath("overview")} replace />}
+          />
           <Route path="overview" element={<ProjectOverview />} />
           <Route path="kanban" element={<DeveloperKanban />} />
-          <Route path="*" element={<Navigate to="overview" replace />} />
+          <Route
+            path="*"
+            element={<Navigate to={workspacePath("overview")} replace />}
+          />
         </Route>
       </Routes>
     </ProjectWorkspaceProvider>
