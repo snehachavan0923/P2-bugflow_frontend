@@ -1,13 +1,10 @@
-import { useCallback, useEffect, useState } from "react";
-import { Loader2, Plus, X } from "lucide-react";
+import { useState } from "react";
+import { Plus, X } from "lucide-react";
 import { useParams } from "react-router-dom";
 
 import KanbanBoard from "../../components/kanban/KanbanBoard";
-import {
-  editIssue,
-  getIssues,
-} from "../../api/issueApi";
-import { getTeamMembers } from "../../api/teamApi";
+import { editIssue } from "../../api/issueApi";
+import { useProjectWorkspace } from "../project/workspace/WorkspaceContext";
 
 const tabs = ["Open", "In Progress", "Review", "Done"];
 
@@ -19,10 +16,8 @@ const inputClassName =
 
 const IssueBoard = ({ onCreateIssue }) => {
   const { projectId } = useParams();
-  const [issues, setIssues] = useState([]);
-  const [members, setMembers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const { issues, members, refreshWorkspace } = useProjectWorkspace();
+
   const [viewMode, setViewMode] = useState("kanban");
   const [activeTab, setActiveTab] = useState("Open");
   const [imagePreview, setImagePreview] = useState(null);
@@ -30,95 +25,40 @@ const IssueBoard = ({ onCreateIssue }) => {
   const [editModal, setEditModal] = useState(null);
   const [modalImage, setModalImage] = useState(null);
   const [modalTitle, setModalTitle] = useState("");
-  const fetchIssues = useCallback(async () => {
-    try {
-      setError("");
-
-      const data = await getIssues(projectId);
-      setIssues(data);
-    } catch (err) {
-      console.error(err);
-
-      setError(
-        err?.response?.data?.message ||
-          "Unable to load issues."
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, [projectId]);
-
-  useEffect(() => {
-    fetchIssues();
-
-    const loadMembers = async () => {
-      try {
-        const data = await getTeamMembers(projectId);
-        setMembers(data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    loadMembers();
-  }, [fetchIssues, projectId]);
 
   const filteredIssues = issues.filter(
     (issue) => issue.status === activeTab
   );
 
   const handleEditSubmit = async () => {
-  await editIssue(
-  projectId,
-  editModal.id,
-  {
-    title: editModal.title,
-    description: editModal.description,
-    priority: editModal.priority,
+    try {
+      await editIssue(
+        projectId,
+        editModal.id,
+        {
+          title: editModal.title,
+          description: editModal.description,
+          priority: editModal.priority,
 
-    developerUserId:
-      editModal.status !== "Review"
-        ? editModal.reassignedUserId
-        : null,
+          developerUserId:
+            editModal.status !== "Review"
+              ? editModal.reassignedUserId
+              : null,
 
-    testerUserId:
-      editModal.status === "Review"
-        ? editModal.reassignedUserId
-        : null,
-  }
-);
+          testerUserId:
+            editModal.status === "Review"
+              ? editModal.reassignedUserId
+              : null,
+        }
+      );
 
-    setEditModal(null);
-    fetchIssues();
+      setEditModal(null);
+      await refreshWorkspace();
+    } catch (err) {
+      console.error(err);
+      alert("Error saving issue details");
+    }
   };
-
-
-
-  if (loading) {
-    return (
-      <div className="flex min-h-[60vh] items-center justify-center p-6">
-        <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-6 py-4 shadow-sm">
-          <Loader2
-            className="h-5 w-5 animate-spin text-blue-600"
-            aria-hidden="true"
-          />
-          <span className="text-sm font-medium text-slate-700">
-            Loading issues...
-          </span>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="p-6">
-        <div className="rounded-2xl border border-red-200 bg-white p-6 text-red-700 shadow-sm">
-          {error}
-        </div>
-      </div>
-    );
-  }
 
   return (
   <div className="relative flex h-full min-h-0 w-full flex-col bg-white">
@@ -162,7 +102,7 @@ const IssueBoard = ({ onCreateIssue }) => {
               projectId={projectId}
               issues={issues}
               members={members}
-              onRefresh={fetchIssues}
+              onRefresh={refreshWorkspace}
             />
           </div>
         ) : (
@@ -308,19 +248,19 @@ const IssueBoard = ({ onCreateIssue }) => {
       )}
 
      {detailsIssue && (
-  <Dialog
-    title="Issue Details"
-    onClose={() => setDetailsIssue(null)}
-  >
-    <DetailsContent
-      issue={detailsIssue}
-      onViewImage={(title, url) => {
-        setModalTitle(title);
-        setModalImage(url);
-      }}
-    />
-  </Dialog>
-)}
+      <Dialog
+        title="Issue Details"
+        onClose={() => setDetailsIssue(null)}
+      >
+        <DetailsContent
+          issue={detailsIssue}
+          onViewImage={(title, url) => {
+            setModalTitle(title);
+            setModalImage(url);
+          }}
+        />
+      </Dialog>
+    )}
 
      {modalImage && (
         <div
