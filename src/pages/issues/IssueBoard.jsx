@@ -121,7 +121,7 @@ const IssueBoard = ({ onCreateIssue }) => {
   }
 
   return (
-    <div className="relative flex h-full w-full flex-col bg-white">
+  <div className="relative flex h-full min-h-0 w-full flex-col bg-white">
       <div className="flex min-h-0 flex-1 flex-col">
         <div className="flex min-h-11 items-center justify-between gap-3 border-b border-slate-200 bg-white px-3 py-1.5">
           {onCreateIssue ? (
@@ -307,17 +307,20 @@ const IssueBoard = ({ onCreateIssue }) => {
         />
       )}
 
-      {detailsIssue && (
-        <DetailsDrawer title="Issue Details" onClose={() => setDetailsIssue(null)}>
-          <DetailsContent
-          issue={detailsIssue}
-          onViewImage={(title, url) => {
-            setModalTitle(title);
-            setModalImage(url);
-          }}
-        />
-        </DetailsDrawer>
-      )}
+     {detailsIssue && (
+  <Dialog
+    title="Issue Details"
+    onClose={() => setDetailsIssue(null)}
+  >
+    <DetailsContent
+      issue={detailsIssue}
+      onViewImage={(title, url) => {
+        setModalTitle(title);
+        setModalImage(url);
+      }}
+    />
+  </Dialog>
+)}
 
      {modalImage && (
         <div
@@ -512,38 +515,7 @@ const LabeledField = ({ label, children }) => (
   </div>
 );
 
-const DetailsDrawer = ({
-  title,
-  children,
-  onClose,
-}) => (
-  <div
-    className="fixed inset-0 z-50 bg-slate-950/20"
-    onClick={onClose}
-  >
-    <div
-      className="absolute right-0 top-0 flex h-full w-full max-w-xl flex-col border-l border-slate-200 bg-white shadow-2xl"
-      onClick={(event) => event.stopPropagation()}
-    >
-      <div className="flex h-12 items-center justify-between border-b border-slate-200 px-4">
-        <h2 className="text-base font-semibold text-slate-950">
-          {title}
-        </h2>
-        <button
-          type="button"
-          onClick={onClose}
-          className="rounded-md p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
-          aria-label="Close details"
-        >
-          <X className="h-5 w-5" aria-hidden="true" />
-        </button>
-      </div>
-      <div className="min-h-0 flex-1 overflow-y-auto p-4">
-        {children}
-      </div>
-    </div>
-  </div>
-);
+
 
   const ImageDialog = ({
     imageUrl,
