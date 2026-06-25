@@ -7,7 +7,7 @@ import {
   UserRound,
 } from "lucide-react";
 
-import { useProjectWorkspace } from "../ProjectWorkspace";
+import { useProjectWorkspace } from "./WorkspaceContext";
 
 const ProjectOverview = () => {
   const {
@@ -15,6 +15,8 @@ const ProjectOverview = () => {
     projectId,
     members,
     issueStats,
+    showMemberCount,
+    showIssueStats,
   } = useProjectWorkspace();
 
   const owner =
@@ -49,14 +51,17 @@ const ProjectOverview = () => {
             value={projectId}
           />
           <InfoCard label="Owner" value={owner} />
-          <InfoCard
-            label="Member Count"
-            value={members.length}
-          />
+          {showMemberCount && (
+            <InfoCard
+              label="Member Count"
+              value={members.length}
+            />
+          )}
         </div>
       </section>
 
-      <aside className="space-y-6">
+      {showIssueStats && issueStats && (
+        <aside className="space-y-6">
         <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
           <div className="mb-5 flex items-center justify-between">
             <div>
@@ -94,6 +99,7 @@ const ProjectOverview = () => {
           </div>
         </section>
       </aside>
+      )}
     </div>
   );
 };

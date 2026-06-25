@@ -11,10 +11,6 @@ import Signup from "../auth/Signup";
 import ProjectList from "../pages/project/ProjectList";
 import CreateProject from "../pages/project/CreateProject";
 import ProjectWorkspace from "../pages/project/ProjectWorkspace";
-import ProjectOverview from "../pages/project/workspace/ProjectOverview";
-import ProjectKanban from "../pages/project/workspace/ProjectKanban";
-import ProjectTeam from "../pages/project/workspace/ProjectTeam";
-import ProjectReports from "../pages/project/workspace/ProjectReports";
 import CreateOrganization from "../pages/organization/CreateOrganization";
 
 import IssueDetails from "../pages/issues/IssueDetails";
@@ -102,44 +98,9 @@ const AppRoutes = () => {
         />
 
         <Route
-          path="projects/:projectId"
+          path="projects/:projectId/*"
           element={<ProjectWorkspace />}
-        >
-          <Route
-            index
-            element={
-              <Navigate to="overview" replace />
-            }
-          />
-          <Route
-            path="overview"
-            element={<ProjectOverview />}
-          />
-          <Route
-            path="kanban"
-            element={
-              <PrivateRoute
-                allowedRoles={["Owner"]}
-              >
-                <ProjectKanban />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="team"
-            element={
-              <PrivateRoute
-                allowedRoles={["Owner"]}
-              >
-                <ProjectTeam />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="reports"
-            element={<ProjectReports />}
-          />
-        </Route>
+        />
 
         <Route
           path="profile"
