@@ -8,7 +8,7 @@ import {
   X,
   XCircle,
 } from "lucide-react";
-
+import { useAuth } from "../../context/AuthContext";
 const fieldClassName =
   "w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-50";
 
@@ -34,17 +34,26 @@ const IssueDetailsDrawer = ({
   embedded = false,
 }) => {
   const [showEditForm, setShowEditForm] = useState(false);
+  const [previewImage, setPreviewImage] =
+  useState(null);
+
+const [previewTitle, setPreviewTitle] =
+  useState("");
   const [isVisible, setIsVisible] = useState(false);
   const [showResolve, setShowResolve] = useState(false);
+  const { user } = useAuth();
+  const isAssignedToMe =
+  issue?.assignedToEmail === user?.email;
   
   const [saving, setSaving] = useState(false);
   const [proofFile, setProofFile] = useState(null);
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    priority: "Medium",
-    assignedToUserId: "",
-  });
+ const [formData, setFormData] = useState({
+  title: "",
+  description: "",
+  priority: "Medium",
+  developerUserId: "",
+  testerUserId: "",
+});
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
@@ -79,21 +88,37 @@ const IssueDetailsDrawer = ({
     setShowEditForm(false);
     setShowResolve(false);
     setProofFile(null);
-    setFormData({
-      title: issue.title || "",
-      description: issue.description || "",
-      priority: issue.priority || "Medium",
-      assignedToUserId: issue.assignedToUserId || "",
-    });
+   setFormData({
+  title: issue.title || "",
+  description: issue.description || "",
+  priority: issue.priority || "Medium",
+  developerUserId: issue.developerId || "",
+  testerUserId: issue.testerId || "",
+});
   }, [issue]);
 
   const canEdit = mode === "owner" && issue?.status !== "Done";
   const canResolve =
-    (mode === "owner" && issue?.status === "Review") ||
-    (mode === "developer" && issue?.status === "In Progress");
-  const canStartWork = mode === "developer" && issue?.status === "Open";
-  const canVerify = mode === "tester" && issue?.status === "Review";
+  mode === "developer" &&
+  issue?.status === "In Progress" &&
+  isAssignedToMe;
+  const canStartWork =
+  mode === "developer" &&
+  issue?.status === "Open" &&
+  isAssignedToMe;
+  const canVerify =
+  mode === "tester" &&
+  issue?.status === "Review" &&
+  isAssignedToMe;
   const isReadOnly = mode === "viewer";
+const assignableMembers =
+  issue?.status === "Review"
+    ? members.filter(
+        (member) => member.role === "Tester"
+      )
+    : members.filter(
+        (member) => member.role === "Developer"
+      );
 
   const priorityClassName = useMemo(
     () =>
@@ -137,7 +162,56 @@ const IssueDetailsDrawer = ({
   };
   const containerClass = embedded
     ? `flex h-full w-full flex-col overflow-hidden rounded-l-2xl border border-r-0 border-slate-200 bg-white shadow-[-12px_0_32px_rgba(15,23,42,0.14)] transition-all duration-200 ${isVisible ? "translate-x-0 opacity-100" : "translate-x-4 opacity-0"}`
-    : `fixed inset-y-0 right-0 z-30 flex w-full flex-col border-l border-slate-200 bg-white shadow-2xl transition-transform duration-200 sm:max-w-[440px] ${isVisible ? "translate-x-0" : "translate-x-full"}`;
+    : `fixed inset-y-0 right-0 z-30 flex w-full flex-col border-l border-slate-200 bg-white shadow-2xl transition-transform duration-200 sm:max-w-[360px] ${isVisible ? "translate-x-0" : "translate-x-full"}`;
+
+  const currentActivity = () => {
+  switch (issue.status) {
+    case "Open":
+      return {
+        icon: "🟡",
+        title: "Current Activity",
+        text: `Issue is waiting for a developer.${
+          issue.assignedToName
+            ? ` Assigned to: ${issue.assignedToName}`
+            : ""
+        }`,
+      };
+
+    case "In Progress":
+      return {
+        icon: "🔵",
+        title: "Current Activity",
+        text: `${
+          issue.assignedToName || "Developer"
+        } (Developer) is currently working on this issue.`,
+      };
+
+    case "Review":
+      return {
+        icon: "🟣",
+        title: "Current Activity",
+        text: `Development completed. Issue is under review by ${
+          issue.assignedToName || "Tester"
+        } (Tester).`,
+      };
+
+    case "Done":
+      return {
+        icon: "🟢",
+        title: "Current Activity",
+        text: "Issue has been verified and closed.",
+      };
+
+    default:
+      return {
+        icon: "⚪",
+        title: "Current Activity",
+        text: "No activity available.",
+      };
+  }
+};
+
+const activity = currentActivity();
 
   return (
     <>
@@ -185,14 +259,15 @@ const IssueDetailsDrawer = ({
           </div>
         </section>
 
-        <section className="border-b border-slate-100 pb-5">
-          <h3 className="text-xs font-bold uppercase tracking-wide text-slate-500">
-            Description
-          </h3>
-          <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-slate-700">
-            {issue.description || "No description provided."}
-          </p>
-        </section>
+       <section className="rounded-xl border border-slate-200 bg-slate-50/60 p-4">
+        <h3 className="text-xs font-bold uppercase tracking-wide text-slate-500">
+          Description
+        </h3>
+
+        <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-slate-700">
+          {issue.description || "No description provided."}
+        </p>
+      </section>
 
         <section className="rounded-xl border border-slate-200 bg-slate-50/60 p-4">
           <h3 className="text-xs font-bold uppercase tracking-wide text-slate-500">
@@ -211,37 +286,74 @@ const IssueDetailsDrawer = ({
           </div>
         </section>
 
-        <section className="space-y-4 border-b border-slate-100 pb-5">
-          <h3 className="text-xs font-bold uppercase tracking-wide text-slate-500">Images</h3>
+       <section className="space-y-3 border-b border-slate-100 pb-5">
+        <h3 className="text-xs font-bold uppercase tracking-wide text-slate-500">
+          Images
+        </h3>
 
-          <div>
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">Bug Screenshot</p>
+        <div className="rounded-xl border border-slate-200 p-3">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-slate-700">
+              Bug Image
+            </span>
+
             {issue.imageUrl ? (
-              <img src={issue.imageUrl} alt="Bug screenshot" className="max-h-64 w-full rounded-xl border border-slate-200 bg-slate-50 object-contain" />
+              <button
+                type="button"
+                onClick={() => {
+                  setPreviewTitle("Bug Image");
+                  setPreviewImage(issue.imageUrl);
+                }}
+                className="rounded-lg bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
+              >
+                View
+              </button>
             ) : (
-              <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-center text-sm text-slate-400">No image available</div>
+              <span className="text-sm text-slate-400">
+                Not Available
+              </span>
             )}
           </div>
+        </div>
 
-          <div>
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">Resolution Proof</p>
+        <div className="rounded-xl border border-slate-200 p-3">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-slate-700">
+              Resolution Image
+            </span>
+
             {issue.resolutionImageUrl ? (
-              <img src={issue.resolutionImageUrl} alt="Resolution proof" className="max-h-64 w-full rounded-xl border border-slate-200 bg-slate-50 object-contain" />
+              <button
+                type="button"
+                onClick={() => {
+                  setPreviewTitle(
+                    "Resolution Proof"
+                  );
+                  setPreviewImage(
+                    issue.resolutionImageUrl
+                  );
+                }}
+                className="rounded-lg bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
+              >
+                View
+              </button>
             ) : (
-              <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-center text-sm text-slate-400">No image available</div>
+              <span className="text-sm text-slate-400">
+                Not Available
+              </span>
             )}
           </div>
-        </section>
+        </div>
+      </section>
+       <section className="rounded-xl border border-slate-200 bg-slate-50/60 p-4">
+        <h3 className="text-xs font-bold uppercase tracking-wide text-slate-500">
+          {activity.icon} {activity.title}
+        </h3>
 
-        <section className="rounded-xl border border-slate-200 bg-slate-50/60 p-4">
-          <h3 className="text-xs font-bold uppercase tracking-wide text-slate-500">
-            Activity
-          </h3>
-          <p className="mt-2 text-sm leading-6 text-slate-500">
-            Activity history will appear here as the workflow expands.
-          </p>
-        </section>
-
+        <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-slate-700">
+          {activity.text}
+        </p>
+      </section>
         {showResolve && (
           <section className="space-y-3 rounded-2xl border border-emerald-100 bg-emerald-50/40 p-4">
             <h3 className="text-sm font-semibold text-slate-950">
@@ -341,6 +453,21 @@ const IssueDetailsDrawer = ({
                 Completed
               </span>
             )}
+            {mode === "developer" &&
+              !isAssignedToMe &&
+              issue.assignedToRole === "Developer" && (
+                <span className="inline-flex items-center rounded-xl bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-600 ring-1 ring-slate-200">
+                  Assigned to {issue.assignedToName}
+                </span>
+              )}
+            {mode === "tester" &&
+              issue.status === "Review" &&
+              !isAssignedToMe &&
+              issue.assignedToRole === "Tester" && (
+                <span className="inline-flex items-center rounded-xl bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-600 ring-1 ring-slate-200">
+                  Assigned to {issue.assignedToName}
+                </span>
+            )}
 
             {mode === "tester" && issue.status !== "Review" && (
               <span className="inline-flex items-center gap-2 rounded-xl bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-500 ring-1 ring-slate-200">
@@ -368,7 +495,7 @@ const IssueDetailsDrawer = ({
               </p>
               <h2 className="mt-1 text-lg font-bold text-slate-950">Edit Issue</h2>
             </div>
-            <button
+            <button 
               type="button"
               onClick={() => setShowEditForm(false)}
               className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
@@ -411,21 +538,48 @@ const IssueDetailsDrawer = ({
                 </select>
               </label>
 
-              <label className="block">
-                <span className="mb-1.5 block text-sm font-semibold text-slate-700">Reassign To</span>
-                <select
-                  className={fieldClassName}
-                  value={formData.assignedToUserId || ""}
-                  onChange={(event) => setFormData({ ...formData, assignedToUserId: event.target.value })}
-                >
-                  <option value="">Select Member</option>
-                  {members.map((member) => (
-                    <option key={member.id || member.userId} value={member.userId}>
-                      {member.name} ({member.role})
-                    </option>
-                  ))}
-                </select>
-              </label>
+             <label className="block">
+              <span className="mb-1.5 block text-sm font-semibold text-slate-700">
+                Reassign To
+              </span>
+
+              <select
+                className={fieldClassName}
+                value={
+                  issue.status === "Review"
+                    ? formData.testerUserId
+                    : formData.developerUserId
+                }
+                onChange={(e) => {
+                if (issue.status === "Review") {
+                  setFormData({
+                    ...formData,
+                    testerUserId: e.target.value,
+                    developerUserId: "",
+                  });
+                } else {
+                  setFormData({
+                    ...formData,
+                    developerUserId: e.target.value,
+                    testerUserId: "",
+                  });
+                }
+                }}
+              >
+                <option value="">
+                  Select Member
+                </option>
+
+                {assignableMembers.map((member) => (
+                  <option
+                    key={member.userId}
+                    value={member.userId}
+                  >
+                    {member.name} ({member.role})
+                  </option>
+                ))}
+              </select>
+            </label>
             </div>
           </div>
 
@@ -446,6 +600,41 @@ const IssueDetailsDrawer = ({
               {saving ? "Saving..." : "Save Changes"}
             </button>
           </div>
+        </div>
+      </div>
+    )}
+
+    {previewImage && (
+      <div
+        className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 p-4"
+        onClick={() =>
+          setPreviewImage(null)
+        }
+      >
+      <div
+        className="w-full max-w-2xl rounded-2xl bg-white p-5 shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-lg font-semibold">
+              {previewTitle}
+            </h3>
+
+            <button
+              onClick={() =>
+                setPreviewImage(null)
+              }
+              className="rounded-lg p-2 hover:bg-slate-100"
+            >
+              <X size={20} />
+            </button>
+          </div>
+
+        <img
+          src={previewImage}
+          alt={previewTitle}
+          className="max-h-[70vh] w-full rounded-xl object-contain"
+        />
         </div>
       </div>
     )}

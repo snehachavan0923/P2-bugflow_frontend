@@ -1,88 +1,129 @@
 import {
-  Eye,
   FolderKanban,
+  Users,
   Bug,
+  ClipboardList,
+  Loader2,
 } from "lucide-react";
 
+import { useEffect, useState } from "react";
+
+import {
+  getViewerDashboard,
+} from "../../api/dashboardApi";
+
+import StatCard from "../../components/dashboard/StatCard";
 const ViewerDashboard = () => {
+
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+
+    const load = async () => {
+
+      try {
+
+        const data =
+          await getViewerDashboard();
+
+        setStats(data);
+
+      } finally {
+
+        setLoading(false);
+
+      }
+
+    };
+
+    load();
+
+  }, []);
+
+  if (loading) {
+
+    return (
+      <div className="flex justify-center py-20">
+        <Loader2
+          className="animate-spin"
+          size={30}
+        />
+      </div>
+    );
+
+  }
 
   return (
 
     <div className="space-y-8">
 
       <div>
-        <h1 className="text-3xl font-bold text-slate-900">
+
+        <h1 className="text-3xl font-bold">
           Viewer Dashboard
         </h1>
 
-        <p className="mt-2 text-slate-500">
-          View projects, issues and team progress.
+        <p className="text-slate-500">
+          Monitor organization projects and issues.
         </p>
+
       </div>
 
-      <div className="grid gap-5 md:grid-cols-3">
+      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
 
-        <div className="rounded-2xl bg-white p-6 shadow">
-          <FolderKanban
-            size={36}
-            className="text-blue-600"
-          />
+        <StatCard
+          title="Total Projects"
+          value={stats.totalProjects}
+          icon={<FolderKanban />}
+          color="bg-blue-100 text-blue-600"
+        />
 
-          <h3 className="mt-4 text-lg font-semibold">
-            Projects
-          </h3>
+        <StatCard
+          title="Total Members"
+          value={stats.totalMembers}
+          icon={<Users />}
+          color="bg-violet-100 text-violet-600"
+        />
 
-          <p className="mt-2 text-sm text-slate-500">
-            Browse available projects and project details.
-          </p>
-        </div>
+        <StatCard
+          title="Total Issues"
+          value={stats.totalIssues}
+          icon={<Bug />}
+          color="bg-red-100 text-red-600"
+        />
 
-        <div className="rounded-2xl bg-white p-6 shadow">
-          <Bug
-            size={36}
-            className="text-red-600"
-          />
-
-          <h3 className="mt-4 text-lg font-semibold">
-            Issues
-          </h3>
-
-          <p className="mt-2 text-sm text-slate-500">
-            View issue status and progress.
-          </p>
-        </div>
-
-        <div className="rounded-2xl bg-white p-6 shadow">
-          <Eye
-            size={36}
-            className="text-emerald-600"
-          />
-
-          <h3 className="mt-4 text-lg font-semibold">
-            Read Only Access
-          </h3>
-
-          <p className="mt-2 text-sm text-slate-500">
-            You can monitor project activity but cannot modify data.
-          </p>
-        </div>
+        <StatCard
+          title="Assigned Tasks"
+          value={stats.assignedTasks}
+          icon={<ClipboardList />}
+          color="bg-emerald-100 text-emerald-600"
+        />
 
       </div>
 
       <div className="rounded-3xl bg-gradient-to-r from-slate-900 to-slate-700 p-8 text-white">
+
         <h2 className="text-2xl font-bold">
-          Welcome Viewer
+
+          Read Only Workspace
+
         </h2>
 
         <p className="mt-3 text-slate-300">
-          Select a project from the Projects page and open the
-          Kanban board to track issue progress across Open,
-          In Progress, Review and Done stages.
+
+          You have read-only access to your organization's projects,
+          issues and workflow. Monitor progress across Open,
+          In Progress, Review and Done without modifying data.
+
         </p>
+
       </div>
 
     </div>
+
   );
+
 };
 
-export default ViewerDashboard;
+export default ViewerDashboard; 

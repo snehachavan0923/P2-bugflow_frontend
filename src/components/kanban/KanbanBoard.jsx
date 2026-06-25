@@ -1,6 +1,4 @@
 import { useMemo, useState } from "react";
-import { LayoutDashboard } from "lucide-react";
-
 import {
   approveIssue,
   editIssue,
@@ -46,15 +44,23 @@ const KanbanBoard = ({
   const resolveProjectId = (issue) =>
     issue.projectId || projectId;
 
-  const handleEditIssue = async (issue, data) => {
-    await editIssue(resolveProjectId(issue), getIssueId(issue), data);
-    await refreshBoard();
-    setSelectedIssue((current) => ({
-      ...current,
-      ...data,
-    }));
-  };
+ const handleEditIssue = async (issue, data) => {
+  await editIssue(
+    resolveProjectId(issue),
+    getIssueId(issue),
+    data
+  );
 
+  await refreshBoard();
+
+  const updatedIssue = issues.find(
+    (i) => getIssueId(i) === getIssueId(issue)
+  );
+
+  if (updatedIssue) {
+    setSelectedIssue(updatedIssue);
+  }
+};
   const handleMoveIssue = async (issue, status) => {
     await moveIssueStatus(resolveProjectId(issue), getIssueId(issue), status);
     await refreshBoard();
@@ -94,25 +100,25 @@ const KanbanBoard = ({
   return (
     <div className="h-full w-full">
       <div className="space-y-6">
-        {(title || subtitle) && (
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <div className="mb-4 inline-flex rounded-2xl bg-slate-900 p-3 text-white shadow-sm">
-                <LayoutDashboard className="h-7 w-7" aria-hidden="true" />
-              </div>
-              {title && (
-                <h1 className="text-3xl font-bold tracking-normal text-slate-950 sm:text-4xl">
-                  {title}
-                </h1>
-              )}
-              {subtitle && (
-                <p className="mt-2 text-sm leading-6 text-slate-600 sm:text-base">
-                  {subtitle}
-                </p>
-              )}
-            </div>
+       {(title || subtitle) && (
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+
+            {title && (
+              <h1 className="text-3xl font-bold tracking-normal text-slate-950 sm:text-4xl">
+                {title}
+              </h1>
+            )}
+
+            {subtitle && (
+              <p className="mt-2 text-sm leading-6 text-slate-600 sm:text-base">
+                {subtitle}
+              </p>
+            )}
+
           </div>
-        )}
+        </div>
+      )}
 
         <div className="relative w-full pb-4">
           <div className="w-full overflow-x-auto pb-2">

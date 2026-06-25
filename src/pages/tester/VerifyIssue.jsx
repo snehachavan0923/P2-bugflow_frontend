@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect,useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useParams } from "react-router-dom";
 
 import KanbanBoard from "../../components/kanban/KanbanBoard";
-import { getProjectReviewIssues } from "../../api/issueApi";
+import { getTesterBoardIssues  } from "../../api/issueApi";
 
 const VerifyIssue = () => {
   const { projectId } = useParams();
@@ -15,7 +15,7 @@ const VerifyIssue = () => {
     try {
       setError("");
 
-      const data = await getProjectReviewIssues(projectId);
+      const data = await getTesterBoardIssues(projectId);
       setIssues(data);
     } catch (err) {
       console.error(err);
@@ -33,11 +33,7 @@ const VerifyIssue = () => {
     loadIssues();
   }, [loadIssues]);
 
-  const reviewIssues = useMemo(
-    () => issues.filter((issue) => issue.status === "Review"),
-    [issues]
-  );
-
+ 
   if (loading) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center p-6">
@@ -69,7 +65,7 @@ const VerifyIssue = () => {
       <KanbanBoard
         mode="tester"
         projectId={projectId}
-        issues={reviewIssues}
+        issues={issues}
         onRefresh={loadIssues}
         title="Verify Issues"
         subtitle="Review submitted fixes and approve or reject resolution proof"

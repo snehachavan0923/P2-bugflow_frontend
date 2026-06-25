@@ -6,7 +6,6 @@ import KanbanBoard from "../../components/kanban/KanbanBoard";
 import {
   editIssue,
   getIssues,
-  resolveIssue,
 } from "../../api/issueApi";
 import { getTeamMembers } from "../../api/teamApi";
 
@@ -29,9 +28,8 @@ const IssueBoard = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [detailsIssue, setDetailsIssue] = useState(null);
   const [editModal, setEditModal] = useState(null);
-  const [resolveModal, setResolveModal] = useState(null);
-  const [resolveFile, setResolveFile] = useState(null);
-
+  const [modalImage, setModalImage] = useState(null);
+  const [modalTitle, setModalTitle] = useState("");
   const fetchIssues = useCallback(async () => {
     try {
       setError("");
@@ -70,32 +68,31 @@ const IssueBoard = () => {
   );
 
   const handleEditSubmit = async () => {
-    await editIssue(projectId, editModal.id, {
-      title: editModal.title,
-      description: editModal.description,
-      priority: editModal.priority,
-      assignedToUserId: editModal.assignedToUserId,
-    });
+  await editIssue(
+  projectId,
+  editModal.id,
+  {
+    title: editModal.title,
+    description: editModal.description,
+    priority: editModal.priority,
+
+    developerUserId:
+      editModal.status !== "Review"
+        ? editModal.reassignedUserId
+        : null,
+
+    testerUserId:
+      editModal.status === "Review"
+        ? editModal.reassignedUserId
+        : null,
+  }
+);
 
     setEditModal(null);
     fetchIssues();
   };
 
-  const handleResolveSubmit = async () => {
-    if (!resolveFile) {
-      alert("Upload proof image");
-      return;
-    }
 
-    const formData = new FormData();
-    formData.append("file", resolveFile);
-
-    await resolveIssue(projectId, resolveModal.id, formData);
-
-    setResolveModal(null);
-    setResolveFile(null);
-    fetchIssues();
-  };
 
   if (loading) {
     return (
@@ -264,25 +261,17 @@ const IssueBoard = () => {
                                 <button
                                   type="button"
                                   className={`${buttonBase} bg-slate-900 text-white hover:bg-slate-800`}
-                                  onClick={() =>
-                                    setEditModal({
-                                      ...issue,
-                                      assignedToUserId:
-                                        issue.assignedToUserId,
-                                    })
-                                  }
+                                 onClick={() =>
+                                  setEditModal({
+                                    ...issue,
+                                    reassignedUserId:
+                                      issue.status === "Review"
+                                        ? issue.testerId
+                                        : issue.developerId,
+                                  })
+                                }
                                 >
                                   Edit
-                                </button>
-                              )}
-
-                              {issue.status === "Review" && (
-                                <button
-                                  type="button"
-                                  className={`${buttonBase} bg-emerald-600 text-white hover:bg-emerald-700`}
-                                  onClick={() => setResolveModal(issue)}
-                                >
-                                  Resolve
                                 </button>
                               )}
 
@@ -316,10 +305,51 @@ const IssueBoard = () => {
 
       {detailsIssue && (
         <Dialog title="Issue Details" onClose={() => setDetailsIssue(null)}>
-          <DetailsContent issue={detailsIssue} />
+          <DetailsContent
+          issue={detailsIssue}
+          onViewImage={(title, url) => {
+            setModalTitle(title);
+            setModalImage(url);
+          }}
+        />
         </Dialog>
       )}
 
+     {modalImage && (
+        <div
+          className="fixed inset-0 z-[70] flex items-center justify-center bg-black/70 p-4"
+          onClick={() => {
+            setModalImage(null);
+            setModalTitle("");
+          }}
+        >
+          <div
+            className="w-full max-w-2xl rounded-2xl bg-white p-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-lg font-semibold">
+                {modalTitle}
+              </h3>
+
+              <button
+                onClick={() => {
+                  setModalImage(null);
+                  setModalTitle("");
+                }}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <img
+              src={modalImage}
+              alt={modalTitle}
+              className="max-h-[75vh] w-full object-contain"
+            />
+          </div>
+        </div>
+      )}
       {editModal && (
         <Dialog title="Edit Issue" onClose={() => setEditModal(null)}>
           <div className="space-y-4">
@@ -367,34 +397,60 @@ const IssueBoard = () => {
             </LabeledField>
 
             <LabeledField label="Reassign To">
-              <select
-                className={inputClassName}
-                value={editModal.assignedToUserId || ""}
-                onChange={(event) =>
-                  setEditModal({
-                    ...editModal,
-                    assignedToUserId: event.target.value,
-                  })
-                }
-              >
-                <option value="">Select Member</option>
-                {members.map((member) => (
+            <select
+            className={inputClassName}
+            value={editModal.reassignedUserId || ""}
+              onChange={(e) =>
+                setEditModal({
+                  ...editModal,
+                  reassignedUserId: e.target.value,
+                })
+              }
+            >
+              <option value="">
+                Select Member
+              </option>
+
+              {members
+                .filter((member) =>
+                  editModal.status === "Review"
+                    ? member.role === "Tester"
+                    : member.role === "Developer"
+                )
+                .map((member) => (
                   <option
-                    key={member.id || member.userId}
+                    key={member.userId}
                     value={member.userId}
                   >
                     {member.name} ({member.role})
                   </option>
                 ))}
-              </select>
-            </LabeledField>
+            </select>
+          </LabeledField>
 
             {editModal.imageUrl && (
-              <img
-                src={editModal.imageUrl}
-                alt="Bug"
-                className="max-h-64 w-full rounded-2xl border border-slate-200 object-contain"
-              />
+              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                  Bug Image
+                </p>
+
+                <div className="mt-2 flex items-center justify-between">
+                  <span className="text-sm text-slate-700">
+                    Bug screenshot available
+                  </span>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setModalTitle("Bug Image");
+                      setModalImage(editModal.imageUrl);
+                    }}
+                    className="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
+                  >
+                    View
+                  </button>
+                </div>
+              </div>
             )}
 
             <button
@@ -403,36 +459,6 @@ const IssueBoard = () => {
               onClick={handleEditSubmit}
             >
               Save Changes
-            </button>
-          </div>
-        </Dialog>
-      )}
-
-      {resolveModal && (
-        <Dialog title="Resolve Issue" onClose={() => setResolveModal(null)}>
-          <div className="space-y-4">
-            {resolveModal.imageUrl && (
-              <img
-                src={resolveModal.imageUrl}
-                alt="Bug"
-                className="max-h-64 w-full rounded-2xl border border-slate-200 object-contain"
-              />
-            )}
-
-            <LabeledField label="Upload Resolution Proof">
-              <input
-                type="file"
-                className={inputClassName}
-                onChange={(event) => setResolveFile(event.target.files[0])}
-              />
-            </LabeledField>
-
-            <button
-              type="button"
-              className={`${buttonBase} bg-emerald-600 text-white hover:bg-emerald-700`}
-              onClick={handleResolveSubmit}
-            >
-              Submit Proof
             </button>
           </div>
         </Dialog>
@@ -450,9 +476,14 @@ const LabeledField = ({ label, children }) => (
   </label>
 );
 
-const Dialog = ({ title, children, onClose }) => (
+  const Dialog = ({
+    title,
+    children,
+    onClose,
+    zIndex = "z-50",
+  }) => (
   <div
-    className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4"
+    className={`fixed inset-0 ${zIndex} flex items-center justify-center bg-slate-950/50 p-4`}
     onClick={onClose}
   >
     <div
@@ -477,17 +508,27 @@ const Dialog = ({ title, children, onClose }) => (
   </div>
 );
 
-const ImageDialog = ({ imageUrl, altText, onClose }) => (
-  <Dialog title="Image Preview" onClose={onClose}>
+  const ImageDialog = ({
+    imageUrl,
+    altText,
+    onClose,
+  }) => (
+    <Dialog
+      title="Image Preview"
+      onClose={onClose}
+      zIndex="z-[70]"
+    >
     <img
       src={imageUrl}
       alt={altText}
       className="max-h-[75vh] w-full rounded-2xl object-contain"
     />
   </Dialog>
-);
-
-const DetailsContent = ({ issue }) => (
+  );
+  const DetailsContent = ({
+    issue,
+    onViewImage,
+  }) => (
   <div className="space-y-4">
     {[
       ["Title", issue.title],
@@ -511,21 +552,63 @@ const DetailsContent = ({ issue }) => (
       </div>
     ))}
 
-    {issue.imageUrl && (
-      <img
-        src={issue.imageUrl}
-        alt="Bug"
-        className="max-h-64 w-full rounded-2xl border border-slate-200 object-contain"
-      />
-    )}
+    <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+      <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+        Bug Image
+      </p>
 
-    {issue.resolutionImageUrl && (
-      <img
-        src={issue.resolutionImageUrl}
-        alt="Resolution proof"
-        className="max-h-64 w-full rounded-2xl border border-slate-200 object-contain"
-      />
-    )}
+      <div className="mt-2 flex items-center justify-between">
+        <span className="text-sm text-slate-700">
+          {issue.imageUrl
+            ? "Bug screenshot available"
+            : "Not available"}
+        </span>
+
+        {issue.imageUrl && (
+          <button
+            type="button"
+            onClick={() =>
+              onViewImage(
+                "Bug Image",
+                issue.imageUrl
+              )
+            }
+            className="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
+          >
+            View
+          </button>
+        )}
+      </div>
+    </div>
+
+    <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+      <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+        Resolution Image
+      </p>
+
+      <div className="mt-2 flex items-center justify-between">
+        <span className="text-sm text-slate-700">
+          {issue.resolutionImageUrl
+            ? "Resolution proof available"
+            : "Not available"}
+        </span>
+
+        {issue.resolutionImageUrl && (
+          <button
+            type="button"
+            onClick={() =>
+              onViewImage(
+                "Resolution Image",
+                issue.resolutionImageUrl
+              )
+            }
+            className="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
+          >
+            View
+          </button>
+        )}
+      </div>
+    </div>
   </div>
 );
 
