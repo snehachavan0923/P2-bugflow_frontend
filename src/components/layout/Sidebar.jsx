@@ -44,6 +44,11 @@ const Sidebar = () => {
           icon: <LayoutDashboard className="h-5 w-5" />,
         },
         {
+          label: "Organizations",
+          to: "/admin/organizations",
+          icon: <Building2 className="h-5 w-5" />,
+        },
+        {
           label: "Projects",
           to: "/admin/projects",
           icon: <FolderKanban className="h-5 w-5" />,
