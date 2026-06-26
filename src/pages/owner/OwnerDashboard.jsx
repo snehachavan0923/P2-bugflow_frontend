@@ -50,8 +50,17 @@ const OwnerDashboard = () => {
   const navigate =
     useNavigate();
 
-  const [stats, setStats] =
-    useState(null);
+  const [stats, setStats] = useState({
+  organizationName: "",
+  totalProjects: 0,
+  totalMembers: 0,
+  totalIssues: 0,
+  assignedTasks: 0,
+  openIssues: 0,
+  inProgressIssues: 0,
+  reviewIssues: 0,
+  resolvedIssues: 0,
+});
 
   const [loading, setLoading] =
     useState(true);
@@ -82,31 +91,24 @@ const OwnerDashboard = () => {
 
   }, []);
 
-  const issueStatusData =
-    useMemo(() => {
-      if (!stats) {
-        return [];
-      }
-
-      return [
-        {
-          name: "Open",
-          value: stats.openIssues || 0,
-        },
-        {
-          name: "In Progress",
-          value: stats.inProgressIssues || 0,
-        },
-        {
-          name: "Review",
-          value: stats.reviewIssues || 0,
-        },
-        {
-          name: "Done",
-          value: stats.resolvedIssues || 0,
-        },
-      ];
-    }, [stats]);
+const issueStatusData = useMemo(() => [
+  {
+    name: "Open",
+    value: stats.openIssues,
+  },
+  {
+    name: "In Progress",
+    value: stats.inProgressIssues,
+  },
+  {
+    name: "Review",
+    value: stats.reviewIssues,
+  },
+  {
+    name: "Done",
+    value: stats.resolvedIssues,
+  },
+], [stats]);
 
   const totalTrackedIssues =
     issueStatusData.reduce(
@@ -115,8 +117,7 @@ const OwnerDashboard = () => {
     );
 
   const statCards =
-    stats
-      ? [
+    [
         {
           title: "Total Projects",
           value: stats.totalProjects,
@@ -146,7 +147,7 @@ const OwnerDashboard = () => {
           iconClass: "bg-emerald-100 text-emerald-600",
         },
       ]
-      : [];
+      ;
 
   const quickActions = [
     {

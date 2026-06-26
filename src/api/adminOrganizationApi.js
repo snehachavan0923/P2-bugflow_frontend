@@ -24,9 +24,3 @@ export const activateAdminOrganization = async (organizationId) => {
   return response.data;
 };
 
-export const deleteAdminOrganization = async (organizationId) => {
-  const response = await axios.delete(
-    `/admin/organizations/${organizationId}`
-  );
-  return response.data;
-};

@@ -25,7 +25,7 @@ const OrganizationGuard = ({
     organization,
     loadOrganization
   } = useOrganization();
-
+const [organizationError, setOrganizationError] = useState(false);
   const [loading,
     setLoading] =
       useState(true);
@@ -47,16 +47,15 @@ const location =
             return;
           }
 
-          await loadOrganization();
+         setOrganizationError(false);
+        await loadOrganization();
 
-        } catch(err) {
+        }catch (err) {
 
-          console.error(
-            "Organization check failed",
-            err
-          );
+    console.error("Organization check failed", err);
 
-        } finally {
+    setOrganizationError(true);
+}finally {
 
           setLoading(false);
         }
@@ -79,23 +78,24 @@ const location =
     );
   }
 
+  
+
   /*
    * Only owners require organization
    */
-  if(
-  role === "Owner" &&
-  !organization &&
-  location.pathname !==
-    "/create-organization"
+ if (
+    role === "Owner" &&
+    !organizationError &&
+    !organization &&
+    location.pathname !== "/create-organization"
 ) {
-
     return (
-      <Navigate
-        to="/create-organization"
-        replace
-      />
+        <Navigate
+            to="/create-organization"
+            replace
+        />
     );
-  }
+}
 
   return children;
 };
