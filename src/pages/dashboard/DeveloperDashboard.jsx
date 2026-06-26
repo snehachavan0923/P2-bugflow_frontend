@@ -18,8 +18,11 @@ import StatCard from "../../components/dashboard/StatCard";
 
 const DeveloperDashboard = () => {
 
-  const [stats, setStats] =
-    useState(null);
+  const [stats, setStats] = useState({
+  totalProjects: 0,
+  assignedTasks: 0,
+  inProgress: 0,
+});
 
   const [loading, setLoading] =
     useState(true);

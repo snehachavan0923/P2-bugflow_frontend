@@ -1,14 +1,22 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Eye, Search, ChevronLeft, ChevronRight, AlertCircle } from 'lucide-react';
-
+import {
+  Eye,
+  Search,
+  ChevronLeft,
+  ChevronRight,
+  AlertCircle,
+  X,
+  Building2,
+  Users,
+  CalendarDays,
+  UserRound,
+} from 'lucide-react';
+import Swal from "sweetalert2";
 import Loader from '../../components/common/Loader';
-import Modal from '../../components/common/Modal';
-import ConfirmDialog from '../../components/common/ConfirmDialog';
 import {
   getAdminOrganizations,
   suspendAdminOrganization,
   activateAdminOrganization,
-  deleteAdminOrganization,
   getAdminOrganizationById,
 } from '../../api/adminOrganizationApi';
 
@@ -22,8 +30,6 @@ const OrganizationManagement = () => {
   const [page, setPage] = useState(1);
   const [selectedOrganization, setSelectedOrganization] = useState(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
-  const [confirmAction, setConfirmAction] = useState(null);
-  const [confirmOrganization, setConfirmOrganization] = useState(null);
   const [actionLoading, setActionLoading] = useState(false);
 
   useEffect(() => {
@@ -69,6 +75,11 @@ const OrganizationManagement = () => {
     1,
     Math.ceil(filteredOrganizations.length / PAGE_SIZE)
   );
+  useEffect(() => {
+  if (page > pageCount) {
+    setPage(pageCount);
+  }
+}, [page, pageCount]);
 
   const currentOrganizations = useMemo(() => {
     const start = (page - 1) * PAGE_SIZE;
@@ -76,6 +87,7 @@ const OrganizationManagement = () => {
   }, [filteredOrganizations, page]);
 
   const openDetails = async (organizationId) => {
+    if (detailsOpen) return;
     try {
       setError('');
       setLoading(true);
@@ -94,6 +106,7 @@ const OrganizationManagement = () => {
   };
 
   const refreshOrganizations = async () => {
+    setError("");
     setLoading(true);
     try {
       const data = await getAdminOrganizations();
@@ -109,25 +122,45 @@ const OrganizationManagement = () => {
     }
   };
 
-  const handleConfirm = async () => {
-    if (!confirmAction || !confirmOrganization) {
-      return;
-    }
+  const handleStatusAction = async (action, organization) => {
+    if (!organization) return;
+
+    const isSuspend = action === 'suspend';
+    const result = await Swal.fire({
+      title: isSuspend ? 'Suspend Organization?' : 'Activate Organization?',
+      text: isSuspend
+        ? `Suspend "${organization.organizationName}"?\n\nAll users belonging to this organization will immediately lose access to BugFlow.\n\nNo projects or data will be deleted.`
+        : `Activate "${organization.organizationName}"?\n\nAll members of this organization will immediately regain access to BugFlow.`,
+      icon: isSuspend ? 'warning' : 'question',
+      showCancelButton: true,
+      confirmButtonText: isSuspend ? 'Suspend' : 'Activate',
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: isSuspend ? '#f59e0b' : '#10b981',
+      reverseButtons: true,
+    });
+
+    if (!result.isConfirmed) return;
 
     setActionLoading(true);
 
     try {
-      if (confirmAction === 'delete') {
-        await deleteAdminOrganization(confirmOrganization.organizationId);
-      } else if (confirmAction === 'suspend') {
-        await suspendAdminOrganization(confirmOrganization.organizationId);
-      } else if (confirmAction === 'activate') {
-        await activateAdminOrganization(confirmOrganization.organizationId);
+      if (isSuspend) {
+        await suspendAdminOrganization(organization.organizationId);
+      } else {
+        await activateAdminOrganization(organization.organizationId);
       }
 
       await refreshOrganizations();
-      setConfirmAction(null);
-      setConfirmOrganization(null);
+
+      Swal.fire({
+        icon: 'success',
+        title: isSuspend ? 'Organization Suspended' : 'Organization Activated',
+        text: isSuspend
+          ? 'Users of this organization can no longer access BugFlow.'
+          : 'Organization access has been restored successfully.',
+        timer: 1800,
+        showConfirmButton: false,
+      });
     } catch (err) {
       console.error(err);
       setError(
@@ -137,34 +170,6 @@ const OrganizationManagement = () => {
     } finally {
       setActionLoading(false);
     }
-  };
-
-  const prepareAction = (action, organization) => {
-    setConfirmAction(action);
-    setConfirmOrganization(organization);
-  };
-
-  const closeConfirmDialog = () => {
-    setConfirmAction(null);
-    setConfirmOrganization(null);
-  };
-
-  const selectedActionMessage = () => {
-    if (!confirmOrganization) return '';
-
-    if (confirmAction === 'delete') {
-      return `Permanently delete ${confirmOrganization.organizationName}? This action cannot be undone.`;
-    }
-
-    if (confirmAction === 'suspend') {
-      return `Suspend ${confirmOrganization.organizationName} and prevent access for its members?`;
-    }
-
-    if (confirmAction === 'activate') {
-      return `Activate ${confirmOrganization.organizationName} and restore access.`;
-    }
-
-    return '';
   };
 
   const formatDate = (value) => {
@@ -181,15 +186,17 @@ const OrganizationManagement = () => {
       <div className="mx-auto max-w-7xl space-y-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-widest text-indigo-600">
-              Platform Admin
-            </p>
-            <h1 className="text-3xl font-bold text-slate-950 sm:text-4xl">
-              Organization Management
-            </h1>
-            <p className="mt-2 text-sm leading-6 text-slate-600">
-              Review organizations, monitor activity, and manage status.
-            </p>
+           <p className="text-sm font-semibold uppercase tracking-widest text-indigo-600">
+  Platform Administration
+</p>
+
+<h1 className="text-3xl font-bold text-slate-950 sm:text-4xl">
+  Organization Management
+</h1>
+
+<p className="mt-2 text-sm leading-6 text-slate-600">
+  Monitor organizations, manage platform access, and review organization activity.
+</p>
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -211,7 +218,12 @@ const OrganizationManagement = () => {
 
         {loading ? (
           <div className="flex min-h-[50vh] items-center justify-center rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-            <Loader />
+         <div className="flex flex-col items-center gap-4">
+    <Loader />
+    <p className="text-sm text-slate-500">
+      Loading organization details...
+    </p>
+</div>
           </div>
         ) : error ? (
           <div className="rounded-3xl border border-red-200 bg-white p-8 shadow-sm">
@@ -230,10 +242,15 @@ const OrganizationManagement = () => {
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 text-slate-500">
               <Search className="h-8 w-8" />
             </div>
-            <h2 className="mt-6 text-xl font-semibold text-slate-950">No organizations found</h2>
-            <p className="mt-2 text-sm leading-6 text-slate-600">
-              Try a different search term or return later when more organizations are available.
-            </p>
+            <h2 className="mt-6 text-xl font-semibold text-slate-950">
+  No organizations found
+</h2>
+
+<p className="mt-2 text-sm leading-6 text-slate-600">
+  No organizations match your search.
+  <br />
+  Try searching by organization name, owner name, or owner email.
+</p>
           </div>
         ) : (
           <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
@@ -286,13 +303,17 @@ const OrganizationManagement = () => {
                         {organization.totalMembers}
                       </td>
                       <td className="whitespace-nowrap px-6 py-4 text-sm">
-                        <span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
-                          organization.organizationStatus === 'ACTIVE'
-                            ? 'bg-emerald-100 text-emerald-800'
-                            : 'bg-rose-100 text-rose-800'
-                        }`}>
-                          {organization.organizationStatus}
-                        </span>
+                       <span
+  className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${
+    organization.organizationStatus === "ACTIVE"
+      ? "bg-emerald-100 text-emerald-700"
+      : "bg-red-100 text-red-700"
+  }`}
+>
+  {organization.organizationStatus === "ACTIVE"
+    ? "Active"
+    : "Suspended"}
+</span>
                       </td>
                       <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-500">
                         {formatDate(organization.createdAt)}
@@ -301,7 +322,7 @@ const OrganizationManagement = () => {
                         <button
                           type="button"
                           onClick={() => openDetails(organization.organizationId)}
-                          className="rounded-full border border-slate-200 bg-white px-3 py-1 text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
+                          className="rounded-full border border-slate-200 bg-white px-3 py-1 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
                         >
                           <Eye className="inline h-4 w-4 mr-1" />
                           View
@@ -309,27 +330,22 @@ const OrganizationManagement = () => {
                         {organization.organizationStatus === 'ACTIVE' ? (
                           <button
                             type="button"
-                            onClick={() => prepareAction('suspend', organization)}
-                            className="rounded-full bg-amber-500 px-3 py-1 text-sm font-semibold text-white transition hover:bg-amber-600"
+                            disabled={actionLoading}
+                            onClick={() => handleStatusAction('suspend', organization)}
+                            className="rounded-full bg-amber-500 px-3 py-1 text-sm font-medium text-white transition hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             Suspend
                           </button>
                         ) : (
                           <button
                             type="button"
-                            onClick={() => prepareAction('activate', organization)}
-                            className="rounded-full bg-emerald-500 px-3 py-1 text-sm font-semibold text-white transition hover:bg-emerald-600"
+                            disabled={actionLoading}
+                            onClick={() => handleStatusAction('activate', organization)}
+                            className="rounded-full bg-emerald-500 px-3 py-1 text-sm font-medium text-white transition hover:bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             Activate
                           </button>
                         )}
-                        <button
-                          type="button"
-                          onClick={() => prepareAction('delete', organization)}
-                          className="rounded-full bg-red-500 px-3 py-1 text-sm font-semibold text-white transition hover:bg-red-600"
-                        >
-                          Delete
-                        </button>
                       </td>
                     </tr>
                   ))}
@@ -368,74 +384,164 @@ const OrganizationManagement = () => {
         )}
       </div>
 
-      <Modal
-        isOpen={detailsOpen}
-        onClose={() => setDetailsOpen(false)}
-        title="Organization Details"
-      >
-        {selectedOrganization ? (
-          <div className="space-y-4 text-sm text-slate-700">
-            <div>
-              <p className="text-xs uppercase tracking-wide text-slate-500">Organization</p>
-              <p className="mt-1 text-base font-semibold text-slate-950">
-                {selectedOrganization.organizationName}
-              </p>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2">
+      {detailsOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4 backdrop-blur-[1px]"
+          onClick={() => {
+            setDetailsOpen(false);
+            setSelectedOrganization(null);
+          }}
+        >
+          <div
+            className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-slate-200 bg-white shadow-2xl"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="flex items-start justify-between border-b border-slate-200 px-6 py-5 sm:px-8">
               <div>
-                <p className="text-xs uppercase tracking-wide text-slate-500">Owner</p>
-                <p className="mt-1 text-sm text-slate-900">
-                  {selectedOrganization.ownerName}
+                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-indigo-600">
+                  Organization details
                 </p>
-                <p className="mt-1 text-sm text-slate-600">
-                  {selectedOrganization.ownerEmail}
-                </p>
+                <h2 className="mt-1 text-xl font-semibold text-slate-950">
+                  {selectedOrganization ? 'View Organization' : 'Organization Details'}
+                </h2>
               </div>
-              <div>
-                <p className="text-xs uppercase tracking-wide text-slate-500">Created</p>
-                <p className="mt-1 text-sm text-slate-900">
-                  {formatDate(selectedOrganization.createdAt)}
-                </p>
-              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setDetailsOpen(false);
+                  setSelectedOrganization(null);
+                }}
+                className="rounded-full p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
+              >
+                <X className="h-5 w-5" />
+              </button>
             </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
-                <p className="text-xs uppercase tracking-wide text-slate-500">Projects</p>
-                <p className="mt-2 text-2xl font-semibold text-slate-950">
-                  {selectedOrganization.totalProjects}
-                </p>
-              </div>
-              <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
-                <p className="text-xs uppercase tracking-wide text-slate-500">Members</p>
-                <p className="mt-2 text-2xl font-semibold text-slate-950">
-                  {selectedOrganization.totalMembers}
-                </p>
-              </div>
-            </div>
-            <div>
-              <p className="text-xs uppercase tracking-wide text-slate-500">Status</p>
-              <span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
-                selectedOrganization.organizationStatus === 'ACTIVE'
-                  ? 'bg-emerald-100 text-emerald-800'
-                  : 'bg-rose-100 text-rose-800'
-              }`}>
-                {selectedOrganization.organizationStatus}
-              </span>
-            </div>
-          </div>
-        ) : (
-          <div className="flex items-center justify-center p-8">
-            <Loader />
-          </div>
-        )}
-      </Modal>
 
-      <ConfirmDialog
-        isOpen={Boolean(confirmAction && confirmOrganization)}
-        onClose={closeConfirmDialog}
-        onConfirm={handleConfirm}
-        message={selectedActionMessage()}
-      />
+            {selectedOrganization ? (
+              <div className="space-y-6 px-6 py-6 sm:px-8 sm:py-8">
+                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                  <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+                        Organization
+                      </p>
+                      <h3 className="mt-2 text-2xl font-semibold text-slate-950">
+                        {selectedOrganization.organizationName}
+                      </h3>
+                      <p className="mt-2 text-sm leading-6 text-slate-600">
+                        Review organization access, ownership details, and platform activity.
+                      </p>
+                    </div>
+                    <span
+                      className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${
+                        selectedOrganization.organizationStatus === 'ACTIVE'
+                          ? 'bg-emerald-100 text-emerald-700'
+                          : 'bg-red-100 text-red-700'
+                      }`}
+                    >
+                      {selectedOrganization.organizationStatus === 'ACTIVE'
+                        ? 'Active'
+                        : 'Suspended'}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                    <div className="flex items-center gap-3">
+                      <div className="rounded-2xl bg-indigo-50 p-2.5 text-indigo-600">
+                        <UserRound className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+                          Owner Name
+                        </p>
+                        <p className="mt-1 text-sm font-semibold text-slate-900">
+                          {selectedOrganization.ownerName || 'Unknown'}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                    <div className="flex items-center gap-3">
+                      <div className="rounded-2xl bg-sky-50 p-2.5 text-sky-600">
+                        <AlertCircle className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+                          Owner Email
+                        </p>
+                        <p className="mt-1 text-sm font-semibold text-slate-900">
+                          {selectedOrganization.ownerEmail || 'Unknown'}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-3">
+                  <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                    <div className="flex items-center gap-2 text-slate-500">
+                      <CalendarDays className="h-4 w-4" />
+                      <p className="text-xs font-semibold uppercase tracking-[0.24em]">
+                        Created Date
+                      </p>
+                    </div>
+                    <p className="mt-3 text-lg font-semibold text-slate-950">
+                      {formatDate(selectedOrganization.createdAt)}
+                    </p>
+                  </div>
+
+                  <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                    <div className="flex items-center gap-2 text-slate-500">
+                      <Building2 className="h-4 w-4" />
+                      <p className="text-xs font-semibold uppercase tracking-[0.24em]">
+                        Total Projects
+                      </p>
+                    </div>
+                    <p className="mt-3 text-lg font-semibold text-slate-950">
+                      {selectedOrganization.totalProjects}
+                    </p>
+                  </div>
+
+                  <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                    <div className="flex items-center gap-2 text-slate-500">
+                      <Users className="h-4 w-4" />
+                      <p className="text-xs font-semibold uppercase tracking-[0.24em]">
+                        Total Members
+                      </p>
+                    </div>
+                    <p className="mt-3 text-lg font-semibold text-slate-950">
+                      {selectedOrganization.totalMembers}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center p-10">
+                <div className="flex flex-col items-center gap-4">
+                  <Loader />
+                  <p className="text-sm text-slate-500">Loading organization details...</p>
+                </div>
+              </div>
+            )}
+
+            <div className="flex justify-end border-t border-slate-200 bg-slate-50 px-6 py-4 sm:px-8">
+              <button
+                type="button"
+                onClick={() => {
+                  setDetailsOpen(false);
+                  setSelectedOrganization(null);
+                }}
+                className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

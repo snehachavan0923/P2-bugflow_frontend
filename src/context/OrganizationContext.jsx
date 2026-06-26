@@ -10,16 +10,11 @@ const OrganizationContext = createContext();
 
 export const useOrganization = () => useContext(OrganizationContext);
 
-const isOrganizationNotFound = (error) => {
-  const message = error.response?.data?.message || error.message || '';
 
-  return message.toLowerCase().includes('organization not found');
-};
 
 export const OrganizationProvider = ({ children }) => {
   const [organization, setOrganization] = useState(null);
   const [loading, setLoading] = useState(false);
-
   const loadOrganization = useCallback(async () => {
     setLoading(true);
 
@@ -28,13 +23,19 @@ export const OrganizationProvider = ({ children }) => {
       setOrganization(data);
       return data;
     } catch (error) {
-      if (isOrganizationNotFound(error)) {
+
+    if (error.response?.status === 404) {
+
+        // Owner has not created an organization yet
         setOrganization(null);
         return null;
-      }
+    }
 
-      throw error;
-    } finally {
+    // Any other error should NOT be treated
+    // as "organization not found"
+
+    throw error;
+}finally {
       setLoading(false);
     }
   }, []);

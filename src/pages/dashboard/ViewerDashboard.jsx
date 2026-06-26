@@ -15,7 +15,12 @@ import {
 import StatCard from "../../components/dashboard/StatCard";
 const ViewerDashboard = () => {
 
-  const [stats, setStats] = useState(null);
+ const [stats, setStats] = useState({
+  totalProjects: 0,
+  totalMembers: 0,
+  totalIssues: 0,
+  assignedTasks: 0,
+});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -24,10 +29,12 @@ const ViewerDashboard = () => {
 
       try {
 
-        const data =
-          await getViewerDashboard();
+        const data = await getViewerDashboard();
 
         setStats(data);
+
+      } catch {
+        // Axios interceptor already handled it.
 
       } finally {
 

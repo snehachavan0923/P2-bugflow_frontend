@@ -18,8 +18,11 @@ import StatCard from "../../components/dashboard/StatCard";
 
 const TesterDashboard = () => {
 
-  const [stats, setStats] =
-    useState(null);
+  const [stats, setStats] = useState({
+  assignedIssues: 0,
+  pendingVerification: 0,
+  verified: 0,
+});
 
   const [loading, setLoading] =
     useState(true);
