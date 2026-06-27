@@ -27,6 +27,7 @@ import VerifyIssue from "../pages/tester/VerifyIssue";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import ProjectManagement from "../pages/admin/ProjectManagement";
 import OrganizationManagement from "../pages/admin/OrganizationManagement";
+import OwnerManagement from "../pages/admin/OwnerManagement";
 import SubscriptionManagement from "../pages/admin/SubscriptionManagement";
 
 import Profile from "../pages/users/Profile";
@@ -269,6 +270,11 @@ const AppRoutes = () => {
         <Route
           path="admin/organizations"
           element={<OrganizationManagement />}
+        />
+
+        <Route
+          path="admin/owners"
+          element={<OwnerManagement />}
         />
 
         <Route
