@@ -143,7 +143,7 @@ const issueStatusData = useMemo(() => [
           title: "Assigned Tasks",
           value: stats.assignedTasks,
           icon: ClipboardList,
-          gradient: "from-emerald-500 to-teal-600",
+          gradient: "from-emerald-500 to-teal-600", 
           iconClass: "bg-emerald-100 text-emerald-600",
         },
       ]
