@@ -3,10 +3,11 @@ import React, {
   useState,
 } from "react";
 
-import Swal from "sweetalert2";
-
+import { AlertCircle } from "lucide-react";
 import { getTeamMembers }
 from "../../api/teamApi";
+import { validation } from "../../utils/validation";
+import { alertWarning } from "../../utils/alerts";
 
 import "./IssueForm.css";
 
@@ -49,6 +50,9 @@ const IssueForm = ({
     
   const [membersLoading, setMembersLoading] =
   useState(true);
+
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
 
   useEffect(() => {
 
@@ -102,12 +106,10 @@ const IssueForm = ({
     testers.length === 0
   ) {
 
-    Swal.fire({
-      icon: "warning",
-      title: "Team Incomplete",
-      text:
-        "Please add at least one Developer and one Tester before creating issues.",
-    });
+    alertWarning(
+      "Team Incomplete",
+      "Please add at least one Developer and one Tester before creating issues."
+    );
   }
 
 }, [
@@ -116,11 +118,124 @@ const IssueForm = ({
   testers.length,
 ]);
 
+  // Validation functions
+  const validateTitle = (value) => {
+    const newErrors = { ...errors };
+    
+    if (!validation.isRequired(value)) {
+      newErrors.title = 'Issue title is required';
+    } else if (!validation.minLength(value, 5)) {
+      newErrors.title = 'Title must be at least 5 characters';
+    } else if (!validation.maxLength(value, 100)) {
+      newErrors.title = 'Title must not exceed 100 characters';
+    } else {
+      delete newErrors.title;
+    }
+    
+    return newErrors;
+  };
+
+  const validateDescription = (value) => {
+    const newErrors = { ...errors };
+    
+    if (value && !validation.maxLength(value, 1000)) {
+      newErrors.description = 'Description must not exceed 1000 characters';
+    } else {
+      delete newErrors.description;
+    }
+    
+    return newErrors;
+  };
+
+  const validateDeveloper = (value) => {
+    const newErrors = { ...errors };
+    
+    if (!value) {
+      newErrors.developer = 'Please select a developer';
+    } else {
+      delete newErrors.developer;
+    }
+    
+    return newErrors;
+  };
+
+  const validateTester = (value) => {
+    const newErrors = { ...errors };
+    
+    if (!value) {
+      newErrors.tester = 'Please select a tester';
+    } else {
+      delete newErrors.tester;
+    }
+    
+    return newErrors;
+  };
+
+  const validateFile = (fileObj) => {
+    const newErrors = { ...errors };
+    
+    if (fileObj) {
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'];
+      
+      if (fileObj.size > maxSize) {
+        newErrors.file = 'File size must not exceed 5MB';
+      } else if (!allowedTypes.includes(fileObj.type)) {
+        newErrors.file = 'Only images (JPG, PNG, GIF) and PDF are allowed';
+      } else {
+        delete newErrors.file;
+      }
+    } else {
+      delete newErrors.file;
+    }
+    
+    return newErrors;
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    setTouched({ ...touched, [name]: true });
+    
+    if (name === 'title') {
+      setErrors(validateTitle(value));
+    } else if (name === 'description') {
+      setErrors(validateDescription(value));
+    } else if (name === 'developer') {
+      setErrors(validateDeveloper(value));
+    } else if (name === 'tester') {
+      setErrors(validateTester(value));
+    }
+  };
+
   const handleSubmit = async (e) => {
 
   e.preventDefault();
 
   if (loading) return;
+
+  // Mark all as touched
+  setTouched({
+    title: true,
+    description: true,
+    developer: true,
+    tester: true,
+    file: true,
+  });
+
+  // Validate all
+  const titleErrs = validateTitle(title);
+  const descErrs = validateDescription(description);
+  const devErrs = validateDeveloper(developerUserId);
+  const testErrs = validateTester(testerUserId);
+  const fileErrs = validateFile(file);
+  
+  const allErrors = { ...titleErrs, ...descErrs, ...devErrs, ...testErrs, ...fileErrs };
+  setErrors(allErrors);
+
+  // Prevent submit if there are errors
+  if (Object.keys(allErrors).length > 0) {
+    return;
+  }
 
   try {
 
@@ -128,8 +243,8 @@ const IssueForm = ({
 
     await onSubmit(
       {
-        title,
-        description,
+        title: title.trim(),
+        description: description.trim(),
         priority,
         developerUserId,
         testerUserId,
@@ -156,18 +271,28 @@ const IssueForm = ({
 
         <div className="issue-group">
           <label>
-            Title
+            Title *
           </label>
 
           <input
+            name="title"
             value={title}
-            onChange={(e) =>
-              setTitle(
-                e.target.value
-              )
-            }
-            required
+            onChange={(e) => {
+              setTitle(e.target.value);
+              if (touched.title) {
+                setErrors(validateTitle(e.target.value));
+              }
+            }}
+            onBlur={handleBlur}
+            placeholder="Brief description of the issue"
+            className={`${errors.title && touched.title ? 'border-red-500 ring-red-200' : ''}`}
           />
+          {errors.title && touched.title && (
+            <div className="flex items-center gap-1 mt-1 text-red-600 text-sm">
+              <AlertCircle size={14} />
+              {errors.title}
+            </div>
+          )}
         </div>
 
         <div className="issue-group">
@@ -176,14 +301,25 @@ const IssueForm = ({
           </label>
 
           <textarea
+            name="description"
             rows="3"
             value={description}
-            onChange={(e) =>
-              setDescription(
-                e.target.value
-              )
-            }
+            onChange={(e) => {
+              setDescription(e.target.value);
+              if (touched.description) {
+                setErrors(validateDescription(e.target.value));
+              }
+            }}
+            onBlur={handleBlur}
+            placeholder="Detailed description (optional)"
+            className={`${errors.description && touched.description ? 'border-red-500 ring-red-200' : ''}`}
           />
+          {errors.description && touched.description && (
+            <div className="flex items-center gap-1 mt-1 text-red-600 text-sm">
+              <AlertCircle size={14} />
+              {errors.description}
+            </div>
+          )}
         </div>
 
         <div className="issue-group">
@@ -216,17 +352,22 @@ const IssueForm = ({
       <div className="issue-group">
 
         <label>
-          Developer
+          Developer *
         </label>
 
         <select
+          name="developer"
           value={developerUserId}
-          onChange={(e) =>
+          onChange={(e) => {
             setDeveloperUserId(
               e.target.value
-            )
-          }
-          required
+            );
+            if (touched.developer) {
+              setErrors(validateDeveloper(e.target.value));
+            }
+          }}
+          onBlur={handleBlur}
+          className={`${errors.developer && touched.developer ? 'border-red-500 ring-red-200' : ''}`}
         >
 
           <option value="">
@@ -250,23 +391,34 @@ const IssueForm = ({
           )}
 
         </select>
+        {errors.developer && touched.developer && (
+          <div className="flex items-center gap-1 mt-1 text-red-600 text-sm">
+            <AlertCircle size={14} />
+            {errors.developer}
+          </div>
+        )}
 
       </div>
 
       <div className="issue-group">
 
         <label>
-          Tester
+          Tester *
         </label>
 
         <select
+          name="tester"
           value={testerUserId}
-          onChange={(e) =>
+          onChange={(e) => {
             setTesterUserId(
               e.target.value
-            )
-          }
-          required
+            );
+            if (touched.tester) {
+              setErrors(validateTester(e.target.value));
+            }
+          }}
+          onBlur={handleBlur}
+          className={`${errors.tester && touched.tester ? 'border-red-500 ring-red-200' : ''}`}
         >
 
           <option value="">
@@ -290,6 +442,12 @@ const IssueForm = ({
           )}
 
         </select>
+        {errors.tester && touched.tester && (
+          <div className="flex items-center gap-1 mt-1 text-red-600 text-sm">
+            <AlertCircle size={14} />
+            {errors.tester}
+          </div>
+        )}
 
       </div>
 
@@ -301,12 +459,22 @@ const IssueForm = ({
 
           <input
             type="file"
-            onChange={(e) =>
-              setFile(
-                e.target.files[0]
-              )
-            }
+            name="file"
+            onChange={(e) => {
+              const fileObj = e.target.files[0];
+              setFile(fileObj);
+              if (touched.file) {
+                setErrors(validateFile(fileObj));
+              }
+            }}
+            onBlur={handleBlur}
           />
+          {errors.file && touched.file && (
+            <div className="flex items-center gap-1 mt-1 text-red-600 text-sm">
+              <AlertCircle size={14} />
+              {errors.file}
+            </div>
+          )}
 
         </div>
 
@@ -315,7 +483,8 @@ const IssueForm = ({
           disabled={
             loading ||
             developers.length === 0 ||
-            testers.length === 0
+            testers.length === 0 ||
+            Object.keys(errors).length > 0
           }
         >
           {loading

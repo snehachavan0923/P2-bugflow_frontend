@@ -168,7 +168,8 @@ const KanbanBoard = ({
   const handleResolveSubmit = async () => {
     if (!editingIssue) return;
     if (!proofFile) {
-      alert("Upload resolution proof");
+      const { alertValidationError } = await import('../../utils/alerts');
+      alertValidationError('Resolution Proof', 'Please upload proof to resolve this issue.');
       return;
     }
 

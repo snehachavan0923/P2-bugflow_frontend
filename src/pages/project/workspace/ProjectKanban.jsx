@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import IssueBoard from "../../issues/IssueBoard";
 import IssueForm from "../../../components/issue/IssueForm";
 import { createIssue } from "../../../api/issueApi";
+import { alertSuccess, alertApiError } from "../../../utils/alerts";
 import { useProjectWorkspace } from "./WorkspaceContext";
 
 const ProjectKanban = () => {
@@ -22,12 +23,12 @@ const ProjectKanban = () => {
       }
 
       await createIssue(projectId, formData);
-      alert("Issue created successfully");
+      alertSuccess('Issue Created', 'Your issue has been created successfully!');
       setShowModal(false);
       refreshWorkspace();
     } catch (err) {
       console.error(err);
-      alert("Error creating issue");
+      alertApiError(err, 'Error creating issue. Please try again.');
     }
   };
 

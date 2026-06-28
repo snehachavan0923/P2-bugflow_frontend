@@ -7,7 +7,6 @@ import {
   Bug,
   Clock3,
   CheckCircle,
-  Loader2,
 } from "lucide-react";
 
 import {
@@ -15,6 +14,7 @@ import {
 } from "../../api/dashboardApi";
 
 import StatCard from "../../components/dashboard/StatCard";
+import LoaderWithMessage from "../../components/common/LoaderWithMessage";
 
 const TesterDashboard = () => {
 
@@ -53,15 +53,9 @@ const TesterDashboard = () => {
 
   }, []);
 
-  if (loading) {
-
+   if (loading) {
     return (
-      <div className="flex justify-center py-20">
-        <Loader2
-          size={30}
-          className="animate-spin"
-        />
-      </div>
+      <LoaderWithMessage message="Loading dashboard data..." />
     );
   }
 
