@@ -6,7 +6,6 @@ import {
 import {
   ClipboardList,
   PlayCircle,
-  Loader2,
   FolderKanban,
 } from "lucide-react";
 
@@ -15,6 +14,7 @@ import {
 } from "../../api/dashboardApi";
 
 import StatCard from "../../components/dashboard/StatCard";
+import LoaderWithMessage from "../../components/common/LoaderWithMessage";
 
 const DeveloperDashboard = () => {
 
@@ -54,14 +54,8 @@ const DeveloperDashboard = () => {
   }, []);
 
   if (loading) {
-
     return (
-      <div className="flex justify-center py-20">
-        <Loader2
-          size={30}
-          className="animate-spin"
-        />
-      </div>
+      <LoaderWithMessage message="Loading dashboard data..." />
     );
   }
 

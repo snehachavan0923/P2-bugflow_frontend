@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import IssueForm from '../../components/issue/IssueForm';
 import { createIssue } from '../../api/issueApi';
 import Modal from '../../components/common/Modal';
+import { alertSuccess, alertApiError } from '../../utils/alerts';
 
 const CreateIssue = () => {
   const { projectId } = useParams();
@@ -21,9 +22,11 @@ const handleSubmit = async (data, file) => {
     await createIssue(projectId, formData);
     setOpen(false);
 
+    const successMessage = 'Issue created successfully!';
+    alertSuccess('Issue Created', successMessage);
   } catch (err) {
     console.error(err);
-    alert("Error creating issue");
+    alertApiError(err, 'Error creating issue. Please try again.');
   }
 };
   return (

@@ -6,39 +6,68 @@ import {
   LayoutDashboard,
   Plus,
   Users,
+  AlertCircle,
 } from 'lucide-react';
 import { createOrganization } from '../../api/organizationApi';
 import { useOrganization } from '../../context/OrganizationContext';
+import { validation } from '../../utils/validation';
+import { alertSuccess, alertApiError } from '../../utils/alerts';
 
 const CreateOrganization = () => {
   const [organizationName, setOrganizationName] = useState('');
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { refreshOrganization } = useOrganization();
 
+  // Validate organization name
+  const validateOrgName = (value) => {
+    const newErrors = { ...errors };
+    
+    if (!validation.isRequired(value)) {
+      newErrors.organizationName = 'Organization name is required';
+    } else if (!validation.minLength(value, 2)) {
+      newErrors.organizationName = 'Organization name must be at least 2 characters';
+    } else if (!validation.maxLength(value, 100)) {
+      newErrors.organizationName = 'Organization name must not exceed 100 characters';
+    } else {
+      delete newErrors.organizationName;
+    }
+    
+    return newErrors;
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    setTouched({ ...touched, [name]: true });
+    setErrors(validateOrgName(value));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const name = organizationName.trim();
-
-    if (!name) {
-      setError('Organization name is required');
+    // Mark as touched
+    setTouched({ organizationName: true });
+    
+    // Validate
+    const newErrors = validateOrgName(organizationName);
+    setErrors(newErrors);
+    
+    // Prevent submit if there are errors
+    if (Object.keys(newErrors).length > 0) {
       return;
     }
 
-    setError('');
     setLoading(true);
 
     try {
-      await createOrganization({ name });
+      await createOrganization({ name: organizationName.trim() });
       await refreshOrganization();
+      await alertSuccess('Organization Created', 'Your organization has been created successfully!');
       navigate('/dashboard');
     } catch (err) {
-      setError(
-        err.response?.data?.message ||
-          'Unable to create organization. Please try again.'
-      );
+      alertApiError(err, 'Unable to create organization. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -197,36 +226,39 @@ const CreateOrganization = () => {
                     </label>
                     <input
                       id="organizationName"
+                      name="organizationName"
                       type="text"
                       value={organizationName}
                       onChange={(e) => {
                         setOrganizationName(e.target.value);
-                        if (error) {
-                          setError('');
+                        if (touched.organizationName) {
+                          setErrors(validateOrgName(e.target.value));
                         }
                       }}
+                      onBlur={handleBlur}
                       placeholder="Acme Inc."
                       className={`mt-2 w-full rounded-lg border bg-white px-4 py-3.5 text-base text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:ring-4 ${
-                        error
+                        errors.organizationName && touched.organizationName
                           ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
                           : 'border-slate-200 focus:border-blue-500 focus:ring-blue-100'
                       }`}
-                      aria-invalid={Boolean(error)}
-                      aria-describedby={error ? 'organizationNameError' : undefined}
+                      aria-invalid={Boolean(errors.organizationName && touched.organizationName)}
+                      aria-describedby={errors.organizationName && touched.organizationName ? 'organizationNameError' : undefined}
                     />
-                    {error && (
-                      <p
+                    {errors.organizationName && touched.organizationName && (
+                      <div
                         id="organizationNameError"
-                        className="mt-2 text-sm font-medium text-red-600"
+                        className="mt-2 flex items-center gap-1 text-sm font-medium text-red-600"
                       >
-                        {error}
-                      </p>
+                        <AlertCircle size={16} />
+                        {errors.organizationName}
+                      </div>
                     )}
                   </div>
 
                   <button
                     type="submit"
-                    disabled={loading}
+                    disabled={loading || Object.keys(errors).length > 0}
                     className="w-full rounded-lg bg-slate-950 px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-slate-300 transition duration-200 hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-slate-200 disabled:translate-y-0 disabled:cursor-not-allowed disabled:bg-slate-400 disabled:shadow-none"
                   >
                     {loading ? 'Creating...' : 'Create Organization'}

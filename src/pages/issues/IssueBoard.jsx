@@ -56,7 +56,8 @@ const IssueBoard = ({ onCreateIssue }) => {
       await refreshWorkspace();
     } catch (err) {
       console.error(err);
-      alert("Error saving issue details");
+      const { alertApiError } = await import('../../utils/alerts');
+      alertApiError(err, 'Error saving issue details. Please try again.');
     }
   };
 

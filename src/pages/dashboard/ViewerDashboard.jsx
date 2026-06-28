@@ -3,7 +3,6 @@ import {
   Users,
   Bug,
   ClipboardList,
-  Loader2,
 } from "lucide-react";
 
 import { useEffect, useState } from "react";
@@ -13,6 +12,7 @@ import {
 } from "../../api/dashboardApi";
 
 import StatCard from "../../components/dashboard/StatCard";
+import LoaderWithMessage from "../../components/common/LoaderWithMessage";
 const ViewerDashboard = () => {
 
  const [stats, setStats] = useState({
@@ -49,16 +49,9 @@ const ViewerDashboard = () => {
   }, []);
 
   if (loading) {
-
     return (
-      <div className="flex justify-center py-20">
-        <Loader2
-          className="animate-spin"
-          size={30}
-        />
-      </div>
+      <LoaderWithMessage message="Loading dashboard data..." />
     );
-
   }
 
   return (

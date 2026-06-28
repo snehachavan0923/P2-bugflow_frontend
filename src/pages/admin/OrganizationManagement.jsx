@@ -12,7 +12,7 @@ import {
   UserRound,
 } from 'lucide-react';
 import Swal from "sweetalert2";
-import Loader from '../../components/common/Loader';
+import LoaderWithMessage from '../../components/common/LoaderWithMessage';
 import {
   getAdminOrganizations,
   suspendAdminOrganization,
@@ -187,16 +187,16 @@ const OrganizationManagement = () => {
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
            <p className="text-sm font-semibold uppercase tracking-widest text-indigo-600">
-  Platform Administration
-</p>
+            Platform Administration
+          </p>
 
-<h1 className="text-3xl font-bold text-slate-950 sm:text-4xl">
-  Organization Management
-</h1>
+          <h1 className="text-3xl font-bold text-slate-950 sm:text-4xl">
+            Organization Management
+          </h1>
 
-<p className="mt-2 text-sm leading-6 text-slate-600">
-  Monitor organizations, manage platform access, and review organization activity.
-</p>
+          <p className="mt-2 text-sm leading-6 text-slate-600">
+            Monitor organizations, manage platform access, and review organization activity.
+          </p>
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -218,12 +218,7 @@ const OrganizationManagement = () => {
 
         {loading ? (
           <div className="flex min-h-[50vh] items-center justify-center rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-         <div className="flex flex-col items-center gap-4">
-    <Loader />
-    <p className="text-sm text-slate-500">
-      Loading organization details...
-    </p>
-</div>
+            <LoaderWithMessage message="Loading organizations..." />
           </div>
         ) : error ? (
           <div className="rounded-3xl border border-red-200 bg-white p-8 shadow-sm">
@@ -243,14 +238,14 @@ const OrganizationManagement = () => {
               <Search className="h-8 w-8" />
             </div>
             <h2 className="mt-6 text-xl font-semibold text-slate-950">
-  No organizations found
-</h2>
+            No organizations found
+          </h2>
 
-<p className="mt-2 text-sm leading-6 text-slate-600">
-  No organizations match your search.
-  <br />
-  Try searching by organization name, owner name, or owner email.
-</p>
+          <p className="mt-2 text-sm leading-6 text-slate-600">
+            No organizations match your search.
+            <br />
+            Try searching by organization name, owner name, or owner email.
+          </p>
           </div>
         ) : (
           <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
@@ -304,16 +299,16 @@ const OrganizationManagement = () => {
                       </td>
                       <td className="whitespace-nowrap px-6 py-4 text-sm">
                        <span
-  className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${
-    organization.organizationStatus === "ACTIVE"
-      ? "bg-emerald-100 text-emerald-700"
-      : "bg-red-100 text-red-700"
-  }`}
->
-  {organization.organizationStatus === "ACTIVE"
-    ? "Active"
-    : "Suspended"}
-</span>
+                        className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${
+                          organization.organizationStatus === "ACTIVE"
+                            ? "bg-emerald-100 text-emerald-700"
+                            : "bg-red-100 text-red-700"
+                        }`}
+                      >
+                        {organization.organizationStatus === "ACTIVE"
+                          ? "Active"
+                          : "Suspended"}
+                      </span>
                       </td>
                       <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-500">
                         {formatDate(organization.createdAt)}
@@ -521,8 +516,8 @@ const OrganizationManagement = () => {
             ) : (
               <div className="flex items-center justify-center p-10">
                 <div className="flex flex-col items-center gap-4">
-                  <Loader />
-                  <p className="text-sm text-slate-500">Loading organization details...</p>
+              
+                  <LoaderWithMessage message="Loading organization details..." />
                 </div>
               </div>
             )}

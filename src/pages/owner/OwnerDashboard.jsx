@@ -12,7 +12,6 @@ import {
   ClipboardList,
   FolderKanban,
   Layers3,
-  Loader2,
   PlusCircle,
   Sparkles,
   Users,
@@ -32,6 +31,7 @@ import {
   Tooltip,
   Cell
 } from "recharts";
+import LoaderWithMessage from "../../components/common/LoaderWithMessage";
 
 import {
   getOwnerDashboard,
@@ -176,15 +176,9 @@ const issueStatusData = useMemo(() => [
     },
   ];
 
-  if (loading) {
-
+    if (loading) {
     return (
-      <div className="flex justify-center py-20">
-        <Loader2
-          className="animate-spin text-slate-700"
-          size={30}
-        />
-      </div>
+      <LoaderWithMessage message="Loading dashboard data..." />
     );
   }
 

@@ -11,7 +11,7 @@ import {
   Building2,
   UserRound,
 } from "lucide-react";
-import Loader from "../../components/common/Loader";
+import LoaderWithMessage from "../../components/common/LoaderWithMessage";
 import {
   getAdminProjects,
   getAdminProjectById,
@@ -134,10 +134,7 @@ const ProjectManagement = () => {
 
         {loading ? (
           <div className="flex min-h-[50vh] items-center justify-center rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-            <div className="flex flex-col items-center gap-4">
-              <Loader />
-              <p className="text-sm text-slate-500">Loading projects...</p>
-            </div>
+            <LoaderWithMessage message="Loading projects..." />
           </div>
         ) : error ? (
           <div className="rounded-3xl border border-red-200 bg-white p-8 shadow-sm">
@@ -377,8 +374,8 @@ const ProjectManagement = () => {
             ) : (
               <div className="flex items-center justify-center p-10">
                 <div className="flex flex-col items-center gap-4">
-                  <Loader />
-                  <p className="text-sm text-slate-500">Loading project details...</p>
+               
+                  <LoaderWithMessage message="Loading project details..." />
                 </div>
               </div>
             )}

@@ -3,26 +3,32 @@ import { Link } from "react-router-dom";
 import { getProjects, createProject } from "../../api/projectApi";
 import CreateProjectModal from "../../components/project/CreateProjectModal";
 import { useAuth } from "../../context/AuthContext";
-
+import LoaderWithMessage from "../../components/common/LoaderWithMessage";
 const ProjectList = () => {
 
   const { role } = useAuth();
 
   const [projects, setProjects] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchProjects();
   }, []);
 
   const fetchProjects = async () => {
-    try {
-      const data = await getProjects();
-      setProjects(data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  try {
+    setLoading(true);
+
+    const data = await getProjects();
+    setProjects(data);
+
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleCreate = async (newProject) => {
     try {
@@ -60,35 +66,41 @@ const ProjectList = () => {
 
       </div>
 
-      <div className="grid md:grid-cols-3 gap-4">
-
-        {projects.map((project) => (
-
-          <div
-            key={project.id}
-            className="bg-white p-6 rounded shadow"
-          >
-
-            <h2 className="text-xl font-semibold">
-              {project.name}
-            </h2>
-
-            <p className="text-gray-600">
-              {project.description}
-            </p>
-
-            <Link
-              to={`/projects/${project.id}`}
-              className="mt-3 inline-block rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
+      {loading ? (
+        <div className="flex justify-center items-center min-h-[50vh]">
+          <LoaderWithMessage message="Loading projects..." />
+        </div>
+      ) : projects.length === 0 ? (
+        <div className="flex justify-center items-center min-h-[40vh]">
+          <p className="text-gray-500 text-lg">
+            No projects available.
+          </p>
+        </div>
+      ) : (
+        <div className="grid md:grid-cols-3 gap-4">
+          {projects.map((project) => (
+            <div
+              key={project.id}
+              className="bg-white p-6 rounded shadow"
             >
-              View
-            </Link>
+              <h2 className="text-xl font-semibold">
+                {project.name}
+              </h2>
 
-          </div>
+              <p className="text-gray-600">
+                {project.description}
+              </p>
 
-        ))}
-
-      </div>
+              <Link
+                to={`/projects/${project.id}`}
+                className="mt-3 inline-block rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
+              >
+                View
+              </Link>
+            </div>
+          ))}
+        </div>
+      )}
 
       {role === "Owner" && isModalOpen && (
 
