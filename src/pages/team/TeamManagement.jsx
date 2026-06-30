@@ -3,18 +3,23 @@ import React, {
   useState,
   useCallback,
 } from "react";
-import Swal from "sweetalert2";
 import { useParams } from "react-router-dom";
 
 import InviteMemberModal from "../../components/team/InviteMemberModal";
-
+import ChangePasswordModal from "../../components/team/ChangePasswordModal";
 import MembersTable from "../../components/team/MembersTable";
 
 import {
   addTeamMember,
+  changeTeamMemberPassword,
   getTeamMembers,
   removeTeamMember,
 } from "../../api/teamApi";
+import {
+  alertSuccess,
+  alertApiError,
+  confirmDelete,
+} from "../../utils/alerts";
 
 const TeamManagement = () => {
 
@@ -27,8 +32,12 @@ const TeamManagement = () => {
 
   const [showModal, setShowModal] =
     useState(false);
+  const [selectedMember, setSelectedMember] =
+    useState(null);
+  const [showPasswordModal, setShowPasswordModal] =
+    useState(false);
 
-    const loadMembers = useCallback(async () => {
+  const loadMembers = useCallback(async () => {
 
       try {
 
@@ -56,88 +65,83 @@ const TeamManagement = () => {
     memberData
   ) => {
     try {
-
       await addTeamMember(
         projectId,
         memberData
       );
 
-      Swal.fire({
-        icon: "success",
-        title: "Member Added",
-        text: "Team member added successfully",
-        timer: 1800,
-        showConfirmButton: false,
-      });
+      alertSuccess(
+        "Member Added",
+        "Team member added successfully"
+      );
 
       setShowModal(false);
-
       loadMembers();
-
     } catch (error) {
-
       console.error(error);
-
-      const message =
-      error?.response?.data?.message ||
-      error?.response?.data ||
-      "Error adding member";
-
-    Swal.fire({
-      icon: "error",
-      title: "Cannot Add Member",
-      text: message,
-      confirmButtonColor: "#2563eb",
-    });   
+      alertApiError(error, "Error adding member");
     }
   };
 
   const handleRemoveMember =
     async (memberId) => {
 
-      const result = await Swal.fire({
-      title: "Remove Member?",
-      text: "This action cannot be undone.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Remove",
-      cancelButtonText: "Cancel",
-      confirmButtonColor: "#dc2626",
-    });
+      const result = await confirmDelete(
+        "member",
+        {
+          title: "Remove Member?",
+          text: "This action cannot be undone.",
+          confirmButtonText: "Remove",
+        }
+      );
 
-    if (!result.isConfirmed) return;
+      if (!result.isConfirmed) return;
 
       try {
-
         await removeTeamMember(
           projectId,
           memberId
         );
-        
-        Swal.fire({
-        icon: "success",
-        title: "Removed",
-        text: "Member removed successfully",
-        timer: 1800,
-        showConfirmButton: false,
-      });
+
+        alertSuccess(
+          "Removed",
+          "Member removed successfully"
+        );
 
         loadMembers();
-
       } catch (error) {
-
-          console.error(error);
-
-          Swal.fire({
-            icon: "error",
-            title: "Remove Failed",
-            text:
-              error?.response?.data?.message ||
-              "Unable to remove member",
-            confirmButtonColor: "#2563eb",
-          });
-        }
+        console.error(error);
+        alertApiError(error, "Unable to remove member");
+      }
     };
+
+  const handleOpenChangePassword = (member) => {
+    setSelectedMember(member);
+    setShowPasswordModal(true);
+  };
+
+  const handleChangePassword = async (
+  memberId,
+  password
+) => {
+  try {
+    await changeTeamMemberPassword(
+      projectId,
+      memberId,
+      password
+    );
+
+    alertSuccess(
+      "Password Updated",
+      "Team member password changed successfully"
+    );
+
+    return true;
+  } catch (error) {
+    alertApiError(error, "Unable to update password");
+    return false;
+  }
+};
 
   if (loading) {
     return (
@@ -170,6 +174,7 @@ const TeamManagement = () => {
       <MembersTable
         members={members}
         onRemove={handleRemoveMember}
+        onChangePassword={handleOpenChangePassword}
       />
 
       {showModal && (
@@ -178,6 +183,18 @@ const TeamManagement = () => {
             setShowModal(false)
           }
           onInvite={handleAddMember}
+        />
+      )}
+
+      {showPasswordModal && selectedMember && (
+        <ChangePasswordModal
+          member={selectedMember}
+          isOpen={showPasswordModal}
+          onClose={() => {
+            setShowPasswordModal(false);
+            setSelectedMember(null);
+          }}
+          onChangePassword={handleChangePassword}
         />
       )}
     </div>

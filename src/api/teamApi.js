@@ -42,3 +42,16 @@ export const updateTeamMemberRole = async (
 
   return response.data;
 };
+
+export const changeTeamMemberPassword = async (
+  projectId,
+  memberId,
+  password
+) => {
+  const response = await axios.put(
+    `/projects/${projectId}/team/${memberId}/password`,
+    { password }
+  );
+
+  return response.data;
+};
