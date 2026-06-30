@@ -10,8 +10,11 @@ const statusAccents = {
 const KanbanColumn = ({
   title,
   issues,
-  selectedIssueId, 
+  selectedIssueId,
   onSelectIssue,
+  mode,
+  onEditIssue,
+  onDeleteIssue,
 }) => {
   return (
     <section className="flex h-[min(68vh,700px)] min-h-[520px] min-w-0 flex-col overflow-hidden rounded-xl border border-slate-200/90 bg-slate-100/70 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
@@ -44,8 +47,11 @@ const KanbanColumn = ({
             <IssueCard
               key={issue.id || issue._id}
               issue={issue}
+              mode={mode}
               isSelected={selectedIssueId === (issue.id || issue._id)}
               onClick={onSelectIssue}
+              onEdit={onEditIssue}
+              onDelete={onDeleteIssue}
             />
           ))
         )}

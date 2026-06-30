@@ -256,6 +256,9 @@ const KanbanBoard = ({
                   issues={issuesByStatus[column] || []}
                   selectedIssueId={selectedIssueId}
                   onSelectIssue={setSelectedIssue}
+                  mode={mode}
+                  onEditIssue={handleOpenEdit}
+                  onDeleteIssue={handleDeleteIssue}
                 />
               ))}
             </div>
