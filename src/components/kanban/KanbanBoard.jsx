@@ -2,11 +2,13 @@ import { useCallback, useMemo, useState } from "react";
 import { X } from "lucide-react";
 import {
   approveIssue,
+  deleteIssue,
   editIssue,
   moveIssueStatus,
   rejectIssue,
   resolveIssue,
 } from "../../api/issueApi";
+import { alertApiError, alertSuccess, confirmAction } from "../../utils/alerts";
 import IssueDetailsDrawer from "./IssueDetailsDrawer";
 import KanbanColumn from "./KanbanColumn";
 
@@ -141,6 +143,29 @@ const KanbanBoard = ({
     setShowResolve(true);
   }, []);
 
+  const handleDeleteIssue = async (issue) => {
+    const confirmed = await confirmAction(
+      "Delete this issue?",
+      "This action cannot be undone.",
+      "Delete",
+      { confirmButtonColor: "#ef4444" }
+    );
+
+    if (!confirmed.isConfirmed) {
+      return;
+    }
+
+    try {
+      await deleteIssue(resolveProjectId(issue), getIssueId(issue));
+      await refreshBoard();
+      setSelectedIssue(null);
+      await alertSuccess("Issue Deleted", "The issue was deleted successfully.");
+    } catch (err) {
+      console.error(err);
+      await alertApiError(err, "Error deleting issue. Please try again.");
+    }
+  };
+
   const handleEditSubmit = async () => {
     if (!editingIssue) return;
     setSaving(true);
@@ -253,6 +278,7 @@ const KanbanBoard = ({
               onOpenImage={handleOpenImage}
               onOpenEdit={handleOpenEdit}
               onOpenResolve={handleOpenResolve}
+              onDeleteIssue={handleDeleteIssue}
             />
           </div>
         )}
@@ -273,6 +299,7 @@ const KanbanBoard = ({
             onOpenImage={handleOpenImage}
             onOpenEdit={handleOpenEdit}
             onOpenResolve={handleOpenResolve}
+            onDeleteIssue={handleDeleteIssue}
           />
         </div>
       )}
