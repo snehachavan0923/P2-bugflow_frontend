@@ -3,7 +3,9 @@ import { Plus, X } from "lucide-react";
 import { useParams } from "react-router-dom";
 
 import KanbanBoard from "../../components/kanban/KanbanBoard";
-import { editIssue } from "../../api/issueApi";
+import { deleteIssue, editIssue } from "../../api/issueApi";
+import { useAuth } from "../../context/AuthContext";
+import { alertApiError, alertSuccess, confirmAction } from "../../utils/alerts";
 import { useProjectWorkspace } from "../project/workspace/WorkspaceContext";
 
 const tabs = ["Open", "In Progress", "Review", "Done"];
@@ -17,6 +19,7 @@ const inputClassName =
 const IssueBoard = ({ onCreateIssue }) => {
   const { projectId } = useParams();
   const { issues, members, refreshWorkspace } = useProjectWorkspace();
+  const { user } = useAuth();
 
   const [viewMode, setViewMode] = useState("kanban");
   const [activeTab, setActiveTab] = useState("Open");
@@ -29,6 +32,29 @@ const IssueBoard = ({ onCreateIssue }) => {
   const filteredIssues = issues.filter(
     (issue) => issue.status === activeTab
   );
+  const isOwnerView = user?.role?.toLowerCase() === "owner";
+
+  const handleDeleteIssue = async (issue) => {
+    const confirmed = await confirmAction(
+      "Delete this issue?",
+      "This action cannot be undone.",
+      "Delete",
+      { confirmButtonColor: "#ef4444" }
+    );
+
+    if (!confirmed.isConfirmed) {
+      return;
+    }
+
+    try {
+      await deleteIssue(projectId, issue.id || issue._id);
+      await refreshWorkspace();
+      await alertSuccess("Issue Deleted", "The issue was deleted successfully.");
+    } catch (err) {
+      console.error(err);
+      await alertApiError(err, "Error deleting issue. Please try again.");
+    }
+  };
 
   const handleEditSubmit = async () => {
     try {
@@ -227,6 +253,16 @@ const IssueBoard = ({ onCreateIssue }) => {
                               >
                                 Details
                               </button>
+
+                              {isOwnerView && (
+                                <button
+                                  type="button"
+                                  className={`${buttonBase} bg-red-600 text-white hover:bg-red-700`}
+                                  onClick={() => handleDeleteIssue(issue)}
+                                >
+                                  Delete
+                                </button>
+                              )}
                             </div>
                           </td>
                         </tr>

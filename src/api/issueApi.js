@@ -36,6 +36,11 @@ export const editIssue = async (projectId, issueId, data) => {
   return res.data;
 };
 
+export const deleteIssue = async (projectId, issueId) => {
+  const res = await axios.delete(`/projects/${projectId}/issues/${issueId}`);
+  return res.data;
+};
+
 export const resolveIssue = async (projectId, issueId, formData) => {
   const res = await axios.put(
     `/projects/${projectId}/issues/${issueId}/resolve`,
