@@ -5,6 +5,7 @@ import {
   Play,
   RotateCcw,
   Send,
+  Trash2,
   X,
   XCircle,
 } from "lucide-react";
@@ -31,6 +32,7 @@ const IssueDetailsDrawer = ({
   onOpenImage,
   onOpenEdit,
   onOpenResolve,
+  onDeleteIssue,
   embedded = false,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -289,6 +291,17 @@ const activity = currentActivity();
               >
                 <Pencil className="h-4 w-4" aria-hidden="true" />
                 Edit Issue
+              </button>
+            )}
+
+            {mode === "owner" && (
+              <button
+                type="button"
+                onClick={() => onDeleteIssue(issue)}
+                className={`${actionButtonClassName} bg-red-600 text-white hover:bg-red-700`}
+              >
+                <Trash2 className="h-4 w-4" aria-hidden="true" />
+                Delete
               </button>
             )}
 
