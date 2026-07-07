@@ -31,7 +31,7 @@ const IssueTrends = ({ data }) => {
 
         <div className="p-6">
           {chartData.length > 0 ? (
-            <ResponsiveContainer width="100%" height={350}>
+          <ResponsiveContainer width="100%" height={260}>
               <LineChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                 <XAxis

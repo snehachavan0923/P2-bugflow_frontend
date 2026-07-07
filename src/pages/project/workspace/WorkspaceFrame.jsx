@@ -9,6 +9,7 @@ import {
 const WorkspaceFrame = ({ project, tabs }) => {
   const { projectId } = useParams();
   const { pathname } = useLocation();
+  const isReportsRoute = pathname.includes("/reports");
   const workspacePath = (tab) =>
     `/projects/${projectId}/${tab}`;
 
@@ -57,7 +58,7 @@ const WorkspaceFrame = ({ project, tabs }) => {
   </div>
 
 <div className="flex-1 min-h-0 overflow-hidden flex h-full">
-    <div className="flex-1 h-full min-h-0 overflow-hidden">
+    <div className={`flex-1 h-full min-h-0 ${isReportsRoute ? "overflow-y-auto" : "overflow-hidden"}`}>
       <Outlet />
     </div>
 </div>
