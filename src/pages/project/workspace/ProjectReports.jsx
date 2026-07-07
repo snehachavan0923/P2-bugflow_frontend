@@ -107,7 +107,7 @@ const ProjectReports = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-7xl mx-auto space-y-6 px-4 lg:px-8">
       <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
         <div className="flex items-center gap-4">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-700">
@@ -125,8 +125,9 @@ const ProjectReports = () => {
       {/* Issue Trends Section */}
       {trends && <IssueTrends data={trends} />}
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+       {/* Summary cards – responsive columns */}
+       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
           <p className="text-sm font-medium text-slate-500">Total Issues</p>
           <p className="mt-3 text-3xl font-semibold text-slate-900">{summary.totalIssues}</p>
           <div className="mt-4 h-1.5 rounded-full bg-slate-100">
@@ -134,7 +135,7 @@ const ProjectReports = () => {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
           <p className="text-sm font-medium text-slate-500">Open</p>
           <p className="mt-3 text-3xl font-semibold text-slate-900">{summary.openIssues}</p>
           <div className="mt-4 h-1.5 rounded-full bg-blue-100">
@@ -145,7 +146,7 @@ const ProjectReports = () => {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
           <p className="text-sm font-medium text-slate-500">Completed</p>
           <p className="mt-3 text-3xl font-semibold text-slate-900">{summary.completed}</p>
           <div className="mt-4 h-1.5 rounded-full bg-emerald-100">
@@ -156,7 +157,7 @@ const ProjectReports = () => {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
           <p className="text-sm font-medium text-slate-500">Completion %</p>
           <p className="mt-3 text-3xl font-semibold text-slate-900">{summary.completionRate}%</p>
           <div className="mt-4 h-1.5 rounded-full bg-emerald-100">
@@ -168,7 +169,8 @@ const ProjectReports = () => {
         </div>
       </div>
 
-      <div className="grid gap-4 xl:grid-cols-[1.3fr_0.7fr]">
+       {/* Two‑column layout: left health, right insights & priority */}
+       <div className="grid gap-6 md:grid-cols-2">
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
@@ -209,7 +211,7 @@ const ProjectReports = () => {
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold text-slate-900">Project Insights</h2>
             </div>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {/* Oldest Open Issue */}
               <div className="p-4 border rounded-lg bg-slate-50">
                 <p className="text-sm font-medium text-slate-500">Oldest Open Issue</p>
@@ -257,7 +259,8 @@ const ProjectReports = () => {
           </div>
         )}
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        {/* Priority Distribution – placed in right column */}
+        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
           <div>
             <p className="text-sm font-medium text-slate-500">Priority Distribution</p>
             <h2 className="mt-2 text-xl font-semibold text-slate-900">Risk profile</h2>
@@ -287,7 +290,8 @@ const ProjectReports = () => {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        {/* Team Performance – full width below columns */}
+        <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div className="border-b border-slate-200 bg-slate-50 px-6 py-4">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div>
