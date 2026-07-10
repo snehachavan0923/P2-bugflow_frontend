@@ -52,7 +52,7 @@ const CreateProjectModal = ({ isOpen, onClose, onCreate }) => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     // Mark all as touched
@@ -73,7 +73,7 @@ const CreateProjectModal = ({ isOpen, onClose, onCreate }) => {
     setSubmitting(true);
     
     try {
-      onCreate({ name: name.trim(), description: description.trim() });
+      await onCreate({ name: name.trim(), description: description.trim() });
       alertSuccess('Project Created', 'Your project has been created successfully!');
       setName('');
       setDescription('');

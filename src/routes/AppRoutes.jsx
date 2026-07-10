@@ -201,6 +201,14 @@ const AppRoutes = () => {
           }
         />
         <Route
+          path="owner/subscription"
+          element={
+            <PrivateRoute allowedRoles={["Owner"]}>
+              <Subscription />
+            </PrivateRoute>
+          }
+        />
+        <Route
           path="organization/settings"
           element={
             <PrivateRoute

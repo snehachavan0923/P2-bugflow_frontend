@@ -150,6 +150,10 @@ export const hideLoading = () => {
  * @param {string} fallbackMessage - Fallback message if no error details
  */
 export const alertApiError = (error, fallbackMessage = 'An error occurred. Please try again.') => {
+  if (error?.isSubscriptionAccessError) {
+    return Promise.resolve();
+  }
+
   let title = 'Request Failed';
   let message = fallbackMessage;
 

@@ -43,6 +43,7 @@ const ProjectList = () => {
 
     } catch (err) {
       console.error(err);
+      throw err;
     }
   };
 

@@ -26,7 +26,9 @@ const handleSubmit = async (data, file) => {
     alertSuccess('Issue Created', successMessage);
   } catch (err) {
     console.error(err);
-    alertApiError(err, 'Error creating issue. Please try again.');
+    if (!err?.isSubscriptionAccessError) {
+      alertApiError(err, 'Error creating issue. Please try again.');
+    }
   }
 };
   return (

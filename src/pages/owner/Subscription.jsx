@@ -45,8 +45,8 @@ const Subscription = () => {
     const confirmed = await Swal.fire({
       title: isDowngrade ? `Downgrade to ${planName}?` : `Upgrade to ${planName}?`,
       text: isDowngrade
-        ? 'Make sure your current usage does not exceed the new plan limits.'
-        : 'Your subscription will be changed immediately.',
+        ? 'Current limits will decrease. Continue?'
+        : 'Your subscription will change immediately.',
       icon: 'question',
       showCancelButton: true,
       confirmButtonText: isDowngrade ? 'Downgrade' : 'Upgrade',

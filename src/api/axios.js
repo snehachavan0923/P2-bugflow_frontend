@@ -9,6 +9,14 @@ const instance = axios.create({
 let isRedirecting = false;
 let isSubscriptionExpiredShown = false;
 
+const getStoredRole = () => {
+  try {
+    return JSON.parse(localStorage.getItem("user"))?.role;
+  } catch {
+    return null;
+  }
+};
+
 instance.interceptors.request.use(
   (config) => {
 
@@ -95,16 +103,49 @@ instance.interceptors.response.use(
         error.response?.data?.message ||
         "You are not authorized to perform this action.";
 
-    // If subscription expired, dispatch event to show modal (do not use SweetAlert)
-    if (message && message.toLowerCase().includes("expired")) {
+    const normalizedMessage = message.toLowerCase();
+    const isSubscriptionExpired =
+      normalizedMessage.includes("subscription") &&
+      normalizedMessage.includes("expired");
+    const isSubscriptionLimit =
+      normalizedMessage.includes("limit reached") ||
+      normalizedMessage.includes("limit exceeded");
+
+    if (isSubscriptionExpired || isSubscriptionLimit) {
+      error.isSubscriptionAccessError = true;
+      const role = getStoredRole();
+
+      if (role !== "Owner") {
+        if (!isRedirecting) {
+          isRedirecting = true;
+          Swal.fire({
+            icon: "error",
+            title: "Subscription Expired",
+            text: "Organization subscription expired. Please contact your organization owner.",
+            confirmButtonText: "OK",
+            customClass: {
+              popup: "rounded-3xl"
+            }
+          }).then(() => {
+            isRedirecting = false;
+          });
+        }
+
+        return Promise.reject(error);
+      }
+
       if (!isSubscriptionExpiredShown) {
         isSubscriptionExpiredShown = true;
         try {
-          window.dispatchEvent(new CustomEvent('subscriptionExpired', { detail: { message } }));
+          window.dispatchEvent(new CustomEvent('subscriptionExpired', {
+            detail: {
+              message,
+              reason: isSubscriptionExpired ? "expired" : "limit"
+            }
+          }));
         } catch (e) {
           // ignore
         }
-        // allow UI to handle showing modal; reset flag after short delay to allow subsequent events
         setTimeout(() => { isSubscriptionExpiredShown = false; }, 3000);
       }
 

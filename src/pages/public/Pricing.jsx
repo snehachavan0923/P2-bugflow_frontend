@@ -5,19 +5,7 @@ const Pricing = () => {
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(79,70,229,0.10),_transparent_35%),linear-gradient(180deg,_#f8fafc_0%,_#f8fafc_100%)] px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-10 text-center">
-          <div className="mb-4 inline-flex items-center rounded-full border border-indigo-100 bg-indigo-50 px-3 py-1 text-sm font-medium text-indigo-700">
-            Pricing that scales with your team
-          </div>
-          <h1 className="text-4xl font-semibold tracking-tight text-slate-950 sm:text-5xl">
-            Choose the right plan for your workflow
-          </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-lg leading-8 text-slate-600">
-            From founders shipping their first release to enterprises coordinating global teams, BugFlow stays calm, collaborative, and clear.
-          </p>
-        </div>
-
-        <PricingPlans mode="public" />
+       <PricingPlans mode="public" />
 
         <div className="mx-auto mt-8 max-w-6xl rounded-2xl border border-slate-200 bg-white/90 p-8 shadow-xl shadow-slate-200/70 backdrop-blur">
           <h2 className="text-center text-2xl font-semibold text-slate-950">Frequently Asked Questions</h2>

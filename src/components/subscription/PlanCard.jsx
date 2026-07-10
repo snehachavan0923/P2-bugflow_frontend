@@ -78,13 +78,14 @@ const PlanCard = ({ plan, mode = 'public', currentPlan = 'FREE', onSelectPlan, l
         <button
           type="button"
           onClick={() => {
+            if (plan.name === 'ENTERPRISE') return;
+
             if (mode === 'public') {
               navigate('/login');
               return;
             }
 
             if (!onSelectPlan || isDisabled) return;
-            if (plan.name === 'ENTERPRISE') return;
             onSelectPlan(plan.name);
           }}
           disabled={isDisabled}
