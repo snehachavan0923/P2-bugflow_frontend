@@ -7,6 +7,7 @@ import {
   FolderKanban,
   ChartColumn,
   ChevronDown,
+    CreditCard,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { getProjects } from "../../api/projectApi";
@@ -61,7 +62,7 @@ const Sidebar = () => {
         {
           label: "Subscriptions",
           to: "/admin/subscriptions",
-          icon: "💳",
+          icon: <CreditCard className="h-5 w-5" />,
         },
       ];
     }
@@ -92,7 +93,7 @@ const Sidebar = () => {
         {
           label: "Subscription",
           to: "/subscription",
-          icon: "💳",
+          icon: <CreditCard className="h-5 w-5" />,
           group: "Organization",
         },
         {
