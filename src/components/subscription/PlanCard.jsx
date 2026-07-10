@@ -40,7 +40,7 @@ const PlanCard = ({ plan, mode = 'public', currentPlan = 'FREE', onSelectPlan, l
     return 'border border-slate-200 bg-white text-slate-700 hover:border-indigo-400 hover:text-indigo-600';
   };
 
-  const isDisabled = isCurrentPlan || loadingPlan === plan.name;
+  const isDisabled = isCurrentPlan || loadingPlan === plan.name || (mode === 'owner' && plan.name === 'ENTERPRISE');
 
   return (
     <article
@@ -84,6 +84,7 @@ const PlanCard = ({ plan, mode = 'public', currentPlan = 'FREE', onSelectPlan, l
             }
 
             if (!onSelectPlan || isDisabled) return;
+            if (plan.name === 'ENTERPRISE') return;
             onSelectPlan(plan.name);
           }}
           disabled={isDisabled}

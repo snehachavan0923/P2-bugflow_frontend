@@ -13,7 +13,7 @@ export const getSubscriptionOverview = async () => {
 };
 
 export const upgradeSubscription = async (planName) => {
-  const res = await axios.put('/subscriptions/upgrade', JSON.stringify(planName), {
+  const res = await axios.put('/subscriptions/upgrade', { plan: planName }, {
     headers: {
       'Content-Type': 'application/json',
     },

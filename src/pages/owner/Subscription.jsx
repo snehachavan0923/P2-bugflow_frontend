@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
 import PricingPlans from '../../components/subscription/PricingPlans';
 import { getSubscriptionOverview, upgradeSubscription } from '../../api/subscriptionApi';
 
@@ -36,12 +37,46 @@ const Subscription = () => {
   }, []);
 
   const handlePlanSelect = async (planName) => {
+    const currentPlan = (subscription?.plan || 'FREE').toUpperCase();
+    const isDowngrade = ['STARTER', 'BUSINESS', 'ENTERPRISE'].includes(planName) && currentPlan !== 'FREE'
+      ? ['STARTER', 'BUSINESS', 'ENTERPRISE'].indexOf(planName) < ['STARTER', 'BUSINESS', 'ENTERPRISE'].indexOf(currentPlan)
+      : false;
+
+    const confirmed = await Swal.fire({
+      title: isDowngrade ? `Downgrade to ${planName}?` : `Upgrade to ${planName}?`,
+      text: isDowngrade
+        ? 'Make sure your current usage does not exceed the new plan limits.'
+        : 'Your subscription will be changed immediately.',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: isDowngrade ? 'Downgrade' : 'Upgrade',
+      cancelButtonText: 'Cancel',
+      customClass: { popup: 'rounded-3xl' },
+    });
+
+    if (!confirmed.isConfirmed) return;
+
     try {
       setLoadingPlan(planName);
       await upgradeSubscription(planName);
       await loadSubscription();
+      Swal.fire({
+        icon: 'success',
+        title: 'Subscription updated successfully',
+        text: `Your plan was changed to ${planName}.`,
+        confirmButtonText: 'OK',
+        customClass: { popup: 'rounded-3xl' },
+      });
     } catch (err) {
-      setError('We could not update your plan. Please try again.');
+      const backendMessage = err?.response?.data?.message || 'We could not update your plan. Please try again.';
+      setError(backendMessage);
+      Swal.fire({
+        icon: 'error',
+        title: 'Plan change failed',
+        text: backendMessage,
+        confirmButtonText: 'OK',
+        customClass: { popup: 'rounded-3xl' },
+      });
     } finally {
       setLoadingPlan(null);
     }
