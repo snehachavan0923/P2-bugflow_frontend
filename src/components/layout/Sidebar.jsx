@@ -90,6 +90,12 @@ const Sidebar = () => {
           group: "Organization",
         },
         {
+          label: "Subscription",
+          to: "/subscription",
+          icon: "💳",
+          group: "Organization",
+        },
+        {
           label: "Members Directory",
           to: "/organization/members",
           icon: <Users className="h-5 w-5" />,

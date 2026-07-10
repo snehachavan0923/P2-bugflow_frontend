@@ -32,6 +32,7 @@ import SubscriptionManagement from "../pages/admin/SubscriptionManagement";
 
 import Profile from "../pages/users/Profile";
 import Settings from "../pages/users/Settings";
+import Subscription from "../pages/owner/Subscription";
 
 import NotFound from "../Errors/NotFound";
 import Unauthorized from "../Errors/Unauthorized";
@@ -77,7 +78,10 @@ const AppRoutes = () => {
       {/* PUBLIC ROUTES */}
       <Route element={<PublicLayout />}>
         <Route index element={<Home />} />
-        <Route path="pricing" element={<Pricing />} />
+        <Route
+          path="pricing"
+          element={<PricingRoute />}
+        />
         <Route path="about" element={<About />} />
       </Route>
 
@@ -185,6 +189,14 @@ const AppRoutes = () => {
               allowedRoles={["Owner"]}
             >
               <Settings />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="subscription"
+          element={
+            <PrivateRoute allowedRoles={["Owner"]}>
+              <Subscription />
             </PrivateRoute>
           }
         />
@@ -300,3 +312,16 @@ const AppRoutes = () => {
 };
 
 export default AppRoutes;
+
+function PricingRoute() {
+  const { token, role } = useAuth();
+
+  // Public (not logged in) can access pricing
+  if (!token) return <Pricing />;
+
+  // Logged in owners can access pricing
+  if (role === 'Owner') return <Pricing />;
+
+  // Other authenticated roles should be redirected to dashboard
+  return <Navigate to="/dashboard" replace />;
+}
