@@ -2,11 +2,20 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 const instance = axios.create({
-  baseURL: "http://localhost:8081",
+  baseURL: "http://localhost:8080",
   timeout: 10000,
 });
 
 let isRedirecting = false;
+let isSubscriptionExpiredShown = false;
+
+const getStoredRole = () => {
+  try {
+    return JSON.parse(localStorage.getItem("user"))?.role;
+  } catch {
+    return null;
+  }
+};
 
 instance.interceptors.request.use(
   (config) => {
@@ -94,57 +103,106 @@ instance.interceptors.response.use(
         error.response?.data?.message ||
         "You are not authorized to perform this action.";
 
-    // Prevent multiple popups
-    if (isRedirecting) {
+    const normalizedMessage = message.toLowerCase();
+    const isSubscriptionExpired =
+      normalizedMessage.includes("subscription") &&
+      normalizedMessage.includes("expired");
+    const isSubscriptionLimit =
+      normalizedMessage.includes("limit reached") ||
+      normalizedMessage.includes("limit exceeded");
+
+    if (isSubscriptionExpired || isSubscriptionLimit) {
+      error.isSubscriptionAccessError = true;
+      const role = getStoredRole();
+
+      if (role !== "Owner") {
+        if (!isRedirecting) {
+          isRedirecting = true;
+          Swal.fire({
+            icon: "error",
+            title: "Subscription Expired",
+            text: "Organization subscription expired. Please contact your organization owner.",
+            confirmButtonText: "OK",
+            customClass: {
+              popup: "rounded-3xl"
+            }
+          }).then(() => {
+            isRedirecting = false;
+          });
+        }
+
         return Promise.reject(error);
+      }
+
+      if (!isSubscriptionExpiredShown) {
+        isSubscriptionExpiredShown = true;
+        try {
+          window.dispatchEvent(new CustomEvent('subscriptionExpired', {
+            detail: {
+              message,
+              reason: isSubscriptionExpired ? "expired" : "limit"
+            }
+          }));
+        } catch (e) {
+          // ignore
+        }
+        setTimeout(() => { isSubscriptionExpiredShown = false; }, 3000);
+      }
+
+      return Promise.reject(error);
+    }
+
+    // Prevent multiple popups for other 403s
+    if (isRedirecting) {
+      return Promise.reject(error);
     }
 
     if (
-        message.toLowerCase().includes("organization")
-        && message.toLowerCase().includes("suspended")
+      message.toLowerCase().includes("organization")
+      && message.toLowerCase().includes("suspended")
     ) {
 
-        isRedirecting = true;
+      isRedirecting = true;
 
-        Swal.fire({
-            icon: "error",
-            title: "Organization Suspended",
-            text: message,
-            confirmButtonText: "OK",
-            allowOutsideClick: false,
-            customClass: {
-                popup: "rounded-3xl"
-            }
-        }).then(() => {
+      Swal.fire({
+        icon: "error",
+        title: "Organization Suspended",
+        text: message,
+        confirmButtonText: "OK",
+        allowOutsideClick: false,
+        customClass: {
+          popup: "rounded-3xl"
+        }
+      }).then(() => {
 
-            isRedirecting = false;
+        isRedirecting = false;
 
-        localStorage.clear();
+      localStorage.clear();
 
-        window.location.replace("/login");
+      window.location.replace("/login");
 
-            });
-
-        } else {
-
-        isRedirecting = true;
-
-        Swal.fire({
-            icon: "error",
-            title: "Request Failed",
-            text: message,
-            confirmButtonText: "OK",
-            allowOutsideClick: false,
-            customClass: {
-                popup: "rounded-3xl"
-            }
-        }).then(() => {
-            isRedirecting = false;
         });
+
+      } else {
+
+      isRedirecting = true;
+
+      Swal.fire({
+        icon: "error",
+        title: "Request Failed",
+        text: message,
+        confirmButtonText: "OK",
+        allowOutsideClick: false,
+        customClass: {
+          popup: "rounded-3xl"
+        }
+      }).then(() => {
+        isRedirecting = false;
+      });
 
     }
 
-        return Promise.reject(error);
+      return Promise.reject(error);
     }
 
         else if (status === 500) {

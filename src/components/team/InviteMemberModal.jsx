@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Eye, EyeOff } from "lucide-react";
 import { validation } from "../../utils/validation";
-import { alertSuccess } from "../../utils/alerts";
 
 const InviteMemberModal = ({
   onClose,
@@ -17,6 +16,7 @@ const InviteMemberModal = ({
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const [submitting, setSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   // Validation functions
   const validateName = (value) => {
@@ -111,7 +111,7 @@ const InviteMemberModal = ({
     }
   };
 
-  const handleSubmit = (e) => {
+ const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Mark all as touched
@@ -139,24 +139,25 @@ const InviteMemberModal = ({
     setSubmitting(true);
 
     try {
-      onInvite({
-        name: formData.name.trim(),
-        email: formData.email.trim().toLowerCase(),
-        password: formData.password,
-        role: formData.role,
-      });
-      
-      alertSuccess('Team Member Added', 'Team member has been invited successfully!');
+      await onInvite({
+      name: formData.name.trim(),
+      email: formData.email.trim().toLowerCase(),
+      password: formData.password,
+      role: formData.role,
+    });
 
-      setFormData({
-        name: "",
-        email: "",
-        password: "",
-        role: "Developer",
-      });
-      setErrors({});
-      setTouched({});
-      onClose();
+    // ONLY if request succeeded
+    setFormData({
+      name: "",
+      email: "",
+      password: "",
+      role: "Developer",
+    });
+
+    setErrors({});
+    setTouched({});
+
+    onClose();
     } catch (err) {
       console.error('Error inviting member:', err);
     } finally {
@@ -223,17 +224,34 @@ const InviteMemberModal = ({
                 (min 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char)
               </span>
             </label>
+         <div className="relative">
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               value={formData.password}
               onChange={handleChange}
               onBlur={handleBlur}
               placeholder="••••••••"
-              className={`border p-2 w-full rounded focus:outline-none focus:ring-2 transition ${
-                errors.password && touched.password ? 'border-red-500 focus:ring-red-200' : 'border-gray-300 focus:ring-blue-500'
+              className={`w-full border p-2 pr-10 rounded focus:outline-none focus:ring-2 transition ${
+                errors.password && touched.password
+                  ? "border-red-500 focus:ring-red-200"
+                  : "border-gray-300 focus:ring-blue-500"
               }`}
             />
+
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition"
+              tabIndex={-1}
+            >
+              {showPassword ? (
+                <EyeOff size={18} />
+              ) : (
+                <Eye size={18} />
+              )}
+            </button>
+          </div>
             {errors.password && touched.password && (
               <div className="flex items-center gap-1 mt-1 text-red-600 text-sm">
                 <AlertCircle size={14} />

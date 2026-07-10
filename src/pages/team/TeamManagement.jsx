@@ -79,7 +79,9 @@ const TeamManagement = () => {
       loadMembers();
     } catch (error) {
       console.error(error);
-      alertApiError(error, "Error adding member");
+      if (!error?.isSubscriptionAccessError) {
+        alertApiError(error, "Error adding member");
+      }
     }
   };
 

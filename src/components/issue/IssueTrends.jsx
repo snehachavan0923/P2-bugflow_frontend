@@ -88,7 +88,7 @@ const IssueTrends = ({ data }) => {
       </div>
 
       {/* Statistics Cards */}
-      <div className="grid gap-4 sm:grid-cols-3">
+      {/* <div className="grid gap-4 sm:grid-cols-3">
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <p className="text-sm font-medium text-slate-500">Average Resolution Time</p>
           <p className="mt-3 text-3xl font-semibold text-slate-900">
@@ -122,6 +122,7 @@ const IssueTrends = ({ data }) => {
           </div>
         </div>
       </div>
+      */}
 
       {/* Trends Table (Alternative view) */}
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
