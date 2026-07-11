@@ -1,11 +1,13 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import Subscription from './Subscription';
-import { getSubscriptionOverview } from '../../api/subscriptionApi';
+import { getPaymentHistory, getSubscriptionOverview } from '../../api/subscriptionApi';
 
 jest.mock('../../api/subscriptionApi', () => ({
   getSubscriptionOverview: jest.fn(),
   upgradeSubscription: jest.fn(),
+  createSubscriptionPayment: jest.fn(),
+  getPaymentHistory: jest.fn(),
 }));
 
 describe('Subscription page', () => {
@@ -21,6 +23,7 @@ describe('Subscription page', () => {
       currentIssues: 75,
       endDate: null,
     });
+    getPaymentHistory.mockResolvedValue([]);
   });
 
   it('renders the current plan, usage, and billing sections', async () => {

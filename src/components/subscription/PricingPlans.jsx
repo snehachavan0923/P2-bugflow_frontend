@@ -2,7 +2,7 @@ import React from 'react';
 import { subscriptionPlans } from '../../constants/subscriptionPlans';
 import PlanCard from './PlanCard';
 
-const PricingPlans = ({ mode = 'public', currentPlan = 'FREE', onSelectPlan, loadingPlan }) => {
+const PricingPlans = ({ mode = 'public', currentPlan = 'FREE', subscriptionStatus = 'ACTIVE', onSelectPlan, loadingPlan }) => {
   return (
     <section className="w-full">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
@@ -25,6 +25,7 @@ const PricingPlans = ({ mode = 'public', currentPlan = 'FREE', onSelectPlan, loa
               plan={plan}
               mode={mode}
               currentPlan={currentPlan}
+              subscriptionStatus={subscriptionStatus}
               onSelectPlan={onSelectPlan}
               loadingPlan={loadingPlan}
             />

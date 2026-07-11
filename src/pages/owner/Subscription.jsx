@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import PricingPlans from '../../components/subscription/PricingPlans';
-import { getSubscriptionOverview, upgradeSubscription } from '../../api/subscriptionApi';
+import { createSubscriptionPayment, getPaymentHistory, getSubscriptionOverview } from '../../api/subscriptionApi';
+import { subscriptionPlans } from '../../constants/subscriptionPlans';
 
 const formatDate = (value) => {
   if (!value) return 'No expiry date';
@@ -13,10 +14,22 @@ const formatDate = (value) => {
   });
 };
 
+const formatAmount = (amount, currency = 'INR') => {
+  if (amount === null || amount === undefined) return '—';
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency,
+    maximumFractionDigits: 0,
+  }).format(Number(amount));
+};
+
 const Subscription = () => {
   const [subscription, setSubscription] = useState(null);
+  const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [loadingPlan, setLoadingPlan] = useState(null);
+  const [paymentsLoading, setPaymentsLoading] = useState(true);
+  const [selectedPlan, setSelectedPlan] = useState(null);
+  const [paymentProcessing, setPaymentProcessing] = useState(false);
   const [error, setError] = useState('');
 
   const loadSubscription = async () => {
@@ -32,53 +45,54 @@ const Subscription = () => {
     }
   };
 
+  const loadPaymentHistory = async () => {
+    try {
+      setPaymentsLoading(true);
+      const data = await getPaymentHistory();
+      setPayments(data);
+    } catch (err) {
+      setPayments([]);
+    } finally {
+      setPaymentsLoading(false);
+    }
+  };
+
   useEffect(() => {
     loadSubscription();
+    loadPaymentHistory();
   }, []);
 
-  const handlePlanSelect = async (planName) => {
-    const currentPlan = (subscription?.plan || 'FREE').toUpperCase();
-    const isDowngrade = ['STARTER', 'BUSINESS', 'ENTERPRISE'].includes(planName) && currentPlan !== 'FREE'
-      ? ['STARTER', 'BUSINESS', 'ENTERPRISE'].indexOf(planName) < ['STARTER', 'BUSINESS', 'ENTERPRISE'].indexOf(currentPlan)
-      : false;
+  const handlePlanSelect = (planName) => {
+    const plan = subscriptionPlans.find((item) => item.name === planName);
+    if (plan) setSelectedPlan(plan);
+  };
 
-    const confirmed = await Swal.fire({
-      title: isDowngrade ? `Downgrade to ${planName}?` : `Upgrade to ${planName}?`,
-      text: isDowngrade
-        ? 'Current limits will decrease. Continue?'
-        : 'Your subscription will change immediately.',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: isDowngrade ? 'Downgrade' : 'Upgrade',
-      cancelButtonText: 'Cancel',
-      customClass: { popup: 'rounded-3xl' },
-    });
-
-    if (!confirmed.isConfirmed) return;
-
+  const handlePayment = async () => {
+    if (!selectedPlan) return;
     try {
-      setLoadingPlan(planName);
-      await upgradeSubscription(planName);
-      await loadSubscription();
+      setPaymentProcessing(true);
+      await createSubscriptionPayment(selectedPlan.name);
+      setSelectedPlan(null);
+      await Promise.all([loadSubscription(), loadPaymentHistory()]);
       Swal.fire({
         icon: 'success',
-        title: 'Subscription updated successfully',
-        text: `Your plan was changed to ${planName}.`,
+        title: 'Payment Successful',
+        text: 'Your subscription has been activated successfully.',
         confirmButtonText: 'OK',
         customClass: { popup: 'rounded-3xl' },
       });
     } catch (err) {
-      const backendMessage = err?.response?.data?.message || 'We could not update your plan. Please try again.';
+      const backendMessage = err?.response?.data?.message || 'We could not process your payment. Please try again.';
       setError(backendMessage);
       Swal.fire({
         icon: 'error',
-        title: 'Plan change failed',
+        title: 'Payment Failed',
         text: backendMessage,
         confirmButtonText: 'OK',
         customClass: { popup: 'rounded-3xl' },
       });
     } finally {
-      setLoadingPlan(null);
+      setPaymentProcessing(false);
     }
   };
 
@@ -195,23 +209,72 @@ const Subscription = () => {
           </section>
         </div>
 
-        <PricingPlans mode="owner" currentPlan={planName} onSelectPlan={handlePlanSelect} loadingPlan={loadingPlan} />
-
         <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_20px_60px_-30px_rgba(15,23,42,0.35)]">
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <div>
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">Billing</p>
-              <h2 className="mt-2 text-2xl font-semibold text-slate-950">Billing center</h2>
-              <p className="mt-2 text-sm leading-6 text-slate-600">
-                Invoice history and payment controls are being prepared for this workspace.
-              </p>
+              <h2 className="mt-2 text-2xl font-semibold text-slate-950">Payment History</h2>
             </div>
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
-              Plan changes update the backend directly.
+            <div className="mt-6 overflow-x-auto rounded-2xl border border-slate-200">
+              <table className="min-w-full divide-y divide-slate-200 text-left text-sm">
+                <thead className="bg-slate-50 text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
+                  <tr>
+                    <th className="px-4 py-3">Date</th>
+                    <th className="px-4 py-3">Plan</th>
+                    <th className="px-4 py-3">Amount</th>
+                    <th className="px-4 py-3">Payment Method</th>
+                    <th className="px-4 py-3">Status</th>
+                    <th className="px-4 py-3">Transaction ID</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 bg-white text-slate-700">
+                  {paymentsLoading ? (
+                    <tr><td colSpan="6" className="px-4 py-8 text-center text-slate-500">Loading payment history…</td></tr>
+                  ) : payments.length === 0 ? (
+                    <tr><td colSpan="6" className="px-4 py-8 text-center text-slate-500">No payments yet.</td></tr>
+                  ) : payments.map((payment) => (
+                    <tr key={payment.id} className="hover:bg-slate-50/80">
+                      <td className="whitespace-nowrap px-4 py-3">{formatDate(payment.paymentDate || payment.createdAt)}</td>
+                      <td className="px-4 py-3 font-medium">{payment.plan}</td>
+                      <td className="whitespace-nowrap px-4 py-3">{formatAmount(payment.amount, payment.currency)}</td>
+                      <td className="px-4 py-3">{payment.paymentMethod}</td>
+                      <td className="px-4 py-3"><span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${payment.paymentStatus === 'SUCCESS' ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'}`}>{payment.paymentStatus}</span></td>
+                      <td className="whitespace-nowrap px-4 py-3 font-mono text-xs text-slate-500">{payment.transactionId}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </section>
+
+        <PricingPlans
+          mode="owner"
+          currentPlan={planName}
+          subscriptionStatus={status}
+          onSelectPlan={handlePlanSelect}
+        />
       </div>
+
+      {selectedPlan && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 px-4 py-6">
+          <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl">
+            <h2 className="text-2xl font-semibold tracking-tight text-slate-950">Confirm Purchase</h2>
+            <dl className="mt-6 divide-y divide-slate-100 rounded-2xl border border-slate-200">
+              <div className="flex items-center justify-between px-4 py-3"><dt className="text-sm text-slate-500">Plan Name</dt><dd className="text-sm font-semibold text-slate-900">{selectedPlan.name}</dd></div>
+              <div className="flex items-center justify-between px-4 py-3"><dt className="text-sm text-slate-500">Duration</dt><dd className="text-sm font-semibold text-slate-900">{selectedPlan.duration}</dd></div>
+              <div className="flex items-center justify-between px-4 py-3"><dt className="text-sm text-slate-500">Amount</dt><dd className="text-sm font-semibold text-slate-900">{selectedPlan.price}</dd></div>
+              <div className="flex items-center justify-between px-4 py-3"><dt className="text-sm text-slate-500">Payment Method</dt><dd className="text-sm font-semibold text-slate-900">MANUAL</dd></div>
+            </dl>
+            <div className="mt-6 flex justify-end gap-3">
+              <button type="button" onClick={() => setSelectedPlan(null)} disabled={paymentProcessing} className="rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60">Cancel</button>
+              <button type="button" onClick={handlePayment} disabled={paymentProcessing} className="inline-flex min-w-28 items-center justify-center rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-70">
+                {paymentProcessing ? <><span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" /> Processing…</> : 'Pay Now'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

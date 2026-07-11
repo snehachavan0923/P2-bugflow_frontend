@@ -22,6 +22,21 @@ export const upgradeSubscription = async (planName) => {
   return res.data;
 };
 
+export const createSubscriptionPayment = async (planName) => {
+  const res = await axios.post('/subscriptions/payment', { plan: planName }, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return res.data;
+};
+
+export const getPaymentHistory = async () => {
+  const res = await axios.get('/subscriptions/payments');
+  return res.data;
+};
+
 export const getSubscriptionStatus = async () => {
   const res = await axios.get('/subscriptions/status');
   return res.data;

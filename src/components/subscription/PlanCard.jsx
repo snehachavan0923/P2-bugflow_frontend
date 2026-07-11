@@ -8,9 +8,10 @@ const planOrder = {
   ENTERPRISE: 3,
 };
 
-const PlanCard = ({ plan, mode = 'public', currentPlan = 'FREE', onSelectPlan, loadingPlan }) => {
+const PlanCard = ({ plan, mode = 'public', currentPlan = 'FREE', subscriptionStatus = 'ACTIVE', onSelectPlan, loadingPlan }) => {
   const normalizedCurrentPlan = currentPlan?.toUpperCase();
   const isCurrentPlan = normalizedCurrentPlan === plan.name;
+  const isCurrentPlanExpired = isCurrentPlan && subscriptionStatus?.toUpperCase() === 'EXPIRED';
   const navigate = useNavigate();
   const isRecommended = plan.highlight;
   const currentRank = planOrder[normalizedCurrentPlan] ?? 0;
@@ -18,10 +19,11 @@ const PlanCard = ({ plan, mode = 'public', currentPlan = 'FREE', onSelectPlan, l
 
   const getButtonLabel = () => {
     if (mode === 'owner') {
+      if (isCurrentPlanExpired) return 'Renew Plan';
       if (isCurrentPlan) return 'Current Plan';
       if (plan.name === 'ENTERPRISE') return 'Contact Sales';
-      if (targetRank < currentRank) return 'Downgrade';
-      return 'Upgrade';
+      if (targetRank > currentRank) return 'Upgrade Plan';
+      return 'Downgrade Plan';
     }
 
     if (plan.name === 'ENTERPRISE') return 'Contact Sales';
@@ -40,7 +42,9 @@ const PlanCard = ({ plan, mode = 'public', currentPlan = 'FREE', onSelectPlan, l
     return 'border border-slate-200 bg-white text-slate-700 hover:border-indigo-400 hover:text-indigo-600';
   };
 
-  const isDisabled = isCurrentPlan || loadingPlan === plan.name || (mode === 'owner' && plan.name === 'ENTERPRISE');
+  const isDisabled = (isCurrentPlan && !isCurrentPlanExpired)
+    || loadingPlan === plan.name
+    || (mode === 'owner' && plan.name === 'ENTERPRISE');
 
   return (
     <article
