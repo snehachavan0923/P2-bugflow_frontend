@@ -60,6 +60,16 @@ const Sidebar = () => {
           icon: <FolderKanban className="h-5 w-5" />,
         },
         {
+        label: "Plan Management",
+        to: "/admin/plans",
+        icon: <CreditCard className="h-5 w-5" />,
+      },
+       {
+        label: "Payment History",
+        to: "/admin/history",
+        icon: <CreditCard className="h-5 w-5" />,
+      },
+        {
           label: "Subscriptions",
           to: "/admin/subscriptions",
           icon: <CreditCard className="h-5 w-5" />,

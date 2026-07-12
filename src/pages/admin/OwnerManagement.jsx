@@ -203,6 +203,7 @@ const OwnerManagement = () => {
                     <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
                       Email
                     </th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Plan</th>
                     <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
                       Organization Status
                     </th>
@@ -229,6 +230,9 @@ const OwnerManagement = () => {
                       <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-700">
                         {owner.email || 'Unknown'}
                       </td>
+                       <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-700">
+                      {owner.subscriptionPlan || "-"}
+                    </td>
                       <td className="whitespace-nowrap px-6 py-4 text-sm">
                         <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${badgeClasses(owner.organizationStatus)}`}>
                           {normalizeStatus(owner.organizationStatus)}
@@ -359,7 +363,7 @@ const OwnerManagement = () => {
                   </div>
                 </div>
 
-                <div className="grid gap-4 md:grid-cols-2">
+               <div className="grid gap-4 md:grid-cols-3">
                   <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
                     <div className="flex items-center gap-3">
                       <div className="rounded-2xl bg-indigo-50 p-2.5 text-indigo-600">
@@ -369,9 +373,9 @@ const OwnerManagement = () => {
                         <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
                           Owner Email
                         </p>
-                        <p className="mt-1 text-sm font-semibold text-slate-900">
-                       {selectedOwner.email || 'Unknown'}
-                        </p>
+                       <p className="mt-1 break-all text-sm font-semibold text-slate-900">
+                        {selectedOwner.email || "Unknown"}
+                      </p>
                       </div>
                     </div>
                   </div>
@@ -385,12 +389,29 @@ const OwnerManagement = () => {
                         <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
                           Organization
                         </p>
-                        <p className="mt-1 text-sm font-semibold text-slate-900">
-                          {selectedOwner.organizationName || 'Unknown'}
-                        </p>
+                       <p className="mt-1 break-words text-sm font-semibold text-slate-900">
+                        {selectedOwner.organizationName || "Unknown"}
+                      </p>
                       </div>
                     </div>
                   </div>
+                  <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                  <div className="flex items-center gap-3">
+                    <div className="rounded-2xl bg-violet-50 p-2.5 text-violet-600">
+                      <Building2 className="h-5 w-5" />
+                    </div>
+
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+                        Current Plan
+                      </p>
+
+                      <p className="mt-1 text-sm font-semibold text-slate-900">
+                        {selectedOwner.subscriptionPlan || "-"}
+                      </p>
+                    </div>
+                  </div>
+                </div>
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-3">

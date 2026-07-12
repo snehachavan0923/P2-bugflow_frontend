@@ -1,195 +1,263 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Search, ChevronLeft, ChevronRight, Eye, AlertCircle } from 'lucide-react';
+import Swal from 'sweetalert2';
+import LoaderWithMessage from '../../components/common/LoaderWithMessage';
+import SubscriptionDetailModal from '../../components/admin/SubscriptionDetailModal';
+import SubscriptionStatCard from '../../components/admin/SubscriptionStatCard';
+import { getAdminSubscriptions, getAdminSubscriptionDetail, getAdminRevenueDashboard } from '../../api/adminSubscriptionApi';
+
+const PAGE_SIZE = 10;
+
+const formatDate = (value) => {
+  if (!value) return '—';
+  return new Date(value).toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+};
+
+const formatCurrency = (value) => {
+  if (value === null || value === undefined || value === '') return '—';
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: 0,
+  }).format(Number(value));
+};
 
 const SubscriptionManagement = () => {
-  const [filter, setFilter] = useState('all');
+  const [subscriptions, setSubscriptions] = useState([]);
+  const [dashboard, setDashboard] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [planFilter, setPlanFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+  const [paymentFilter, setPaymentFilter] = useState('');
+  const [page, setPage] = useState(0);
+  const [pageInfo, setPageInfo] = useState({ totalPages: 1, totalElements: 0 });
+  const [selectedSubscription, setSelectedSubscription] = useState(null);
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
-  const subscriptions = [
-    {
-      id: 1,
-      user: 'John Doe',
-      plan: 'Professional',
-      status: 'Active',
-      amount: '$29/month',
-      nextBilling: '2024-02-15',
-      startDate: '2024-01-15',
-    },
-    {
-      id: 2,
-      user: 'Jane Smith',
-      plan: 'Enterprise',
-      status: 'Active',
-      amount: '$99/month',
-      nextBilling: '2024-02-20',
-      startDate: '2024-01-20',
-    },
-    {
-      id: 3,
-      user: 'Mike Johnson',
-      plan: 'Professional',
-      status: 'Cancelled',
-      amount: '$29/month',
-      nextBilling: 'N/A',
-      startDate: '2023-12-01',
-    },
-    {
-      id: 4,
-      user: 'Sarah Wilson',
-      plan: 'Starter',
-      status: 'Active',
-      amount: '$0/month',
-      nextBilling: 'N/A',
-      startDate: '2024-01-10',
-    },
-  ];
+  const loadData = useCallback(async (nextPage = 0, filters = { search: searchTerm, plan: planFilter, status: statusFilter, paymentStatus: paymentFilter }) => {
+    try {
+      setLoading(true);
+      setError('');
+      const [pageData, revenueData] = await Promise.all([
+        getAdminSubscriptions({
+          search: filters.search,
+          plan: filters.plan,
+          status: filters.status,
+          paymentStatus: filters.paymentStatus,
+          page: nextPage,
+          size: PAGE_SIZE,
+        }),
+        getAdminRevenueDashboard(),
+      ]);
+      setSubscriptions(Array.isArray(pageData?.content) ? pageData.content : []);
+      setPageInfo({
+        totalPages: pageData?.totalPages || 1,
+        totalElements: pageData?.totalElements || 0,
+      });
+      setDashboard(revenueData || {});
+      setPage(nextPage);
+    } catch (err) {
+      console.error(err);
+      setError(err?.response?.data?.message || 'Unable to load subscription data right now.');
+    } finally {
+      setLoading(false);
+    }
+  }, [searchTerm, planFilter, statusFilter, paymentFilter]);
 
-  const filteredSubscriptions = filter === 'all'
-    ? subscriptions
-    : subscriptions.filter(sub => sub.status.toLowerCase() === filter);
+  useEffect(() => {
+    loadData(0);
+  }, [loadData]);
 
-  const stats = {
-    total: subscriptions.length,
-    active: subscriptions.filter(s => s.status === 'Active').length,
-    cancelled: subscriptions.filter(s => s.status === 'Cancelled').length,
-    revenue: subscriptions
-      .filter(s => s.status === 'Active')
-      .reduce((sum, s) => sum + parseInt(s.amount.replace('$', '').replace('/month', '')), 0),
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      loadData(0, { search: searchTerm, plan: planFilter, status: statusFilter, paymentStatus: paymentFilter });
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchTerm, planFilter, statusFilter, paymentFilter, loadData]);
+
+  const openDetails = async (subscriptionId) => {
+    try {
+      const data = await getAdminSubscriptionDetail(subscriptionId);
+      setSelectedSubscription(data);
+      setDetailsOpen(true);
+    } catch (err) {
+      console.error(err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Unable to load subscription',
+        text: err?.response?.data?.message || 'We could not load the subscription details.',
+        confirmButtonText: 'Try again',
+        customClass: { popup: 'rounded-3xl' },
+      });
+    }
   };
 
+  const stats = useMemo(() => {
+    const defaultPlanMap = {
+      free: dashboard.freePlans || 0,
+      starter: dashboard.starterPlans || 0,
+      business: dashboard.businessPlans || 0,
+    };
+    return [
+      { label: 'Total Subscriptions', value: dashboard.totalSubscriptions ?? pageInfo.totalElements, accent: 'indigo' },
+      { label: 'Active', value: dashboard.activeSubscriptions ?? 0, accent: 'emerald' },
+      { label: 'Expired', value: dashboard.expiredSubscriptions ?? 0, accent: 'rose' },
+      { label: 'Free', value: defaultPlanMap.free, accent: 'slate' },
+      { label: 'Starter', value: defaultPlanMap.starter, accent: 'sky' },
+      { label: 'Business', value: defaultPlanMap.business, accent: 'violet' },
+      { label: 'Monthly Revenue', value: formatCurrency(dashboard.monthlyRevenue), accent: 'indigo' },
+      { label: 'Total Revenue', value: formatCurrency(dashboard.totalRevenue), accent: 'emerald' },
+      { label: 'Renewals Today', value: dashboard.renewalsToday ?? 0, accent: 'amber' },
+      { label: 'Renewals This Week', value: dashboard.renewalsThisWeek ?? 0, accent: 'cyan' },
+    ];
+  }, [dashboard, pageInfo.totalElements]);
+
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Subscription Management</h1>
-        <p className="text-gray-600">Monitor and manage user subscriptions and billing.</p>
+    <div className="min-h-screen bg-slate-50 p-4 sm:p-6 lg:p-8">
+      <div className="mx-auto max-w-7xl space-y-6">
+        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-indigo-600">Platform Administration</p>
+            <h1 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">Subscription Management</h1>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+              Review every organization subscription, track billing status, and view plan usage without leaving the admin console.
+            </p>
+          </div>
+          <div className="rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm font-medium text-indigo-700">
+            {loading ? 'Loading subscriptions…' : `${pageInfo.totalElements} subscriptions`}
+          </div>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+          {stats.map((item) => (
+            <SubscriptionStatCard key={item.label} label={item.label} value={item.value} />
+          ))}
+        </div>
+
+        <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div className="relative w-full lg:max-w-md">
+              <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+              <input
+                type="search"
+                value={searchTerm}
+                onChange={(event) => setSearchTerm(event.target.value)}
+                placeholder="Search organization, owner, or email"
+                className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-12 pr-4 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50"
+              />
+            </div>
+            <div className="grid gap-3 sm:grid-cols-3">
+              <select value={planFilter} onChange={(event) => setPlanFilter(event.target.value)} className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50">
+                <option value="">All plans</option>
+                <option value="FREE">Free</option>
+                <option value="STARTER">Starter</option>
+                <option value="BUSINESS">Business</option>
+                <option value="ENTERPRISE">Enterprise</option>
+              </select>
+              <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50">
+                <option value="">All statuses</option>
+                <option value="ACTIVE">Active</option>
+                <option value="EXPIRED">Expired</option>
+              </select>
+              <select value={paymentFilter} onChange={(event) => setPaymentFilter(event.target.value)} className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50">
+                <option value="">All payments</option>
+                <option value="SUCCESS">Success</option>
+                <option value="PENDING">Pending</option>
+                <option value="FAILED">Failed</option>
+              </select>
+            </div>
+          </div>
+
+          {loading ? (
+            <div className="mt-6 flex min-h-[50vh] items-center justify-center rounded-3xl border border-slate-200 bg-slate-50 p-8">
+              <LoaderWithMessage message="Loading subscriptions..." />
+            </div>
+          ) : error ? (
+            <div className="mt-6 rounded-3xl border border-rose-200 bg-rose-50 p-8 text-sm text-rose-700">
+              {error}
+            </div>
+          ) : subscriptions.length === 0 ? (
+            <div className="mt-6 rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-10 text-center">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white text-slate-500 shadow-sm">
+                <AlertCircle className="h-7 w-7" />
+              </div>
+              <h2 className="mt-4 text-lg font-semibold text-slate-950">No subscriptions match your filters</h2>
+              <p className="mt-2 text-sm text-slate-600">Try broadening the search or clearing one of the filters to see more results.</p>
+            </div>
+          ) : (
+            <div className="mt-6 overflow-x-auto rounded-3xl border border-slate-200">
+              <table className="min-w-full divide-y divide-slate-200 text-left text-sm">
+                <thead className="bg-slate-50 text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
+                  <tr>
+                    <th className="px-4 py-3">Organization</th>
+                    <th className="px-4 py-3">Owner</th>
+                    <th className="px-4 py-3">Plan</th>
+                    <th className="px-4 py-3">Subscription Status</th>
+                    <th className="px-4 py-3">Payment Status</th>
+                    <th className="px-4 py-3">Amount</th>
+                    <th className="px-4 py-3">Start Date</th>
+                    <th className="px-4 py-3">Expiry Date</th>
+                    <th className="px-4 py-3">Days Remaining</th>
+                    <th className="px-4 py-3">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-200 bg-white">
+                  {subscriptions.map((subscription) => (
+                    <tr key={subscription.id} className="hover:bg-slate-50">
+                      <td className="px-4 py-4 font-medium text-slate-900">{subscription.organizationName || 'Unknown'}</td>
+                      <td className="px-4 py-4 text-slate-600">{subscription.ownerName || 'Unknown'}</td>
+                      <td className="px-4 py-4 text-slate-600">{subscription.plan || '—'}</td>
+                      <td className="px-4 py-4">
+                        <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${subscription.status === 'ACTIVE' ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}`}>
+                          {subscription.status || '—'}
+                        </span>
+                      </td>
+                      <td className="px-4 py-4">
+                        <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${subscription.paymentStatus === 'SUCCESS' ? 'bg-emerald-100 text-emerald-700' : subscription.paymentStatus === 'PENDING' ? 'bg-amber-100 text-amber-700' : 'bg-rose-100 text-rose-700'}`}>
+                          {subscription.paymentStatus || '—'}
+                        </span>
+                      </td>
+                      <td className="px-4 py-4 text-slate-700">{formatCurrency(subscription.amount)}</td>
+                      <td className="px-4 py-4 text-slate-600">{formatDate(subscription.startDate)}</td>
+                      <td className="px-4 py-4 text-slate-600">{formatDate(subscription.expiryDate)}</td>
+                      <td className="px-4 py-4 text-slate-600">{subscription.daysRemaining ?? '—'}</td>
+                      <td className="px-4 py-4">
+                        <button type="button" onClick={() => openDetails(subscription.id)} className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:border-indigo-400 hover:text-indigo-600">
+                          <Eye className="h-4 w-4" /> View
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {!loading && !error && subscriptions.length > 0 && (
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-sm text-slate-500">
+                Showing page {page + 1} of {Math.max(1, pageInfo.totalPages)} • {pageInfo.totalElements} total subscriptions
+              </p>
+              <div className="flex items-center gap-2">
+                <button type="button" onClick={() => loadData(Math.max(0, page - 1))} disabled={page === 0} className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:border-indigo-400 hover:text-indigo-600 disabled:cursor-not-allowed disabled:opacity-50">
+                  <ChevronLeft className="h-4 w-4" /> Prev
+                </button>
+                <button type="button" onClick={() => loadData(page + 1)} disabled={page + 1 >= pageInfo.totalPages} className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:border-indigo-400 hover:text-indigo-600 disabled:cursor-not-allowed disabled:opacity-50">
+                  Next <ChevronRight className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center">
-            <div className="text-2xl mr-4">📊</div>
-            <div>
-              <p className="text-sm font-medium text-gray-600">Total Subscriptions</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center">
-            <div className="text-2xl mr-4">✅</div>
-            <div>
-              <p className="text-sm font-medium text-gray-600">Active</p>
-              <p className="text-2xl font-bold text-green-600">{stats.active}</p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center">
-            <div className="text-2xl mr-4">❌</div>
-            <div>
-              <p className="text-sm font-medium text-gray-600">Cancelled</p>
-              <p className="text-2xl font-bold text-red-600">{stats.cancelled}</p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center">
-            <div className="text-2xl mr-4">💰</div>
-            <div>
-              <p className="text-sm font-medium text-gray-600">Monthly Revenue</p>
-              <p className="text-2xl font-bold text-indigo-600">${stats.revenue}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Filters */}
-      <div className="mb-6 flex flex-wrap gap-2">
-        {['all', 'active', 'cancelled'].map((status) => (
-          <button
-            key={status}
-            onClick={() => setFilter(status)}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              filter === status
-                ? 'bg-indigo-600 text-white'
-                : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
-            }`}
-          >
-            {status.charAt(0).toUpperCase() + status.slice(1)}
-          </button>
-        ))}
-      </div>
-
-      {/* Subscriptions Table */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  User
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Plan
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Amount
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Next Billing
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Start Date
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {filteredSubscriptions.map((subscription) => (
-                <tr key={subscription.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{subscription.user}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{subscription.plan}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                      subscription.status === 'Active'
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-red-100 text-red-800'
-                    }`}>
-                      {subscription.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {subscription.amount}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {subscription.nextBilling}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {subscription.startDate}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <button className="text-indigo-600 hover:text-indigo-900 mr-4">
-                      Edit
-                    </button>
-                    <button className="text-red-600 hover:text-red-900">
-                      Cancel
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <SubscriptionDetailModal isOpen={detailsOpen} onClose={() => setDetailsOpen(false)} subscription={selectedSubscription} />
     </div>
   );
 };

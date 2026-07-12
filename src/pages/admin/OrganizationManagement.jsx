@@ -261,7 +261,10 @@ const OrganizationManagement = () => {
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
                       Owner Email
-                    </th>
+                    </th > 
+                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Plan</th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Subscription</th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Expiry</th>
                     <th className="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wide text-slate-500">
                       Projects
                     </th>
@@ -291,6 +294,25 @@ const OrganizationManagement = () => {
                       <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-700">
                         {organization.ownerEmail || 'Unknown'}
                       </td>
+                      <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-700">
+                      {organization.subscriptionPlan || "-"}
+                    </td>
+
+                    <td className="whitespace-nowrap px-6 py-4">
+                      <span
+                        className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
+                          organization.subscriptionStatus === "ACTIVE"
+                            ? "bg-emerald-100 text-emerald-700"
+                            : "bg-red-100 text-red-700"
+                        }`}
+                      >
+                        {organization.subscriptionStatus || "-"}
+                      </span>
+                    </td>
+
+                    <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-700">
+                      {formatDate(organization.expiryDate)}
+                    </td>
                       <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-slate-900">
                         {organization.totalProjects}
                       </td>
@@ -412,115 +434,214 @@ const OrganizationManagement = () => {
               </button>
             </div>
 
-            {selectedOrganization ? (
-              <div className="space-y-6 px-6 py-6 sm:px-8 sm:py-8">
-                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                  <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                    <div>
-                      <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
-                        Organization
-                      </p>
-                      <h3 className="mt-2 text-2xl font-semibold text-slate-950">
-                        {selectedOrganization.organizationName}
-                      </h3>
-                      <p className="mt-2 text-sm leading-6 text-slate-600">
-                        Review organization access, ownership details, and platform activity.
-                      </p>
-                    </div>
-                    <span
-                      className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${
-                        selectedOrganization.organizationStatus === 'ACTIVE'
-                          ? 'bg-emerald-100 text-emerald-700'
-                          : 'bg-red-100 text-red-700'
-                      }`}
-                    >
-                      {selectedOrganization.organizationStatus === 'ACTIVE'
-                        ? 'Active'
-                        : 'Suspended'}
-                    </span>
+           {selectedOrganization ? (
+            <div className="space-y-8 px-6 py-6 sm:px-8 sm:py-8">
+
+              {/* Header Card */}
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-6">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+                      Organization
+                    </p>
+
+                    <h3 className="mt-2 text-2xl font-semibold text-slate-950">
+                      {selectedOrganization.organizationName}
+                    </h3>
+
+                    <p className="mt-2 text-sm text-slate-600">
+                      Review organization access, ownership details and subscription
+                      information.
+                    </p>
                   </div>
+
+                  <span
+                    className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${
+                      selectedOrganization.organizationStatus === "ACTIVE"
+                        ? "bg-emerald-100 text-emerald-700"
+                        : "bg-red-100 text-red-700"
+                    }`}
+                  >
+                    {selectedOrganization.organizationStatus}
+                  </span>
                 </div>
+              </div>
+
+              {/* Owner Information */}
+              <div>
+                <h3 className="mb-4 text-lg font-semibold text-slate-900">
+                  Owner Information
+                </h3>
 
                 <div className="grid gap-4 md:grid-cols-2">
-                  <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+
+                  <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                     <div className="flex items-center gap-3">
-                      <div className="rounded-2xl bg-indigo-50 p-2.5 text-indigo-600">
+                      <div className="rounded-2xl bg-indigo-50 p-3 text-indigo-600">
                         <UserRound className="h-5 w-5" />
                       </div>
+
                       <div>
                         <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
                           Owner Name
                         </p>
+
                         <p className="mt-1 text-sm font-semibold text-slate-900">
-                          {selectedOrganization.ownerName || 'Unknown'}
+                          {selectedOrganization.ownerName || "-"}
                         </p>
                       </div>
                     </div>
                   </div>
 
-                  <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                  <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                     <div className="flex items-center gap-3">
-                      <div className="rounded-2xl bg-sky-50 p-2.5 text-sky-600">
+                      <div className="rounded-2xl bg-sky-50 p-3 text-sky-600">
                         <AlertCircle className="h-5 w-5" />
                       </div>
+
                       <div>
                         <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
                           Owner Email
                         </p>
+
                         <p className="mt-1 text-sm font-semibold text-slate-900">
-                          {selectedOrganization.ownerEmail || 'Unknown'}
+                          {selectedOrganization.ownerEmail || "-"}
                         </p>
                       </div>
                     </div>
                   </div>
+
+                </div>
+              </div>
+
+              {/* Subscription Information */}
+              <div>
+
+                <h3 className="mb-4 text-lg font-semibold text-slate-900">
+                  Subscription Information
+                </h3>
+
+                <div className="grid gap-4 md:grid-cols-2">
+
+                  <div className="flex min-h-[120px] flex-col justify-between rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+                      Current Plan
+                    </p>
+
+                    <p className="text-2xl font-bold text-slate-900">
+                      {selectedOrganization.subscriptionPlan
+                        ? selectedOrganization.subscriptionPlan.charAt(0) +
+                          selectedOrganization.subscriptionPlan
+                            .slice(1)
+                            .toLowerCase()
+                        : "-"}
+                    </p>
+                  </div>
+
+                  <div className="flex min-h-[120px] flex-col justify-between rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+                      Subscription Status
+                    </p>
+
+                    <span
+                      className={`inline-flex w-fit rounded-full px-3 py-1 text-xs font-semibold ${
+                        selectedOrganization.subscriptionStatus === "ACTIVE"
+                          ? "bg-emerald-100 text-emerald-700"
+                          : "bg-red-100 text-red-700"
+                      }`}
+                    >
+                      {selectedOrganization.subscriptionStatus || "-"}
+                    </span>
+                  </div>
+
+                  <div className="flex min-h-[120px] flex-col justify-between rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+                      Payment Status
+                    </p>
+
+                    <span
+                      className={`inline-flex w-fit rounded-full px-3 py-1 text-xs font-semibold ${
+                        selectedOrganization.paymentStatus === "SUCCESS"
+                          ? "bg-emerald-100 text-emerald-700"
+                          : "bg-red-100 text-red-700"
+                      }`}
+                    >
+                      {selectedOrganization.paymentStatus || "-"}
+                    </span>
+                  </div>
+
+                  <div className="flex min-h-[120px] flex-col justify-between rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+                      Expiry Date
+                    </p>
+
+                    <p className="text-lg font-semibold text-slate-900">
+                      {formatDate(selectedOrganization.expiryDate)}
+                    </p>
+                  </div>
+
                 </div>
 
+              </div>
+
+              {/* Organization Statistics */}
+              <div>
+
+                <h3 className="mb-4 text-lg font-semibold text-slate-900">
+                  Organization Statistics
+                </h3>
+
                 <div className="grid gap-4 md:grid-cols-3">
-                  <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+
+                  <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                     <div className="flex items-center gap-2 text-slate-500">
                       <CalendarDays className="h-4 w-4" />
-                      <p className="text-xs font-semibold uppercase tracking-[0.24em]">
-                        Created Date
-                      </p>
+                      <span className="text-xs font-semibold uppercase tracking-[0.24em]">
+                        Created
+                      </span>
                     </div>
-                    <p className="mt-3 text-lg font-semibold text-slate-950">
+
+                    <p className="mt-3 text-lg font-semibold text-slate-900">
                       {formatDate(selectedOrganization.createdAt)}
                     </p>
                   </div>
 
-                  <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                  <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                     <div className="flex items-center gap-2 text-slate-500">
                       <Building2 className="h-4 w-4" />
-                      <p className="text-xs font-semibold uppercase tracking-[0.24em]">
-                        Total Projects
-                      </p>
+                      <span className="text-xs font-semibold uppercase tracking-[0.24em]">
+                        Projects
+                      </span>
                     </div>
-                    <p className="mt-3 text-lg font-semibold text-slate-950">
+
+                    <p className="mt-3 text-lg font-semibold text-slate-900">
                       {selectedOrganization.totalProjects}
                     </p>
                   </div>
 
-                  <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                  <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                     <div className="flex items-center gap-2 text-slate-500">
                       <Users className="h-4 w-4" />
-                      <p className="text-xs font-semibold uppercase tracking-[0.24em]">
-                        Total Members
-                      </p>
+                      <span className="text-xs font-semibold uppercase tracking-[0.24em]">
+                        Members
+                      </span>
                     </div>
-                    <p className="mt-3 text-lg font-semibold text-slate-950">
+
+                    <p className="mt-3 text-lg font-semibold text-slate-900">
                       {selectedOrganization.totalMembers}
                     </p>
                   </div>
+
                 </div>
+
               </div>
-            ) : (
-              <div className="flex items-center justify-center p-10">
-                <div className="flex flex-col items-center gap-4">
-              
-                  <LoaderWithMessage message="Loading organization details..." />
-                </div>
-              </div>
-            )}
+
+            </div>
+          ) : (
+            <div className="flex items-center justify-center p-10">
+              <LoaderWithMessage message="Loading organization details..." />
+            </div>
+          )}
 
             <div className="flex justify-end border-t border-slate-200 bg-slate-50 px-6 py-4 sm:px-8">
               <button

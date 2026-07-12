@@ -41,3 +41,8 @@ export const getSubscriptionStatus = async () => {
   const res = await axios.get('/subscriptions/status');
   return res.data;
 };
+
+export const getAvailablePlans = async () => {
+    const { data } = await axios.get("/subscriptions/plans");
+    return data;
+};

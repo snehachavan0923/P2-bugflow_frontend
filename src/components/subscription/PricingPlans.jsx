@@ -1,8 +1,43 @@
-import React from 'react';
-import { subscriptionPlans } from '../../constants/subscriptionPlans';
-import PlanCard from './PlanCard';
+import React, { useEffect, useState } from "react";
+import LoaderWithMessage from "../common/LoaderWithMessage";
+import { getAvailablePlans } from "../../api/subscriptionApi";
+import PlanCard from "./PlanCard";
 
-const PricingPlans = ({ mode = 'public', currentPlan = 'FREE', subscriptionStatus = 'ACTIVE', onSelectPlan, loadingPlan }) => {
+const PricingPlans = ({
+    plans: externalPlans,
+    mode = "public",
+    currentPlan = "FREE",
+    subscriptionStatus = "ACTIVE",
+    onSelectPlan,
+    loadingPlan
+}) => {
+
+    const [plans, setPlans] = useState(externalPlans || []);
+    const [loading, setLoading] = useState(!externalPlans);
+
+    useEffect(() => {
+
+        if (externalPlans) {
+            setPlans(externalPlans);
+            return;
+        }
+
+        const loadPlans = async () => {
+            try {
+                const data = await getAvailablePlans();
+                setPlans(Array.isArray(data) ? data : []);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadPlans(); 
+
+    }, [externalPlans]);
+
+    if (loading) {
+        return <LoaderWithMessage message="Loading plans..." />;
+    }
   return (
     <section className="w-full">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
@@ -19,9 +54,9 @@ const PricingPlans = ({ mode = 'public', currentPlan = 'FREE', subscriptionStatu
         </div>
 
         <div className="mt-14 grid gap-8 lg:grid-cols-4">
-          {subscriptionPlans.map((plan) => (
-            <PlanCard
-              key={plan.id}
+          {plans.map((plan) => (
+            <PlanCard 
+              key={plan.name}
               plan={plan}
               mode={mode}
               currentPlan={currentPlan}

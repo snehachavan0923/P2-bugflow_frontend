@@ -49,6 +49,8 @@ import OrganizationSettings from "../pages/organization/OrganizationSettings";
 import MembersDirectory from "../pages/organization/MembersDirectory";
 import TaskOverview from "../pages/tasks/TaskOverview";
 import ViewerBoard from "../pages/viewer/ViewerBoard";
+import PlanManagement from "../pages/admin/PlanManagement";
+import PaymentHistory from "../pages/admin/PaymentHistory";
 
 const ProjectSectionRedirect = ({ section }) => {
   const { projectId } = useParams();
@@ -300,6 +302,14 @@ const AppRoutes = () => {
         <Route
           path="admin/subscriptions"
           element={<SubscriptionManagement />}
+        />
+        <Route
+          path="/admin/plans"
+          element={<PlanManagement />}
+      />
+        <Route
+          path="/admin/history"
+          element={<PaymentHistory />}
         />
       </Route>
 

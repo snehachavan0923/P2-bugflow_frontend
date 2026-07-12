@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import PricingPlans from '../../components/subscription/PricingPlans';
 import { createSubscriptionPayment, getPaymentHistory, getSubscriptionOverview } from '../../api/subscriptionApi';
-import { subscriptionPlans } from '../../constants/subscriptionPlans';
-
+import { getAvailablePlans } from '../../api/subscriptionApi';
+import LoaderWithMessage from '../../components/common/LoaderWithMessage';
 const formatDate = (value) => {
   if (!value) return 'No expiry date';
   const date = new Date(value);
@@ -31,6 +31,8 @@ const Subscription = () => {
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [paymentProcessing, setPaymentProcessing] = useState(false);
   const [error, setError] = useState('');
+  const [availablePlans, setAvailablePlans] = useState([]);
+  const [plansLoading, setPlansLoading] = useState(true);
 
   const loadSubscription = async () => {
     try {
@@ -44,7 +46,19 @@ const Subscription = () => {
       setLoading(false);
     }
   };
+  const loadAvailablePlans = async () => {
+    try {
+        setPlansLoading(true);
 
+        const data = await getAvailablePlans();
+
+        setAvailablePlans(Array.isArray(data) ? data : []);
+    } catch (err) {
+        console.error(err);
+    } finally {
+        setPlansLoading(false);
+    }
+};
   const loadPaymentHistory = async () => {
     try {
       setPaymentsLoading(true);
@@ -57,15 +71,21 @@ const Subscription = () => {
     }
   };
 
-  useEffect(() => {
+ useEffect(() => {
     loadSubscription();
     loadPaymentHistory();
-  }, []);
+    loadAvailablePlans();
+}, []);
 
-  const handlePlanSelect = (planName) => {
-    const plan = subscriptionPlans.find((item) => item.name === planName);
-    if (plan) setSelectedPlan(plan);
-  };
+ const handlePlanSelect = (planName) => {
+    const plan = availablePlans.find(
+        (item) => item.name === planName
+    );
+
+    if (plan) {
+        setSelectedPlan(plan);
+    }
+};
 
   const handlePayment = async () => {
     if (!selectedPlan) return;
@@ -248,12 +268,17 @@ const Subscription = () => {
           </div>
         </section>
 
-        <PricingPlans
-          mode="owner"
-          currentPlan={planName}
-          subscriptionStatus={status}
-          onSelectPlan={handlePlanSelect}
-        />
+      {plansLoading ? (
+      <LoaderWithMessage message="Loading plans..." />
+    ) : ( 
+      <PricingPlans
+        plans={availablePlans}
+        mode="owner"
+        currentPlan={planName}
+        subscriptionStatus={status}
+        onSelectPlan={handlePlanSelect}
+      />
+    )}
       </div>
 
       {selectedPlan && (
@@ -262,8 +287,17 @@ const Subscription = () => {
             <h2 className="text-2xl font-semibold tracking-tight text-slate-950">Confirm Purchase</h2>
             <dl className="mt-6 divide-y divide-slate-100 rounded-2xl border border-slate-200">
               <div className="flex items-center justify-between px-4 py-3"><dt className="text-sm text-slate-500">Plan Name</dt><dd className="text-sm font-semibold text-slate-900">{selectedPlan.name}</dd></div>
-              <div className="flex items-center justify-between px-4 py-3"><dt className="text-sm text-slate-500">Duration</dt><dd className="text-sm font-semibold text-slate-900">{selectedPlan.duration}</dd></div>
-              <div className="flex items-center justify-between px-4 py-3"><dt className="text-sm text-slate-500">Amount</dt><dd className="text-sm font-semibold text-slate-900">{selectedPlan.price}</dd></div>
+              <div className="flex items-center justify-between px-4 py-3"><dt className="text-sm text-slate-500">Duration</dt><dd className="text-sm font-semibold text-slate-900">{selectedPlan.durationDays
+              ? `${selectedPlan.durationDays} days`
+              : "Custom"}
+            </dd>
+            </div>
+              <div className="flex items-center justify-between px-4 py-3"><dt className="text-sm text-slate-500">Amount</dt><dd className="text-sm font-semibold text-slate-900">{selectedPlan.name === "ENTERPRISE"
+                  ? "Contact Sales"
+                  : formatAmount(
+                  selectedPlan.price,
+                  selectedPlan.currency
+              )}</dd></div>
               <div className="flex items-center justify-between px-4 py-3"><dt className="text-sm text-slate-500">Payment Method</dt><dd className="text-sm font-semibold text-slate-900">MANUAL</dd></div>
             </dl>
             <div className="mt-6 flex justify-end gap-3">
