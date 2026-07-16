@@ -60,6 +60,11 @@ const Sidebar = () => {
           icon: <FolderKanban className="h-5 w-5" />,
         },
         {
+          label: "Revenue Analytics",
+          to: "/admin/revenue",
+          icon: <ChartColumn className="h-5 w-5" />,
+        },
+        {
         label: "Plan Management",
         to: "/admin/plans",
         icon: <CreditCard className="h-5 w-5" />,

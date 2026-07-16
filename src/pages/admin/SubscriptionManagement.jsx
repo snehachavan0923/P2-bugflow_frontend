@@ -19,9 +19,9 @@ const formatDate = (value) => {
 
 const formatCurrency = (value) => {
   if (value === null || value === undefined || value === '') return '—';
-  return new Intl.NumberFormat('en-US', {
+  return new Intl.NumberFormat('en-IN', {
     style: 'currency',
-    currency: 'USD',
+    currency: 'INR',
     maximumFractionDigits: 0,
   }).format(Number(value));
 };
@@ -99,23 +99,24 @@ const SubscriptionManagement = () => {
   };
 
   const stats = useMemo(() => {
-    const defaultPlanMap = {
-      free: dashboard.freePlans || 0,
-      starter: dashboard.starterPlans || 0,
-      business: dashboard.businessPlans || 0,
-    };
-    return [
+    const stats = [
       { label: 'Total Subscriptions', value: dashboard.totalSubscriptions ?? pageInfo.totalElements, accent: 'indigo' },
       { label: 'Active', value: dashboard.activeSubscriptions ?? 0, accent: 'emerald' },
       { label: 'Expired', value: dashboard.expiredSubscriptions ?? 0, accent: 'rose' },
-      { label: 'Free', value: defaultPlanMap.free, accent: 'slate' },
-      { label: 'Starter', value: defaultPlanMap.starter, accent: 'sky' },
-      { label: 'Business', value: defaultPlanMap.business, accent: 'violet' },
+      { label: 'Free', value: dashboard.freePlanCount ?? 0, accent: 'slate' },
+      { label: 'Starter', value: dashboard.starterPlanCount ?? 0, accent: 'sky' },
+      { label: 'Business', value: dashboard.businessPlanCount ?? 0, accent: 'violet' },
+    ];
+    if (dashboard.enterprisePlanCount !== undefined && dashboard.enterprisePlanCount !== null) {
+      stats.push({ label: 'Enterprise', value: dashboard.enterprisePlanCount, accent: 'purple' });
+    }
+    stats.push(
       { label: 'Monthly Revenue', value: formatCurrency(dashboard.monthlyRevenue), accent: 'indigo' },
       { label: 'Total Revenue', value: formatCurrency(dashboard.totalRevenue), accent: 'emerald' },
       { label: 'Renewals Today', value: dashboard.renewalsToday ?? 0, accent: 'amber' },
-      { label: 'Renewals This Week', value: dashboard.renewalsThisWeek ?? 0, accent: 'cyan' },
-    ];
+      { label: 'Renewals This Week', value: dashboard.renewalsThisWeek ?? 0, accent: 'cyan' }
+    );
+    return stats;
   }, [dashboard, pageInfo.totalElements]);
 
   return (

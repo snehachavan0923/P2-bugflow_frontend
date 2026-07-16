@@ -51,6 +51,7 @@ import TaskOverview from "../pages/tasks/TaskOverview";
 import ViewerBoard from "../pages/viewer/ViewerBoard";
 import PlanManagement from "../pages/admin/PlanManagement";
 import PaymentHistory from "../pages/admin/PaymentHistory";
+import RevenueAnalytics from "../pages/admin/RevenueAnalytics";
 
 const ProjectSectionRedirect = ({ section }) => {
   const { projectId } = useParams();
@@ -302,6 +303,10 @@ const AppRoutes = () => {
         <Route
           path="admin/subscriptions"
           element={<SubscriptionManagement />}
+        />
+        <Route
+          path="admin/revenue"
+          element={<RevenueAnalytics />}
         />
         <Route
           path="/admin/plans"

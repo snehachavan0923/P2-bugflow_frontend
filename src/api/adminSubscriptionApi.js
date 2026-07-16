@@ -27,7 +27,12 @@ export const getAdminSubscriptionDetail = async (subscriptionId) => {
   return response.data;
 };
 
-export const getAdminRevenueDashboard = async () => {
-  const response = await axios.get('/admin/revenue/dashboard');
+export const getAdminRevenueDashboard = async ({ from, to, plan } = {}) => {
+  const params = {};
+  if (from) params.from = from;
+  if (to) params.to = to;
+  if (plan) params.plan = plan;
+
+  const response = await axios.get('/admin/revenue/dashboard', { params });
   return response.data;
 };

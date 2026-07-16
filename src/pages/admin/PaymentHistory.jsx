@@ -187,18 +187,14 @@ const PaymentHistory = () => {
 
       {
         title: "Successful Payments",
-        value: dashboard?.paymentsThisMonth ?? 0,
+        value: dashboard?.successfulPaymentsCount ?? 0,
         icon: CheckCircle2,
         color: "bg-sky-500",
       },
 
       {
         title: "Failed Payments",
-        value:
-          payments.filter(
-            (payment) =>
-              payment.paymentStatus === "FAILED"
-          ).length,
+        value: dashboard?.failedPaymentsCount ?? 0,
         icon: XCircle,
         color: "bg-red-500",
       },
