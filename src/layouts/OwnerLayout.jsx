@@ -12,7 +12,7 @@ const OwnerLayout = () => {
       <div className="flex flex-1 min-w-0 flex-col">
         <Navbar />
 
-        <div className="p-6">
+        <div className="px-6">
           <SubscriptionExpiredBanner />
         </div>
 
