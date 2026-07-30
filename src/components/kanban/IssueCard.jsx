@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from "react";
-import { MoreVertical, UserRound } from "lucide-react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { MoreVertical } from "lucide-react";
 
 const priorityStyles = {
   High: "bg-red-50 text-red-700 ring-red-200",
@@ -9,6 +10,7 @@ const priorityStyles = {
 
 const IssueCard = ({ issue, isSelected, mode, onClick, onEdit, onDelete }) => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [menuPosition, setMenuPosition] = useState(null);
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
   const priorityClassName =
@@ -38,6 +40,45 @@ const IssueCard = ({ issue, isSelected, mode, onClick, onEdit, onDelete }) => {
     return () => window.removeEventListener("mousedown", handleClickOutside);
   }, [menuOpen]);
 
+  useLayoutEffect(() => {
+    if (!menuOpen) {
+      setMenuPosition(null);
+      return undefined;
+    }
+
+    const updateMenuPosition = () => {
+      const buttonBounds = buttonRef.current?.getBoundingClientRect();
+      if (!buttonBounds) {
+        return;
+      }
+
+      const menuWidth = menuRef.current?.offsetWidth || 150;
+      const menuHeight = menuRef.current?.offsetHeight || (isOwner ? 120 : 40);
+
+      setMenuPosition({
+        left: Math.min(
+          Math.max(8, buttonBounds.right - menuWidth),
+          window.innerWidth - menuWidth - 8,
+        ),
+        top: Math.min(
+          buttonBounds.bottom + 8,
+          window.innerHeight - menuHeight - 8,
+        ),
+      });
+    };
+
+    updateMenuPosition();
+    const animationFrame = window.requestAnimationFrame(updateMenuPosition);
+    window.addEventListener("resize", updateMenuPosition);
+    window.addEventListener("scroll", updateMenuPosition, true);
+
+    return () => {
+      window.cancelAnimationFrame(animationFrame);
+      window.removeEventListener("resize", updateMenuPosition);
+      window.removeEventListener("scroll", updateMenuPosition, true);
+    };
+  }, [isOwner, menuOpen]);
+
   const handleCardClick = () => onClick(issue);
   const handleDetails = (event) => {
     event.stopPropagation();
@@ -57,7 +98,7 @@ const IssueCard = ({ issue, isSelected, mode, onClick, onEdit, onDelete }) => {
           handleCardClick();
         }
       }}
-      className={`relative w-full rounded-lg border bg-white px-3 py-2.5 text-left shadow-[0_1px_2px_rgba(15,23,42,0.06)] outline-none transition duration-150 hover:border-blue-300 hover:shadow-[0_3px_8px_rgba(15,23,42,0.10)] focus-visible:ring-2 focus-visible:ring-blue-500 ${isSelected ? "border-blue-500 ring-2 ring-blue-100" : "border-slate-200 ring-2 ring-transparent"}`}
+      className={`relative w-full cursor-pointer rounded-[24px] border bg-white px-3.5 py-3.5 text-left shadow-[0_14px_34px_-24px_rgba(15,23,42,0.24)] outline-none transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-[0_20px_44px_-24px_rgba(15,23,42,0.3)] focus-visible:ring-2 focus-visible:ring-indigo-500 ${isSelected ? "border-indigo-400 ring-2 ring-indigo-100" : "border-slate-200 ring-2 ring-transparent"}`}
     >
       <div className="absolute right-3 top-3">
         <button
@@ -67,7 +108,7 @@ const IssueCard = ({ issue, isSelected, mode, onClick, onEdit, onDelete }) => {
             event.stopPropagation();
             setMenuOpen((open) => !open);
           }}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 transition hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 transition hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           aria-haspopup="true"
           aria-expanded={menuOpen}
           aria-label="Open issue actions"
@@ -75,67 +116,74 @@ const IssueCard = ({ issue, isSelected, mode, onClick, onEdit, onDelete }) => {
           <MoreVertical className="h-4 w-4" aria-hidden="true" />
         </button>
 
-        {menuOpen && (
-          <div
-            ref={menuRef}
-            className="absolute right-0 top-10 z-10 min-w-[150px] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg"
-          >
-            <button
-              type="button"
-              onClick={handleDetails}
-              className="w-full px-3 py-2 text-left text-sm text-slate-700 transition hover:bg-slate-50"
+        {menuOpen && menuPosition &&
+          createPortal(
+            <div
+              ref={menuRef}
+              className="fixed z-50 min-w-[150px] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl"
+              style={menuPosition}
             >
-              View Details
-            </button>
-            {isOwner && (
-              <>
-                <button
-                  type="button"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    setMenuOpen(false);
-                    onEdit(issue);
-                  }}
-                  className="w-full px-3 py-2 text-left text-sm text-slate-700 transition hover:bg-slate-50"
-                >
-                  Edit
-                </button>
-                <button
-                  type="button"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    setMenuOpen(false);
-                    onDelete(issue);
-                  }}
-                  className="w-full px-3 py-2 text-left text-sm text-red-600 transition hover:bg-slate-50"
-                >
-                  Delete
-                </button>
-              </>
-            )}
-          </div>
-        )}
+              <button
+                type="button"
+                onClick={handleDetails}
+                className="w-full px-3 py-2 text-left text-sm text-slate-700 transition hover:bg-slate-50"
+              >
+                View Details
+              </button>
+              {isOwner && (
+                <>
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setMenuOpen(false);
+                      onEdit(issue);
+                    }}
+                    className="w-full px-3 py-2 text-left text-sm text-slate-700 transition hover:bg-slate-50"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setMenuOpen(false);
+                      onDelete(issue);
+                    }}
+                    className="w-full px-3 py-2 text-left text-sm text-red-600 transition hover:bg-slate-50"
+                  >
+                    Delete
+                  </button>
+                </>
+              )}
+            </div>,
+            document.body,
+          )}
       </div>
 
-      <h3 className="line-clamp-2 text-sm font-semibold leading-5 text-slate-900">
-        {issue.title}
-      </h3>
+      <div className="pr-10">
+        <h3 className="line-clamp-2 text-sm font-semibold leading-5 text-slate-950">
+          {issue.title}
+        </h3>
 
-      <p className="mt-1 line-clamp-2 text-xs leading-4 text-slate-500">
-        {issue.description || "No description provided."}
-      </p>
+        <p className="mt-2 line-clamp-2 text-xs leading-4 text-slate-500">
+          {issue.description || "No description provided."}
+        </p>
+      </div>
 
-      <div className="mt-2.5 flex items-center justify-between gap-2 border-t border-slate-100 pt-2">
+      <div className="mt-3 flex items-center justify-between gap-2 border-t border-slate-100 pt-2.5">
         <span
-          className={`inline-flex rounded-full px-2 py-0.5 text-[11px] font-semibold leading-4 ring-1 ring-inset ${priorityClassName}`}
+          className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-semibold leading-4 ring-1 ring-inset ${priorityClassName}`}
         >
           {issue.priority || "Medium"}
         </span>
 
-        <span className="flex min-w-0 items-center gap-1.5 text-xs font-medium text-slate-500">
-          <UserRound className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+        <div className="flex min-w-0 items-center gap-2 text-xs font-medium text-slate-500">
+          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-indigo-50 font-semibold text-indigo-700">
+            {(issue.assignedToName || "U").charAt(0).toUpperCase()}
+          </div>
           <span className="truncate">{issue.assignedToName || "Unassigned"}</span>
-        </span>
+        </div>
       </div>
     </div>
   );

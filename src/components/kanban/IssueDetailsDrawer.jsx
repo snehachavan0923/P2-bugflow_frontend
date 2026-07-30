@@ -18,7 +18,7 @@ const priorityStyles = {
 };
 
 const actionButtonClassName =
-  "inline-flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex items-center justify-center gap-2 rounded-2xl px-3.5 py-2.5 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-60";
 
 const IssueDetailsDrawer = ({
   issue,
@@ -94,8 +94,8 @@ const IssueDetailsDrawer = ({
 
 
   const containerClass = embedded
-    ? `flex h-full min-h-0 max-h-full w-full flex-col overflow-hidden border-l border-slate-200 bg-white transition-all duration-200 ${isVisible ? "translate-x-0 opacity-100" : "translate-x-4 opacity-0"}`
-    : `fixed inset-y-0 right-0 z-30 flex h-full max-h-full w-full flex-col overflow-hidden border-l border-slate-200 bg-white shadow-2xl transition-transform duration-200 sm:max-w-[360px] ${isVisible ? "translate-x-0" : "translate-x-full"}`;
+    ? `flex h-full min-h-0 max-h-full w-full flex-col overflow-hidden border-l border-slate-200 bg-[linear-gradient(180deg,#f8fafc_0%,#ffffff_100%)] transition-all duration-200 ${isVisible ? "translate-x-0 opacity-100" : "translate-x-4 opacity-0"}`
+    : `fixed inset-y-0 right-0 z-30 flex h-full max-h-full w-full flex-col overflow-hidden border-l border-slate-200 bg-[linear-gradient(180deg,#f8fafc_0%,#ffffff_100%)] shadow-[0_24px_80px_-28px_rgba(15,23,42,0.24)] transition-transform duration-200 sm:max-w-[380px] ${isVisible ? "translate-x-0" : "translate-x-full"}`;
 
   const currentActivity = () => {
   switch (issue.status) {
@@ -151,10 +151,10 @@ const activity = currentActivity();
     <aside className={`${containerClass} shadow-sm sm:shadow-none`}>
       <div className="flex items-start justify-between gap-4 border-b border-slate-200 px-6 py-5">
         <div className="min-w-0">
-          <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400">
+          <div className="inline-flex items-center rounded-full border border-indigo-100 bg-indigo-50 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-indigo-700">
             Issue Details
-          </p>
-          <h2 className="mt-1.5 text-xl font-bold leading-7 text-slate-950">
+          </div>
+          <h2 className="mt-2 text-xl font-semibold leading-7 text-slate-950">
             {issue.title}
           </h2>
         </div>
@@ -162,26 +162,26 @@ const activity = currentActivity();
         <button
           type="button"
           onClick={handleClose}
-          className="rounded-xl p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+          className="rounded-2xl p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
           aria-label="Close issue details"
         >
           <X className="h-5 w-5" aria-hidden="true" />
         </button>
       </div>
 
-      <div className="flex-1 min-h-0 space-y-5 overflow-y-auto px-6 py-5">
+      <div className="flex-1 min-h-0 space-y-4 overflow-y-auto px-6 py-5 [scrollbar-width:thin] [scrollbar-color:rgba(148,163,184,0.6)_transparent]">
         <section className="grid grid-cols-2 gap-3">
-          <div className="rounded-lg border border-slate-200 bg-slate-50/80 p-3">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+          <div className="rounded-[20px] border border-slate-200 bg-slate-50/80 p-3">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">
               Status
             </p>
-            <p className="mt-1 text-sm font-semibold text-slate-800">
+            <p className="mt-2 text-sm font-semibold text-slate-800">
               {issue.status}
             </p>
           </div>
 
-          <div className="rounded-lg border border-slate-200 bg-slate-50/80 p-3">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+          <div className="rounded-[20px] border border-slate-200 bg-slate-50/80 p-3">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">
               Priority
             </p>
             <span
@@ -192,8 +192,8 @@ const activity = currentActivity();
           </div>
         </section>
 
-       <section className="rounded-xl border border-slate-200 bg-slate-50/60 p-4">
-        <h3 className="text-xs font-bold uppercase tracking-wide text-slate-500">
+       <section className="rounded-[24px] border border-slate-200 bg-slate-50/70 p-4">
+        <h3 className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
           Description
         </h3>
 
@@ -202,11 +202,11 @@ const activity = currentActivity();
         </p>
       </section>
 
-        <section className="rounded-xl border border-slate-200 bg-slate-50/60 p-4">
-          <h3 className="text-xs font-bold uppercase tracking-wide text-slate-500">
+        <section className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm">
+          <h3 className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
             Assignee
           </h3>
-          <div className="mt-2.5 space-y-1 text-sm">
+          <div className="mt-3 space-y-1 text-sm">
             <p className="font-semibold text-slate-900">
               {issue.assignedToName || "Unassigned"}
             </p>
@@ -219,13 +219,13 @@ const activity = currentActivity();
           </div>
         </section>
 
-       <section className="space-y-3 border-b border-slate-100 pb-5">
-        <h3 className="text-xs font-bold uppercase tracking-wide text-slate-500">
+       <section className="space-y-3 rounded-[24px] border border-slate-200 bg-slate-50/70 p-4">
+        <h3 className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
           Images
         </h3>
 
-        <div className="rounded-xl border border-slate-200 p-3">
-          <div className="flex items-center justify-between">
+        <div className="rounded-[20px] border border-slate-200 bg-white p-3 shadow-sm">
+          <div className="flex items-center justify-between gap-3">
             <span className="text-sm font-medium text-slate-700">
               Bug Image
             </span>
@@ -234,7 +234,7 @@ const activity = currentActivity();
               <button
                 type="button"
                 onClick={() => onOpenImage("Bug Image", issue.imageUrl)}
-                className="rounded-lg bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
+                className="rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white transition hover:bg-indigo-700"
               >
                 View
               </button>
@@ -246,8 +246,8 @@ const activity = currentActivity();
           </div>
         </div>
 
-        <div className="rounded-xl border border-slate-200 p-3">
-          <div className="flex items-center justify-between">
+        <div className="rounded-[20px] border border-slate-200 bg-white p-3 shadow-sm">
+          <div className="flex items-center justify-between gap-3">
             <span className="text-sm font-medium text-slate-700">
               Resolution Image
             </span>
@@ -256,7 +256,7 @@ const activity = currentActivity();
               <button
                 type="button"
                 onClick={() => onOpenImage("Resolution Proof", issue.resolutionImageUrl)}
-                className="rounded-lg bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
+                className="rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white transition hover:bg-indigo-700"
               >
                 View
               </button>
@@ -268,8 +268,8 @@ const activity = currentActivity();
           </div>
         </div>
       </section>
-       <section className="rounded-xl border border-slate-200 bg-slate-50/60 p-4">
-        <h3 className="text-xs font-bold uppercase tracking-wide text-slate-500">
+       <section className="rounded-[24px] border border-slate-200 bg-slate-50/70 p-4">
+        <h3 className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
           {activity.icon} {activity.title}
         </h3>
 
@@ -309,7 +309,7 @@ const activity = currentActivity();
               <button
                 type="button"
                 onClick={() => onMoveIssue(issue, "In Progress")}
-                className={`${actionButtonClassName} bg-blue-600 text-white hover:bg-blue-700`}
+                className={`${actionButtonClassName} bg-indigo-600 text-white hover:bg-indigo-700`}
               >
                 <Play className="h-4 w-4" aria-hidden="true" />
                 Start Work

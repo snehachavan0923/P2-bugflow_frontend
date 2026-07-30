@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Plus, X } from "lucide-react";
 import { useParams } from "react-router-dom";
-
+import { ListTodo } from "lucide-react";
 import KanbanBoard from "../../components/kanban/KanbanBoard";
 import { deleteIssue, editIssue } from "../../api/issueApi";
 import { useAuth } from "../../context/AuthContext";
@@ -11,10 +11,10 @@ import { useProjectWorkspace } from "../project/workspace/WorkspaceContext";
 const tabs = ["Open", "In Progress", "Review", "Done"];
 
 const buttonBase =
-  "inline-flex items-center justify-center rounded-xl px-3 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex items-center justify-center rounded-2xl px-3.5 py-2.5 text-sm font-semibold transition duration-200 disabled:cursor-not-allowed disabled:opacity-60";
 
 const inputClassName =
-  "w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-50";
+  "w-full rounded-2xl border border-slate-200 bg-slate-50/80 px-3.5 py-2.75 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-100";
 
 const IssueBoard = ({ onCreateIssue }) => {
   const { projectId } = useParams();
@@ -88,14 +88,14 @@ const IssueBoard = ({ onCreateIssue }) => {
   };
 
   return (
-  <div className="relative flex h-full min-h-0 w-full flex-col bg-white">
-      <div className="flex min-h-0 flex-1 flex-col">
-        <div className="flex min-h-11 items-center justify-between gap-3 border-b border-slate-200 bg-white px-3 py-1.5">
+  <div className="relative flex h-full min-h-0 w-full flex-col bg-[linear-gradient(180deg,#f8fafc_0%,#ffffff_100%)] px-2 py-2 sm:px-3 lg:px-4">
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-[32px] border border-slate-200 bg-white shadow-[0_24px_80px_-32px_rgba(15,23,42,0.24)]">
+        <div className="flex min-h-11 items-center justify-between gap-3 border-b border-slate-200 bg-slate-50/80 px-3 py-3 sm:px-4">
           {onCreateIssue ? (
             <button
               type="button"
               onClick={onCreateIssue}
-              className="inline-flex h-8 items-center justify-center gap-1.5 rounded-md bg-blue-600 px-3 text-xs font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-100"
+              className="inline-flex h-9 items-center justify-center gap-2 rounded-2xl bg-indigo-600 px-3.5 text-sm font-semibold text-white shadow-[0_10px_30px_-12px_rgba(79,70,229,0.55)] transition hover:-translate-y-0.5 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-100"
             >
               <Plus className="h-3.5 w-3.5" />
               Create Issue
@@ -104,16 +104,16 @@ const IssueBoard = ({ onCreateIssue }) => {
             <div />
           )}
 
-          <div className="inline-flex h-8 rounded-md border border-slate-200 bg-slate-50 p-0.5">
+          <div className="inline-flex h-9 rounded-2xl border border-slate-200 bg-white p-0.5 shadow-sm">
             {["kanban", "table"].map((mode) => (
               <button
                 key={mode}
                 type="button"
                 onClick={() => setViewMode(mode)}
-                className={`rounded px-3 text-xs font-semibold transition ${
+                className={`rounded-xl px-3 text-sm font-semibold transition ${
                   viewMode === mode
-                    ? "bg-white text-blue-700 shadow-sm"
-                    : "text-slate-600 hover:bg-white"
+                    ? "bg-indigo-600 text-white shadow-sm"
+                    : "text-slate-600 hover:bg-slate-50"
                 }`}
               >
                 {mode === "kanban" ? "Kanban" : "Table"}
@@ -123,7 +123,7 @@ const IssueBoard = ({ onCreateIssue }) => {
         </div>
 
         {viewMode === "kanban" ? (
-          <div className="min-h-0 min-w-0 flex-1 bg-slate-50 p-2">
+          <div className="min-h-0 min-w-0 flex-1 bg-[linear-gradient(180deg,#f8fafc_0%,#ffffff_100%)] p-2 sm:p-3">
             <KanbanBoard
               mode="owner"
               projectId={projectId}
@@ -133,16 +133,16 @@ const IssueBoard = ({ onCreateIssue }) => {
             />
           </div>
         ) : (
-          <div className="space-y-2 bg-slate-50 p-2">
-            <div className="flex flex-wrap gap-1 rounded-md border border-slate-200 bg-white p-1 shadow-sm">
+          <div className="space-y-3 bg-[linear-gradient(180deg,#f8fafc_0%,#ffffff_100%)] p-2 sm:p-3">
+            <div className="flex flex-wrap gap-1 rounded-[24px] border border-slate-200 bg-white p-1.5 shadow-sm">
               {tabs.map((tab) => (
                 <button
                   key={tab}
                   type="button"
                   onClick={() => setActiveTab(tab)}
-                  className={`rounded px-3 py-1.5 text-xs font-semibold transition ${
+                  className={`rounded-xl px-3 py-1.5 text-sm font-semibold transition ${
                     activeTab === tab
-                      ? "bg-blue-50 text-blue-700"
+                      ? "bg-indigo-600 text-white shadow-sm"
                       : "text-slate-600 hover:bg-slate-50"
                   }`}
                 >
@@ -151,10 +151,10 @@ const IssueBoard = ({ onCreateIssue }) => {
               ))}
             </div>
 
-            <div className="overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm">
-              <div className="overflow-x-auto">
+            <div className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_20px_60px_-30px_rgba(15,23,42,0.2)]">
+              <div className="max-h-[520px] overflow-x-auto overflow-y-auto [scrollbar-width:thin] [scrollbar-color:rgba(148,163,184,0.6)_transparent]">
                 <table className="min-w-full divide-y divide-slate-200">
-                  <thead className="bg-slate-50">
+                  <thead className="sticky top-0 z-10 bg-slate-50/95 backdrop-blur">
                     <tr>
                       {[
                         "Title",
@@ -166,7 +166,7 @@ const IssueBoard = ({ onCreateIssue }) => {
                       ].map((heading) => (
                         <th
                           key={heading}
-                          className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-500"
+                          className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-[0.2em] text-slate-500"
                         >
                           {heading}
                         </th>
@@ -179,16 +179,22 @@ const IssueBoard = ({ onCreateIssue }) => {
                       <tr>
                         <td
                           colSpan="6"
-                          className="px-5 py-12 text-center text-sm text-slate-500"
+                          className="px-5 py-12 text-center"
                         >
-                          No issues in {activeTab}
+                          <div className="mx-auto flex max-w-sm flex-col items-center rounded-[28px] border border-dashed border-slate-200 bg-slate-50 px-6 py-10 text-sm text-slate-500">
+                          <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-sm">
+                          <ListTodo className="h-7 w-7 text-slate-500" />
+                        </div>
+                            <p className="mt-4 font-semibold text-slate-900">No issues in {activeTab}</p>
+                            <p className="mt-1 text-slate-500">Create or move work here to keep the board moving.</p>
+                          </div>
                         </td>
                       </tr>
                     ) : (
                       filteredIssues.map((issue) => (
                         <tr
                           key={issue.id}
-                          className="transition hover:bg-slate-50"
+                          className="transition hover:bg-slate-50/80"
                         >
                           <td className="max-w-xs px-5 py-4 text-sm font-semibold text-slate-950">
                             {issue.title}
@@ -213,7 +219,7 @@ const IssueBoard = ({ onCreateIssue }) => {
                             {issue.imageUrl ? (
                               <button
                                 type="button"
-                                className={`${buttonBase} bg-blue-50 text-blue-700 hover:bg-blue-100`}
+                                className={`${buttonBase} bg-indigo-50 text-indigo-700 hover:bg-indigo-100`}
                                 onClick={() =>
                                   setImagePreview(issue.imageUrl)
                                 }
@@ -301,22 +307,23 @@ const IssueBoard = ({ onCreateIssue }) => {
 
      {modalImage && (
         <div
-          className="fixed inset-0 z-[70] flex items-center justify-center bg-black/70 p-4"
+          className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-[2px]"
           onClick={() => {
             setModalImage(null);
             setModalTitle("");
           }}
         >
           <div
-            className="w-full max-w-2xl rounded-2xl bg-white p-4"
+            className="w-full max-w-3xl rounded-[32px] border border-slate-200 bg-white p-4 shadow-[0_24px_90px_-28px_rgba(15,23,42,0.4)]"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-lg font-semibold">
+              <h3 className="text-lg font-semibold text-slate-950">
                 {modalTitle}
               </h3>
 
               <button
+                className="rounded-2xl p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
                 onClick={() => {
                   setModalImage(null);
                   setModalTitle("");
@@ -329,7 +336,7 @@ const IssueBoard = ({ onCreateIssue }) => {
             <img
               src={modalImage}
               alt={modalTitle}
-              className="max-h-[75vh] w-full object-contain"
+              className="max-h-[75vh] w-full rounded-[24px] border border-slate-200 bg-slate-50 object-contain p-2"
             />
           </div>
         </div>
@@ -413,7 +420,7 @@ const IssueBoard = ({ onCreateIssue }) => {
           </LabeledField>
 
             {editModal.imageUrl && (
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+              <div className="rounded-[24px] border border-slate-200 bg-slate-50/80 p-4 shadow-sm">
                 <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
                   Bug Image
                 </p>
@@ -429,7 +436,7 @@ const IssueBoard = ({ onCreateIssue }) => {
                       setModalTitle("Bug Image");
                       setModalImage(editModal.imageUrl);
                     }}
-                    className="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
+                    className="rounded-2xl bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700"
                   >
                     View
                   </button>
@@ -439,7 +446,7 @@ const IssueBoard = ({ onCreateIssue }) => {
 
             <button
               type="button"
-              className={`${buttonBase} bg-blue-600 text-white hover:bg-blue-700`}
+              className={`${buttonBase} bg-indigo-600 text-white hover:bg-indigo-700`}
               onClick={handleEditSubmit}
             >
               Save Changes
@@ -467,27 +474,27 @@ const LabeledField = ({ label, children }) => (
     zIndex = "z-50",
   }) => (
   <div
-    className={`fixed inset-0 ${zIndex} flex items-center justify-center bg-slate-950/50 p-4`}
+    className={`fixed inset-0 ${zIndex} flex items-center justify-center bg-slate-950/55 p-4 backdrop-blur-[2px]`}
     onClick={onClose}
   >
     <div
-      className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white shadow-2xl"
+      className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-[32px] border border-slate-200 bg-white shadow-[0_24px_90px_-28px_rgba(15,23,42,0.4)]"
       onClick={(event) => event.stopPropagation()}
     >
-      <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+      <div className="flex items-center justify-between border-b border-slate-200 px-6 py-5">
         <h2 className="text-lg font-bold text-slate-950">
           {title}
         </h2>
         <button
           type="button"
           onClick={onClose}
-          className="rounded-xl p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+          className="rounded-2xl p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
           aria-label="Close dialog"
         >
           <X className="h-5 w-5" aria-hidden="true" />
         </button>
       </div>
-      <div className="p-5">{children}</div>
+      <div className="p-6">{children}</div>
     </div>
   </div>
 );
@@ -507,7 +514,7 @@ const LabeledField = ({ label, children }) => (
     <img
       src={imageUrl}
       alt={altText}
-      className="max-h-[75vh] w-full rounded-2xl object-contain"
+      className="max-h-[75vh] w-full rounded-[24px] border border-slate-200 bg-slate-50 object-contain p-2"
     />
   </Dialog>
   );
@@ -527,7 +534,7 @@ const LabeledField = ({ label, children }) => (
     ].map(([label, value]) => (
       <div
         key={label}
-        className="rounded-xl border border-slate-200 bg-slate-50 p-4"
+        className="rounded-[24px] border border-slate-200 bg-slate-50/80 p-4 shadow-sm"
       >
         <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
           {label}
@@ -538,7 +545,7 @@ const LabeledField = ({ label, children }) => (
       </div>
     ))}
 
-    <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+    <div className="rounded-[24px] border border-slate-200 bg-slate-50/80 p-4 shadow-sm">
       <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
         Bug Image
       </p>
@@ -559,7 +566,7 @@ const LabeledField = ({ label, children }) => (
                 issue.imageUrl
               )
             }
-            className="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
+            className="rounded-2xl bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700"
           >
             View
           </button>
@@ -567,7 +574,7 @@ const LabeledField = ({ label, children }) => (
       </div>
     </div>
 
-    <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+    <div className="rounded-[24px] border border-slate-200 bg-slate-50/80 p-4 shadow-sm">
       <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
         Resolution Image
       </p>
@@ -588,7 +595,7 @@ const LabeledField = ({ label, children }) => (
                 issue.resolutionImageUrl
               )
             }
-            className="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
+            className="rounded-2xl bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700"
           >
             View
           </button>

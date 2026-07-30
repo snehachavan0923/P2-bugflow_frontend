@@ -1,15 +1,17 @@
 import React from "react";
+import { ArrowLeft } from "lucide-react";
 import {
   NavLink,
   Outlet,
   useLocation,
+  useNavigate,
   useParams,
 } from "react-router-dom";
 
 const WorkspaceFrame = ({ project, tabs }) => {
   const { projectId } = useParams();
   const { pathname } = useLocation();
-  const isReportsRoute = pathname.includes("/reports");
+  const navigate = useNavigate();
   const workspacePath = (tab) =>
     `/projects/${projectId}/${tab}`;
 
@@ -18,12 +20,24 @@ const WorkspaceFrame = ({ project, tabs }) => {
   <div className="sticky top-0 z-30 w-full border-b border-slate-200 bg-white/95 backdrop-blur">
     <div className="flex h-16 items-center px-4 sm:px-5">
       <div className="min-w-0 flex-1">
-        <h1 className="truncate text-base font-semibold tracking-normal text-slate-950">
-          {project.name}
-        </h1>
-        <p className="max-w-3xl truncate text-xs text-slate-600">
-          {project.description || "No project description provided."}
-        </p>
+        <div className="flex items-center gap-2.5">
+          <button
+            type="button"
+            onClick={() => navigate("/projects")}
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-slate-100 text-slate-700 transition duration-200 hover:border-indigo-300 hover:bg-indigo-600 hover:text-white"
+            aria-label="Go back to projects"
+          >
+            <ArrowLeft size={16} />
+          </button>
+          <div className="min-w-0">
+            <h1 className="truncate text-base font-semibold tracking-normal text-slate-950">
+              {project.name}
+            </h1>
+            <p className="max-w-3xl truncate text-xs text-slate-600">
+              {project.description || "No project description provided."}
+            </p>
+          </div>
+        </div>
       </div>
       <nav className="flex h-full overflow-x-auto">
           {tabs.map((tab) => {
@@ -57,10 +71,10 @@ const WorkspaceFrame = ({ project, tabs }) => {
     </div>
   </div>
 
-<div className="flex-1 min-h-0 overflow-hidden flex h-full">
-    <div className={`flex-1 h-full min-h-0 ${isReportsRoute ? "overflow-y-auto" : "overflow-hidden"}`}>
-      <Outlet />
-    </div>
+<div className="flex-1 min-h-0 overflow-y-auto">
+  <div className="h-full min-h-0">
+    <Outlet />
+  </div>
 </div>
 </div>
   );
