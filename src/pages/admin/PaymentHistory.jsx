@@ -206,7 +206,7 @@ const PaymentHistory = () => {
         color: "bg-slate-500",
       },
     ];
-  }, [dashboard, payments]);
+  }, [dashboard]);
     if (loading) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">

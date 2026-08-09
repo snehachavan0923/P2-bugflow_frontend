@@ -137,7 +137,6 @@ const RevenueAnalytics = () => {
   }, [dashboard]);
 
   const hasOverviewData = stats.length > 0 && dashboard;
-  const hasChartData = monthlyRevenueData.length > 0 || revenueByPlanData.length > 0 || renewalsTrendData.length > 0;
 
   return (
     <div className="min-h-screen bg-slate-50 p-4 sm:p-6 lg:p-8">
