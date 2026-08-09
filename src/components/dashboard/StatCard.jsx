@@ -1,64 +1,24 @@
-const StatCard = ({
-  title,
-  value,
-  icon,
-  color
-}) => {
+import React from "react";
 
+const StatCard = ({ title, value, icon, color }) => {
   return (
-    <div
-      className="
-        bg-white
-        rounded-2xl
-        border
-        border-slate-200
-        shadow-sm
-        p-6
-        hover:shadow-md
-        transition
-      "
-    >
-      <div className="flex justify-between">
-
+    <div className="group relative overflow-hidden rounded-[28px] border border-slate-200 bg-white p-6 shadow-[0_14px_38px_-24px_rgba(15,23,42,0.18)] transition-all duration-300 hover:-translate-y-1 hover:border-indigo-200 hover:shadow-[0_22px_50px_-24px_rgba(79,70,229,0.2)]">
+      <div className="flex items-center justify-between gap-4">
         <div>
-
-          <p
-            className="
-              text-sm
-              text-slate-500
-            "
-          >
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
             {title}
           </p>
-
-          <h2
-            className="
-              text-4xl
-              font-bold
-              mt-3
-            "
-          >
-            {value}
-          </h2>
-
+          <p className="mt-2.5 text-3xl font-semibold text-slate-950 sm:text-4xl">
+            {value ?? 0}
+          </p>
         </div>
 
         <div
-          className={`
-            h-12
-            w-12
-            rounded-xl
-            flex
-            items-center
-            justify-center
-            ${color}
-          `}
+          className={`flex h-12 w-12 items-center justify-center rounded-2xl ${color} shadow-sm transition-transform duration-300 group-hover:scale-110`}
         >
           {icon}
         </div>
-
       </div>
-
     </div>
   );
 };
