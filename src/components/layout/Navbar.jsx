@@ -1,76 +1,99 @@
 import React, { useState } from 'react';
+import { ChevronDown, LogOut, Sparkles } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
+  const getInitial = () => {
+    if (!user) return 'U';
+    if (user.name) return user.name.charAt(0).toUpperCase();
+    if (user.email) return user.email.charAt(0).toUpperCase();
+    return 'U';
+  };
+
   return (
-    <header className="bg-white border-b border-gray-200 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 py-3">
+    <header className="sticky top-0 z-30 border-b border-slate-200/80 bg-white/80 backdrop-blur-md shadow-[0_4px_20px_-10px_rgba(15,23,42,0.05)]">
+      <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
         <div className="flex items-center justify-between">
-          {/* Logo */}
-          <div className="text-xl font-bold text-indigo-600">
-            BugFlow
+          {/* Workspace Title & Brand Indicator */}
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-md shadow-indigo-600/20 sm:hidden">
+              <Sparkles className="h-4 w-4" />
+            </div>
+            <div className="hidden items-center gap-2 text-sm font-medium text-slate-500 sm:flex">
+              <span className="font-bold tracking-tight text-slate-900">BugFlow</span>
+              <span className="text-slate-300">•</span>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-indigo-100 bg-indigo-50/80 px-2.5 py-0.5 text-xs font-semibold text-indigo-700">
+                Workspace
+              </span>
+            </div>
           </div>
 
-          {/* User Menu */}
+          {/* User Profile Menu */}
           {user && (
             <div className="relative">
               <button
+                type="button"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="flex items-center space-x-3 hover:bg-gray-50 rounded-lg px-3 py-2 transition-colors"
+                className="flex items-center gap-3 rounded-full border border-slate-200/80 bg-slate-50/80 p-1.5 pr-3.5 shadow-sm transition-all duration-200 hover:border-slate-300 hover:bg-slate-100/60"
               >
-                <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
-                  <span className="text-sm font-medium text-indigo-600">
-                    {user.name ? user.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
-                  </span>
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 text-xs font-bold text-white shadow-sm shadow-indigo-600/25">
+                  {getInitial()}
                 </div>
-                <div className="flex flex-col items-start">
-                <span className="text-gray-700 font-medium">
-                  {user.name || user.email}
-                </span>
 
-                <span className="text-xs font-semibold text-indigo-600">
-                  {user.role}
-                </span>
-              </div>
-                <svg
-                  className={`w-4 h-4 text-gray-500 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
+                <div className="hidden text-left sm:block">
+                  <p className="text-xs font-semibold text-slate-950">
+                    {user.name || user.email}
+                  </p>
+                  <p className="text-[10px] font-medium uppercase tracking-wider text-indigo-600">
+                    {user.role}
+                  </p>
+                </div>
+
+                <ChevronDown
+                  className={`h-4 w-4 text-slate-400 transition-transform duration-200 ${
+                    dropdownOpen ? 'rotate-180 text-indigo-600' : ''
+                  }`}
+                />
               </button>
 
-              {/* Dropdown Menu */}
+              {/* Elevated Dropdown Menu */}
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
-                  <div className="py-2">
-                   <div className="px-4 py-2 border-b border-gray-100">
-
-                      <p className="text-sm font-medium text-gray-900">
-                        {user.name || "User"}
-                      </p>
-
-                      <p className="text-sm text-gray-500">
-                        {user.email}
-                      </p>
-
-                      <span className="inline-block mt-2 px-2 py-1 text-xs rounded-full bg-indigo-100 text-indigo-700 font-semibold">
+                <div className="absolute right-0 mt-2.5 w-64 rounded-2xl border border-slate-200 bg-white p-2 shadow-[0_20px_50px_-20px_rgba(15,23,42,0.22)] z-50">
+                  <div className="rounded-xl border border-slate-100 bg-slate-50/80 p-3">
+                    <div className="flex items-center gap-2.5">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-100 text-sm font-bold text-indigo-700">
+                        {getInitial()}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-semibold text-slate-950">
+                          {user.name || 'User'}
+                        </p>
+                        <p className="truncate text-xs font-medium text-slate-500">
+                          {user.email}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="mt-2.5 flex items-center justify-between border-t border-slate-200/60 pt-2 text-xs">
+                      <span className="text-slate-500">Role</span>
+                      <span className="rounded-full border border-indigo-100 bg-indigo-50 px-2.5 py-0.5 font-semibold text-indigo-700">
                         {user.role}
                       </span>
-
                     </div>
+                  </div>
+
+                  <div className="mt-1 pt-1">
                     <button
+                      type="button"
                       onClick={() => {
                         logout();
                         setDropdownOpen(false);
                       }}
-                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                      className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-semibold text-rose-600 transition-all duration-200 hover:bg-rose-50"
                     >
+                      <LogOut className="h-4 w-4 text-rose-500" />
                       Sign out
                     </button>
                   </div>
@@ -81,12 +104,12 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Overlay for mobile dropdown */}
+      {/* Backdrop overlay for closing dropdown */}
       {dropdownOpen && (
         <div
           className="fixed inset-0 z-40"
           onClick={() => setDropdownOpen(false)}
-        ></div>
+        />
       )}
     </header>
   );

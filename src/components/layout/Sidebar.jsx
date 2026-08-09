@@ -7,7 +7,8 @@ import {
   FolderKanban,
   ChartColumn,
   ChevronDown,
-    CreditCard,
+  CreditCard,
+  Sparkles,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { getProjects } from "../../api/projectApi";
@@ -65,15 +66,15 @@ const Sidebar = () => {
           icon: <ChartColumn className="h-5 w-5" />,
         },
         {
-        label: "Plan Management",
-        to: "/admin/plans",
-        icon: <CreditCard className="h-5 w-5" />,
-      },
-       {
-        label: "Payment History",
-        to: "/admin/history",
-        icon: <CreditCard className="h-5 w-5" />,
-      },
+          label: "Plan Management",
+          to: "/admin/plans",
+          icon: <CreditCard className="h-5 w-5" />,
+        },
+        {
+          label: "Payment History",
+          to: "/admin/history",
+          icon: <CreditCard className="h-5 w-5" />,
+        },
         {
           label: "Subscriptions",
           to: "/admin/subscriptions",
@@ -142,73 +143,88 @@ const Sidebar = () => {
   const items = menuItems();
 
   return (
-    <aside className="flex h-screen w-64 flex-col border-r border-gray-200 bg-white shadow-sm">
-      {/* Logo */}
-      <div className="border-b border-gray-200 px-6 py-6">
+    <aside className="flex h-screen w-72 flex-col border-r border-slate-200/80 bg-white shadow-[4px_0_24px_-12px_rgba(15,23,42,0.06)]">
+      {/* Branding Header */}
+      <div className="border-b border-slate-100 p-6">
         <NavLink
           to="/dashboard"
-          className="text-2xl font-bold text-indigo-600 transition-colors hover:text-indigo-700"
+          className="group flex items-center gap-3 transition-transform duration-200 hover:scale-[0.99]"
         >
-          BugFlow
+          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-lg shadow-indigo-600/25">
+            <Sparkles className="h-5 w-5" />
+          </div>
+          <div>
+            <span className="text-xl font-bold tracking-tight text-slate-950 transition-colors group-hover:text-indigo-600">
+              BugFlow
+            </span>
+            <p className="text-[11px] font-medium text-slate-400">
+              Bug Tracking System
+            </p>
+          </div>
         </NavLink>
-
-        <p className="mt-1 text-sm text-gray-500">
-          Bug Tracking Made Simple
-        </p>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto px-3 py-4">
+      <nav className="flex-1 space-y-1.5 overflow-y-auto px-4 py-5 [scrollbar-color:rgba(148,163,184,0.4)_transparent] [scrollbar-width:thin]">
         {items.map((item, index) => {
           const showGroupHeading =
             item.group &&
             (index === 0 || items[index - 1].group !== item.group);
 
           if (item.isProjectGroup) {
-            const projectGroupIsActive = location.pathname.startsWith("/projects/");
+            const projectGroupIsActive = location.pathname.startsWith(
+              "/projects/"
+            );
 
             return (
-              <div key="project-group" className="mb-3">
+              <div key="project-group" className="mb-2">
                 <button
                   type="button"
                   onClick={() => setProjectsOpen((prev) => !prev)}
-                  className={`mb-1 flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition-all duration-200 ${
+                  className={`flex w-full items-center gap-3 rounded-2xl px-3.5 py-2.5 text-sm font-semibold transition-all duration-200 ${
                     projectGroupIsActive
-                      ? "bg-indigo-50 text-indigo-700 shadow-sm"
-                      : "text-gray-700 hover:bg-gray-100 hover:text-indigo-600"
+                      ? "border border-indigo-100/80 bg-indigo-50 font-bold text-indigo-700 shadow-sm"
+                      : "text-slate-600 hover:bg-slate-100/70 hover:text-slate-950"
                   }`}
                 >
-                  <span className="flex h-5 w-5 items-center justify-center text-gray-500">
+                  <span
+                    className={`flex h-5 w-5 items-center justify-center ${
+                      projectGroupIsActive
+                        ? "text-indigo-600"
+                        : "text-slate-400 group-hover:text-slate-600"
+                    }`}
+                  >
                     {item.icon}
                   </span>
-                  <span>{item.label}</span>
+                  <span className="flex-1 text-left">{item.label}</span>
                   <ChevronDown
-                    className={`ml-auto h-4 w-4 text-gray-400 transition-transform duration-200 ${
-                      projectsOpen ? "rotate-180" : ""
+                    className={`h-4 w-4 text-slate-400 transition-transform duration-200 ${
+                      projectsOpen ? "rotate-180 text-indigo-600" : ""
                     }`}
                   />
                 </button>
 
                 {projectsOpen && (
-                  <div className="space-y-1 pl-10">
+                  <div className="ml-5 mt-1.5 space-y-1 border-l-2 border-slate-100 pl-4">
                     {assignedProjects.length > 0 ? (
                       assignedProjects.map((project) => (
                         <NavLink
                           key={project.id}
                           to={`/projects/${project.id}/overview`}
                           className={({ isActive }) =>
-                            `block rounded-xl px-3 py-2 text-sm font-medium transition-all duration-200 ${
+                            `flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold transition-all duration-200 ${
                               isActive
-                                ? "bg-indigo-50 text-indigo-700 shadow-sm"
-                                : "text-gray-700 hover:bg-gray-100 hover:text-indigo-600"
+                                ? "bg-indigo-100/60 font-bold text-indigo-700"
+                                : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
                             }`
                           }
                         >
-                          {project.name}
+                          <span className="h-1.5 w-1.5 rounded-full bg-indigo-500" />
+                          <span className="truncate">{project.name}</span>
                         </NavLink>
                       ))
                     ) : (
-                      <div className="rounded-xl px-3 py-2 text-sm text-gray-500">
+                      <div className="flex items-center gap-2 rounded-xl border border-dashed border-slate-200 bg-slate-50/60 px-3 py-2 text-xs font-medium text-slate-400">
                         No projects assigned
                       </div>
                     )}
@@ -221,7 +237,7 @@ const Sidebar = () => {
           return (
             <React.Fragment key={item.to}>
               {showGroupHeading && (
-                <p className="mb-2 mt-6 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400">
+                <p className="mb-2 mt-6 px-3 text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400">
                   {item.group}
                 </p>
               )}
@@ -229,18 +245,28 @@ const Sidebar = () => {
               <NavLink
                 to={item.to}
                 className={({ isActive }) =>
-                  `mb-1 flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition-all duration-200 ${
+                  `group relative flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-sm font-semibold transition-all duration-200 ${
                     isActive
-                      ? "bg-indigo-50 text-indigo-700 shadow-sm"
-                      : "text-gray-700 hover:bg-gray-100 hover:text-indigo-600"
+                      ? "border border-indigo-100/80 bg-indigo-50 font-bold text-indigo-700 shadow-sm"
+                      : "text-slate-600 hover:bg-slate-100/70 hover:text-slate-950"
                   }`
                 }
               >
-                <span className="flex h-5 w-5 items-center justify-center text-gray-500">
-                  {item.icon}
-                </span>
+                {({ isActive }) => (
+                  <>
+                    <span
+                      className={`flex h-5 w-5 items-center justify-center transition-colors ${
+                        isActive
+                          ? "text-indigo-600"
+                          : "text-slate-400 group-hover:text-slate-600"
+                      }`}
+                    >
+                      {item.icon}
+                    </span>
 
-                <span>{item.label}</span>
+                    <span>{item.label}</span>
+                  </>
+                )}
               </NavLink>
             </React.Fragment>
           );
@@ -248,17 +274,18 @@ const Sidebar = () => {
       </nav>
 
       {/* Footer */}
-      <div className="border-t border-gray-200 p-4">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 font-semibold text-indigo-600">
-            {role?.charAt(0)}
+      <div className="border-t border-slate-100 bg-slate-50/50 p-4">
+        <div className="flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white p-3 shadow-sm">
+          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-indigo-100 text-sm font-bold text-indigo-700 shadow-sm">
+            {role?.charAt(0) || "U"}
           </div>
 
-          <div>
-            <p className="text-sm font-semibold text-gray-900">{role}</p>
-
-            <p className="text-xs text-gray-500">
-              BugFlow User
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-semibold text-slate-950">
+              {role || "User"}
+            </p>
+            <p className="truncate text-xs font-medium text-slate-500">
+              BugFlow Workspace
             </p>
           </div>
         </div>
