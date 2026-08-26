@@ -14,7 +14,7 @@ const Navbar = () => {
   };
 
   return (
-    <header className="sticky top-0 z-30 border-b border-slate-200/80 bg-white/80 backdrop-blur-md shadow-[0_4px_20px_-10px_rgba(15,23,42,0.05)]">
+    <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-md shadow-[0_4px_20px_-10px_rgba(15,23,42,0.05)]">
       <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
         <div className="flex items-center justify-between">
           {/* Workspace Title & Brand Indicator */}

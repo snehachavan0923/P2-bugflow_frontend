@@ -17,7 +17,7 @@ const WorkspaceFrame = ({ project, tabs }) => {
 
   return (
 <div className="flex h-full min-h-0 flex-col bg-slate-50">
-  <div className="sticky top-0 z-30 w-full border-b border-slate-200 bg-white/95 backdrop-blur">
+  <div className="sticky top-0 z-10 w-full border-b border-slate-200 bg-white/95 backdrop-blur">
     <div className="flex h-16 items-center px-4 sm:px-5">
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2.5">
