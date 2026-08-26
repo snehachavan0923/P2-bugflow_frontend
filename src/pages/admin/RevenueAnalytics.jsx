@@ -234,7 +234,7 @@ const RevenueAnalytics = () => {
                         <XAxis dataKey="label" stroke="#64748b" tick={{ fill: '#64748b', fontSize: 12 }} />
                         <YAxis stroke="#64748b" tick={{ fill: '#64748b', fontSize: 12 }} />
                         <Tooltip
-                          contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 8 }}
+                          contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #d9e8f7', borderRadius: 8 }}
                         />
                         <Legend wrapperStyle={{ paddingTop: 16 }} />
                         <Line type="monotone" dataKey="value" stroke="#4338ca" strokeWidth={3} dot={{ r: 4 }} name="Revenue" />
@@ -261,7 +261,7 @@ const RevenueAnalytics = () => {
                         <XAxis dataKey="label" stroke="#64748b" tick={{ fill: '#64748b', fontSize: 12 }} />
                         <YAxis stroke="#64748b" tick={{ fill: '#64748b', fontSize: 12 }} />
                         <Tooltip
-                          contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 8 }}
+                          contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #d9e8f7', borderRadius: 8 }}
                         />
                         <Bar dataKey="value" fill="#0ea5e9" radius={[8, 8, 0, 0]} />
                       </BarChart>
@@ -289,7 +289,7 @@ const RevenueAnalytics = () => {
                         <XAxis dataKey="date" stroke="#64748b" tick={{ fill: '#64748b', fontSize: 12 }} />
                         <YAxis stroke="#64748b" tick={{ fill: '#64748b', fontSize: 12 }} />
                         <Tooltip
-                          contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 8 }}
+                          contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #d9e8f7', borderRadius: 8 }}
                         />
                         <Legend wrapperStyle={{ paddingTop: 16 }} />
                         <Line type="monotone" dataKey="renewals" stroke="#10b981" strokeWidth={3} dot={{ r: 4 }} name="Renewals" />
@@ -328,7 +328,7 @@ const RevenueAnalytics = () => {
                           ))}
                         </Pie>
                         <Tooltip
-                          contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 8 }}
+                          contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #d9e8f7', borderRadius: 8 }}
                         />
                       </PieChart>
                     </ResponsiveContainer>

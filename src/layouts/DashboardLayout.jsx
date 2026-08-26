@@ -5,7 +5,7 @@ import Navbar from '../components/layout/Navbar';
 
 const DashboardLayout = () => {
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="dashboard-theme flex h-screen overflow-hidden">
       <Sidebar />
       <div className="flex flex-1 min-w-0 flex-col">
         <Navbar />

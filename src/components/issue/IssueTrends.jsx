@@ -48,7 +48,7 @@ const IssueTrends = ({ data }) => {
                 <Tooltip
                   contentStyle={{
                     backgroundColor: "#ffffff",
-                    border: "1px solid #e2e8f0",
+                    border: "1px solid #d9e8f7",
                     borderRadius: "8px",
                   }}
                   cursor={{ stroke: "#cbd5e1", strokeWidth: 2 }}

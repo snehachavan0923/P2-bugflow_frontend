@@ -11,6 +11,73 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Dashboard-only palette. The sidebar deliberately has no theme selector so its
+   established blue treatment, active states, and icons remain unchanged. */
+.dashboard-theme {
+  --dashboard-page: #f3f8fd;
+  --dashboard-subtle: #f8fbff;
+  --dashboard-hover: #eef6ff;
+  --dashboard-border: #d9e8f7;
+  background-color: var(--dashboard-page);
+}
+
+.dashboard-theme main {
+  background-color: var(--dashboard-page);
+}
+
+/* Existing slate/gray utility surfaces become soft blue-tinted surfaces while
+   white cards retain their visual separation from the page background. */
+.dashboard-theme .bg-slate-50,
+.dashboard-theme .bg-gray-50,
+.dashboard-theme .bg-gray-100,
+.dashboard-theme .bg-slate-50\/50,
+.dashboard-theme .bg-slate-50\/70,
+.dashboard-theme .bg-slate-50\/80,
+.dashboard-theme .bg-slate-50\/95 {
+  background-color: var(--dashboard-subtle) !important;
+}
+
+.dashboard-theme .bg-slate-100,
+.dashboard-theme .bg-slate-100\/50,
+.dashboard-theme .bg-slate-100\/60,
+.dashboard-theme .bg-slate-200,
+.dashboard-theme .bg-gray-200 {
+  background-color: var(--dashboard-hover) !important;
+}
+
+.dashboard-theme .border-slate-100,
+.dashboard-theme .border-slate-200,
+.dashboard-theme .border-slate-200\/60,
+.dashboard-theme .border-slate-200\/80,
+.dashboard-theme .border-slate-300,
+.dashboard-theme .border-gray-100,
+.dashboard-theme .border-gray-200,
+.dashboard-theme .border-gray-300 {
+  border-color: var(--dashboard-border) !important;
+}
+
+.dashboard-theme .divide-slate-200 > :not([hidden]) ~ :not([hidden]) {
+  border-color: var(--dashboard-border) !important;
+}
+
+.dashboard-theme .ring-slate-200 {
+  --tw-ring-color: var(--dashboard-border) !important;
+}
+
+.dashboard-theme .hover\:bg-slate-50:hover,
+.dashboard-theme .hover\:bg-slate-50\/80:hover,
+.dashboard-theme .hover\:bg-slate-100:hover,
+.dashboard-theme .hover\:bg-slate-100\/50:hover,
+.dashboard-theme .hover\:bg-slate-100\/60:hover,
+.dashboard-theme .hover\:bg-gray-100:hover {
+  background-color: var(--dashboard-hover) !important;
+}
+
+.dashboard-theme .hover\:border-slate-300:hover,
+.dashboard-theme .hover\:border-slate-400:hover {
+  border-color: #bfd9f1 !important;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
