@@ -88,7 +88,7 @@ const CreateProjectModal = ({ isOpen, onClose, onCreate }) => {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Create Project">
+    <Modal isOpen={isOpen} onClose={onClose} title="Create Project" showCloseButton={false}>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label className="block text-sm font-medium mb-2">Project Name</label>
@@ -142,13 +142,22 @@ const CreateProjectModal = ({ isOpen, onClose, onCreate }) => {
           )}
         </div>
 
-        <button
-          type="submit"
-          disabled={submitting || Object.keys(errors).length > 0}
-          className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition"
-        >
-          {submitting ? 'Creating...' : 'Create'}
-        </button>
+        <div className="mt-5 flex items-center justify-between gap-3">
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
+          >
+            Close
+          </button>
+          <button
+            type="submit"
+            disabled={submitting || Object.keys(errors).length > 0}
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition"
+          >
+            {submitting ? 'Creating...' : 'Create'}
+          </button>
+        </div>
       </form>
     </Modal>
   );

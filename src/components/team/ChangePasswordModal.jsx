@@ -127,6 +127,7 @@ const ChangePasswordModal = ({ member, isOpen, onClose, onChangePassword }) => {
         onClose();
       }}
       title={`Change Password for ${member?.name || "Member"}`}
+      showCloseButton={false}
     >
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
@@ -208,13 +209,25 @@ const ChangePasswordModal = ({ member, isOpen, onClose, onChangePassword }) => {
           )}
         </div>
 
-        <button
-          type="submit"
-          disabled={submitting}
-          className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition"
-        >
-          {submitting ? "Saving..." : "Save Password"}
-        </button>
+        <div className="mt-5 flex items-center justify-between gap-3">
+          <button
+            type="button"
+            onClick={() => {
+              resetForm();
+              onClose();
+            }}
+            className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={submitting}
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition"
+          >
+            {submitting ? "Saving..." : "Save Password"}
+          </button>
+        </div>
       </form>
     </Modal>
   );

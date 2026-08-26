@@ -123,7 +123,7 @@ const PlanCard = ({
 
   return (
     <article
-      className={`group rounded-2xl border bg-white p-7 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl ${
+      className={`group flex h-full flex-col rounded-2xl border bg-white p-7 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl ${
         isRecommended
           ? `${accent.border} shadow-xl ${accent.shadow}`
           : "border-slate-200 shadow-lg shadow-slate-200/60"
@@ -169,29 +169,9 @@ const PlanCard = ({
         </p>
       </div>
 
-      {/* Colored Feature Chips */}
 
-      <div className="mt-6 flex flex-wrap gap-2">
-        <span
-          className={`rounded-full px-3 py-1 text-sm font-medium ${accent.chip}`}
-        >
-          {plan.projectLimit == null ? "Unlimited" : plan.projectLimit} Projects
-        </span>
 
-        <span
-          className={`rounded-full px-3 py-1 text-sm font-medium ${accent.chip}`}
-        >
-          {plan.memberLimit == null ? "Unlimited" : plan.memberLimit} Members
-        </span>
-
-        <span
-          className={`rounded-full px-3 py-1 text-sm font-medium ${accent.chip}`}
-        >
-       {plan.issueLimit == null ? "Unlimited" : plan.issueLimit} Issues
-        </span>
-      </div>
-
-      <ul className="mt-6 space-y-3">
+      <ul className="mt-6 flex-1 space-y-3">
         {plan.features?.map((feature) => (
           <li
             key={feature}
@@ -208,27 +188,29 @@ const PlanCard = ({
         ))}
       </ul>
 
-      <button
-        type="button"
-        onClick={() => {
-          if (plan.name === "ENTERPRISE") return;
+      <div className="mt-auto pt-8">
+        <button
+          type="button"
+          onClick={() => {
+            if (plan.name === "ENTERPRISE") return;
 
-          if (mode === "public") {
-            navigate("/login");
-            return;
-          }
+            if (mode === "public") {
+              navigate("/login");
+              return;
+            }
 
-          if (!onSelectPlan || isDisabled) return;
+            if (!onSelectPlan || isDisabled) return;
 
-          onSelectPlan(plan.name);
-        }}
-        disabled={isDisabled}
-        className={`mt-8 inline-flex w-full items-center justify-center rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-200 ${getButtonStyle()} ${
-          isDisabled ? "cursor-not-allowed opacity-80" : ""
-        }`}
-      >
-        {loadingPlan === plan.name ? "Updating..." : getButtonLabel()}
-      </button>
+            onSelectPlan(plan.name);
+          }}
+          disabled={isDisabled}
+          className={`inline-flex w-full items-center justify-center rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-200 ${getButtonStyle()} ${
+            isDisabled ? "cursor-not-allowed opacity-80" : ""
+          }`}
+        >
+          {loadingPlan === plan.name ? "Updating..." : getButtonLabel()}
+        </button>
+      </div>
     </article>
   );
 };
