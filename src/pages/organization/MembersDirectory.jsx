@@ -16,10 +16,10 @@ import LoaderWithMessage from "../../components/common/LoaderWithMessage";
 const filters = ["All", "Developer", "Tester", "Viewer"];
 
 const roleStyles = {
-  Developer: "bg-indigo-50 text-indigo-700 border-indigo-200/60",
+  Developer: "bg-blue-50 text-blue-700 border-blue-200/60",
   Tester: "bg-emerald-50 text-emerald-700 border-emerald-200/60",
   Viewer: "bg-slate-100 text-slate-700 border-slate-200/60",
-  Owner: "bg-violet-50 text-violet-700 border-violet-200/60",
+  Owner: "bg-blue-50 text-blue-700 border-blue-200/60",
 };
 
 const getMemberName = (member) =>
@@ -143,7 +143,7 @@ const MembersDirectory = () => {
         <div className="rounded-[32px] border border-slate-200 bg-white p-6 shadow-[0_24px_80px_-32px_rgba(15,23,42,0.22)] sm:p-8">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-indigo-50 px-3 py-1 text-sm font-medium text-indigo-700">
+              <div className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700">
                 <Sparkles className="h-4 w-4" />
                 Directory & access
               </div>
@@ -160,7 +160,7 @@ const MembersDirectory = () => {
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-5 transition-all duration-200 hover:border-slate-300 hover:bg-slate-100/50">
               <div className="flex items-center gap-3">
-                <div className="rounded-2xl bg-indigo-100 p-2.5 text-indigo-700">
+                <div className="rounded-2xl bg-blue-100 p-2.5 text-blue-700">
                   <Users className="h-5 w-5" aria-hidden="true" />
                 </div>
                 <div>
@@ -221,7 +221,7 @@ const MembersDirectory = () => {
                 value={searchTerm}
                 onChange={(event) => setSearchTerm(event.target.value)}
                 placeholder="Search by name or email..."
-                className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 py-2.5 pl-11 pr-4 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50/80 placeholder:text-slate-400"
+                className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 py-2.5 pl-11 pr-4 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50/80 placeholder:text-slate-400"
               />
             </div>
 
@@ -236,7 +236,7 @@ const MembersDirectory = () => {
                     onClick={() => setActiveFilter(filter)}
                     className={`rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 ${
                       isActive
-                        ? "bg-white text-indigo-700 shadow-sm"
+                        ? "bg-white text-blue-700 shadow-sm"
                         : "text-slate-600 hover:bg-white/50 hover:text-slate-900"
                     }`}
                   >
@@ -252,7 +252,7 @@ const MembersDirectory = () => {
         <div className="rounded-[32px] border border-slate-200 bg-white p-4 shadow-[0_16px_45px_-24px_rgba(15,23,42,0.18)] sm:p-6">
           {members.length === 0 ? (
             <div className="mx-auto flex max-w-md flex-col items-center justify-center rounded-[24px] border border-slate-200 bg-slate-50 p-10 text-center shadow-sm my-4">
-              <div className="rounded-2xl border border-slate-200/80 bg-white p-3.5 text-indigo-600 shadow-sm">
+              <div className="rounded-2xl border border-slate-200/80 bg-white p-3.5 text-blue-600 shadow-sm">
                 <UserX className="h-7 w-7" aria-hidden="true" />
               </div>
               <h2 className="mt-4 text-xl font-semibold text-slate-950">
@@ -264,7 +264,7 @@ const MembersDirectory = () => {
             </div>
           ) : filteredMembers.length === 0 ? (
             <div className="mx-auto flex max-w-md flex-col items-center justify-center rounded-[24px] border border-slate-200 bg-slate-50 p-10 text-center shadow-sm my-4">
-              <div className="rounded-2xl border border-slate-200/80 bg-white p-3.5 text-indigo-600 shadow-sm">
+              <div className="rounded-2xl border border-slate-200/80 bg-white p-3.5 text-blue-600 shadow-sm">
                 <Search className="h-7 w-7" aria-hidden="true" />
               </div>
               <h2 className="mt-4 text-xl font-semibold text-slate-950">
@@ -308,7 +308,7 @@ const MembersDirectory = () => {
                         >
                           <td className="whitespace-nowrap px-6 py-4">
                             <div className="flex items-center gap-3">
-                              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-indigo-100 font-bold text-indigo-700 shadow-sm">
+                              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-100 font-bold text-blue-700 shadow-sm">
                                 {name.charAt(0).toUpperCase()}
                               </div>
                               <span className="font-semibold text-slate-950">

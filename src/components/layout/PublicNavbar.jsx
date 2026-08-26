@@ -11,7 +11,7 @@ const PublicNavbar = () => {
       <div className="max-w-6xl mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <NavLink to="/" className="text-2xl font-bold text-indigo-600 hover:text-indigo-700 transition-colors">
+          <NavLink to="/" className="text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors">
             BugFlow
           </NavLink>
 
@@ -22,8 +22,8 @@ const PublicNavbar = () => {
               className={({ isActive }) =>
                 `font-medium transition-colors ${
                   isActive
-                    ? 'text-indigo-600'
-                    : 'text-gray-700 hover:text-indigo-600'
+                    ? 'text-blue-600'
+                    : 'text-gray-700 hover:text-blue-600'
                 }`
               }
               end
@@ -35,8 +35,8 @@ const PublicNavbar = () => {
               className={({ isActive }) =>
                 `font-medium transition-colors ${
                   isActive
-                    ? 'text-indigo-600'
-                    : 'text-gray-700 hover:text-indigo-600'
+                    ? 'text-blue-600'
+                    : 'text-gray-700 hover:text-blue-600'
                 }`
               }
             >
@@ -47,8 +47,8 @@ const PublicNavbar = () => {
               className={({ isActive }) =>
                 `font-medium transition-colors ${
                   isActive
-                    ? 'text-indigo-600'
-                    : 'text-gray-700 hover:text-indigo-600'
+                    ? 'text-blue-600'
+                    : 'text-gray-700 hover:text-blue-600'
                 }`
               }
             >
@@ -60,7 +60,7 @@ const PublicNavbar = () => {
               {user ? (
                 <button
                   onClick={logout}
-                  className="px-6 py-2 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition-colors"
+                  className="px-6 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors"
                 >
                   Logout
                 </button>
@@ -68,13 +68,13 @@ const PublicNavbar = () => {
                 <>
                   <NavLink
                     to="/login"
-                    className="px-6 py-2 rounded-lg font-medium text-indigo-600 hover:bg-indigo-50 transition-colors"
+                    className="px-6 py-2 rounded-lg font-medium text-blue-600 hover:bg-blue-50 transition-colors"
                   >
                     Login
                   </NavLink>
                   <NavLink
                     to="/signup"
-                    className="px-6 py-2 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition-colors"
+                    className="px-6 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors"
                   >
                     Get Started
                   </NavLink>
@@ -103,8 +103,8 @@ const PublicNavbar = () => {
                 className={({ isActive }) =>
                   `font-medium transition-colors ${
                     isActive
-                      ? 'text-indigo-600'
-                      : 'text-gray-700 hover:text-indigo-600'
+                      ? 'text-blue-600'
+                      : 'text-gray-700 hover:text-blue-600'
                   }`
                 }
                 end
@@ -117,8 +117,8 @@ const PublicNavbar = () => {
                 className={({ isActive }) =>
                   `font-medium transition-colors ${
                     isActive
-                      ? 'text-indigo-600'
-                      : 'text-gray-700 hover:text-indigo-600'
+                      ? 'text-blue-600'
+                      : 'text-gray-700 hover:text-blue-600'
                   }`
                 }
                 onClick={() => setMobileMenuOpen(false)}
@@ -130,8 +130,8 @@ const PublicNavbar = () => {
                 className={({ isActive }) =>
                   `font-medium transition-colors ${
                     isActive
-                      ? 'text-indigo-600'
-                      : 'text-gray-700 hover:text-indigo-600'
+                      ? 'text-blue-600'
+                      : 'text-gray-700 hover:text-blue-600'
                   }`
                 }
                 onClick={() => setMobileMenuOpen(false)}
@@ -147,7 +147,7 @@ const PublicNavbar = () => {
                       logout();
                       setMobileMenuOpen(false);
                     }}
-                    className="px-4 py-2 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition-colors text-center"
+                    className="px-4 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors text-center"
                   >
                     Logout
                   </button>
@@ -155,14 +155,14 @@ const PublicNavbar = () => {
                   <>
                     <NavLink
                       to="/login"
-                      className="px-4 py-2 rounded-lg font-medium text-indigo-600 hover:bg-indigo-50 transition-colors text-center"
+                      className="px-4 py-2 rounded-lg font-medium text-blue-600 hover:bg-blue-50 transition-colors text-center"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Login
                     </NavLink>
                     <NavLink
                       to="/signup"
-                      className="px-4 py-2 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition-colors text-center"
+                      className="px-4 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors text-center"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Get Started

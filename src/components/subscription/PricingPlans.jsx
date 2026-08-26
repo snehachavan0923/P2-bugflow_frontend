@@ -42,7 +42,7 @@ const PricingPlans = ({
     <section className="w-full">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
         <div className="mx-auto max-w-3xl text-center">
-          <div className="mb-4 inline-flex items-center rounded-full border border-indigo-100 bg-indigo-50 px-3 py-1 text-sm font-medium text-indigo-700">
+          <div className="mb-4 inline-flex items-center rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700">
             Flexible plans for every stage
           </div>
           <h2 className="text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">

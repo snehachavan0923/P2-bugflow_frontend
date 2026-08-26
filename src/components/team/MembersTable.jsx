@@ -9,13 +9,13 @@ const MembersTable = ({
     const base = "rounded-full px-3 py-1 text-xs font-semibold";
     switch (role) {
       case "Developer":
-        return `${base} bg-indigo-50 text-indigo-700`;
+        return `${base} bg-blue-50 text-blue-700`;
       case "Tester":
         return `${base} bg-emerald-50 text-emerald-700`;
       case "Viewer":
         return `${base} bg-slate-100 text-slate-700`;
       case "Manager":
-        return `${base} bg-violet-50 text-violet-700`;
+        return `${base} bg-blue-50 text-blue-700`;
       default:
         return `${base} bg-slate-100 text-slate-700`;
     }
@@ -74,7 +74,7 @@ const MembersTable = ({
                   <tr key={member.id} className="transition-colors hover:bg-slate-50">
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-700">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 font-semibold text-indigo-700">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 font-semibold text-blue-700">
                           {initial}
                         </div>
                         <span className="font-medium text-slate-900">{member.name}</span>
@@ -99,7 +99,7 @@ const MembersTable = ({
                       <div className="flex flex-wrap items-center gap-2">
                         <button
                           onClick={() => onChangePassword(member)}
-                          className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-indigo-600 transition hover:bg-indigo-50"
+                          className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-blue-600 transition hover:bg-blue-50"
                         >
                           Change Password
                         </button>

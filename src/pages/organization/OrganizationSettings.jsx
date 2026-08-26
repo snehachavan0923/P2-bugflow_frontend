@@ -148,7 +148,7 @@ const OrganizationSettings = () => {
         <div className="rounded-[32px] border border-slate-200 bg-white p-6 shadow-[0_24px_80px_-32px_rgba(15,23,42,0.22)] sm:p-8">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-indigo-50 px-3 py-1 text-sm font-medium text-indigo-700">
+              <div className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700">
                 <Sparkles className="h-4 w-4" />
                 Workspace configuration
               </div>
@@ -165,7 +165,7 @@ const OrganizationSettings = () => {
           <div className="mt-8 grid gap-4 md:grid-cols-2">
             <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-5 transition-all duration-200 hover:border-slate-300 hover:bg-slate-100/50">
               <div className="flex items-center gap-3">
-                <div className="rounded-2xl bg-indigo-100 p-2.5 text-indigo-700">
+                <div className="rounded-2xl bg-blue-100 p-2.5 text-blue-700">
                   <FolderKanban className="h-5 w-5" aria-hidden="true" />
                 </div>
                 <div>
@@ -192,7 +192,7 @@ const OrganizationSettings = () => {
         {/* Organization Information Section */}
         <div className="rounded-[32px] border border-slate-200 bg-white p-6 shadow-[0_16px_45px_-24px_rgba(15,23,42,0.18)] sm:p-8">
           <div className="mb-6 flex items-center gap-3">
-            <div className="rounded-2xl border border-indigo-100/80 bg-indigo-50 p-2.5 text-indigo-700">
+            <div className="rounded-2xl border border-blue-100/80 bg-blue-50 p-2.5 text-blue-700">
               <Building2 className="h-5 w-5" aria-hidden="true" />
             </div>
             <div>
@@ -254,7 +254,7 @@ const OrganizationSettings = () => {
                     {totalProjects}
                   </p>
                 </div>
-                <div className="rounded-2xl bg-indigo-100/80 p-3 text-indigo-700">
+                <div className="rounded-2xl bg-blue-100/80 p-3 text-blue-700">
                   <FolderKanban className="h-6 w-6" aria-hidden="true" />
                 </div>
               </div>

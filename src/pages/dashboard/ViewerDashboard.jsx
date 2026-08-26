@@ -56,7 +56,7 @@ const ViewerDashboard = () => {
         <div className="rounded-[32px] border border-slate-200 bg-white p-6 shadow-[0_24px_80px_-32px_rgba(15,23,42,0.22)] sm:p-8">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-indigo-50 px-3 py-1 text-sm font-medium text-indigo-700">
+              <div className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700">
                 <Eye className="h-4 w-4" />
                 Monitoring & Visibility
               </div>
@@ -75,13 +75,13 @@ const ViewerDashboard = () => {
               title="Total Projects"
               value={stats.totalProjects}
               icon={<FolderKanban className="h-5 w-5" />}
-              color="bg-indigo-100 text-indigo-700"
+              color="bg-blue-100 text-blue-700"
             />
             <StatCard
               title="Total Members"
               value={stats.totalMembers}
               icon={<Users className="h-5 w-5" />}
-              color="bg-violet-100 text-violet-700"
+              color="bg-blue-100 text-blue-700"
             />
             <StatCard
               title="Total Issues"
@@ -101,7 +101,7 @@ const ViewerDashboard = () => {
         {/* Read-Only Workspace Guidance Card */}
         <div className="rounded-[32px] border border-slate-200 bg-white p-6 shadow-[0_16px_45px_-24px_rgba(15,23,42,0.18)] sm:p-8">
           <div className="mb-6 flex items-center gap-3">
-            <div className="rounded-2xl border border-indigo-100/80 bg-indigo-50 p-2.5 text-indigo-700">
+            <div className="rounded-2xl border border-blue-100/80 bg-blue-50 p-2.5 text-blue-700">
               <Sparkles className="h-5 w-5" />
             </div>
             <div>

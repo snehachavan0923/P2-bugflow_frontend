@@ -71,7 +71,7 @@ export default function SubscriptionExpiredModal() {
                 setOpen(false);
                 navigate("/owner/subscription");
             }}
-            className="rounded-xl bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-200 transition hover:bg-indigo-700"
+            className="rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-200 transition hover:bg-blue-700"
             >
             Upgrade Plan
             </button>

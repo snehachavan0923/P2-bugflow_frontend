@@ -22,7 +22,7 @@
 }
 
 .tab.active {
-  background: linear-gradient(to right, #6366f1, #8b5cf6);
+  background: linear-gradient(to right, #2f52d5, #2f52d5);
   color: white;
 }
 
@@ -157,7 +157,7 @@
 /* 🔥 SAVE BUTTON */
 .btn-save {
   width: 100%;
-  background: linear-gradient(to right, #6366f1, #8b5cf6);
+  background: #2f52d5;
   color: white;
   padding: 10px;
   border-radius: 10px;

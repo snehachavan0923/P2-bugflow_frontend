@@ -48,7 +48,7 @@ const ProjectList = () => {
       <div className="mx-auto max-w-7xl">
         <div className="mb-8 flex flex-col gap-5 rounded-[32px] border border-slate-200 bg-white/90 p-6 shadow-[0_24px_80px_-32px_rgba(15,23,42,0.24)] backdrop-blur sm:flex-row sm:items-end sm:justify-between sm:p-8">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-indigo-50 px-3 py-1 text-sm font-medium text-indigo-700">
+            <div className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700">
               <Sparkles className="h-4 w-4" />
               Project portfolio
             </div>
@@ -63,7 +63,7 @@ const ProjectList = () => {
           {role === "Owner" && (
             <button
               onClick={() => setIsModalOpen(true)}
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-100 transition-all duration-200 hover:-translate-y-0.5 hover:bg-indigo-700"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-100 transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-700"
             >
               <Plus className="h-4 w-4" />
               Create Project
@@ -92,7 +92,7 @@ const ProjectList = () => {
             {projects.map((project, index) => {
               const initial = (project.name?.charAt(0) || "P").toUpperCase();
               const accentStyles = index % 3 === 0
-                ? "bg-indigo-50 text-indigo-700"
+                ? "bg-blue-50 text-blue-700"
                 : index % 3 === 1
                   ? "bg-emerald-50 text-emerald-700"
                   : "bg-sky-50 text-sky-700";

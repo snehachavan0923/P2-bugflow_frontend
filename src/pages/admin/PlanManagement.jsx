@@ -90,13 +90,13 @@ const PlanManagement = () => {
       <div className="mx-auto max-w-7xl space-y-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-indigo-600">Platform Administration</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">Platform Administration</p>
             <h1 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">Plan Management</h1>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
               Review every subscription plan from the backend and update its pricing, limits, and feature set in one place.
             </p>
           </div>
-          <div className="rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm font-medium text-indigo-700">
+          <div className="rounded-full border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700">
             {loading ? 'Loading plans…' : `${plans.length} plan${plans.length === 1 ? '' : 's'}`} 
           </div>
         </div>

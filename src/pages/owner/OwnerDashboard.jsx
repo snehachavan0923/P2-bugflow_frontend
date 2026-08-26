@@ -39,9 +39,9 @@ import {
 } from "../../api/dashboardApi";
 
 const COLORS = [
-  "#4F46E5",
+  "#2F52D5",
   "#f59e0b",
-  "#8b5cf6",
+  "#2F52D5",
   "#22c55e",
 ];
 
@@ -106,13 +106,13 @@ const OwnerDashboard = () => {
       title: "Total Projects",
       value: stats.totalProjects,
       icon: FolderKanban,
-      iconClass: "bg-indigo-100 text-indigo-700",
+      iconClass: "bg-blue-100 text-blue-700",
     },
     {
       title: "Total Members",
       value: stats.totalMembers,
       icon: Users,
-      iconClass: "bg-violet-100 text-violet-700",
+      iconClass: "bg-blue-100 text-blue-700",
     },
     {
       title: "Total Issues",
@@ -133,13 +133,13 @@ const OwnerDashboard = () => {
       title: "Create Project",
       path: "/projects",
       icon: PlusCircle,
-      gradient: "from-indigo-600 to-indigo-500",
+      gradient: "from-blue-600 to-blue-500",
     },
     {
       title: "Create Team",
       path: "/projects",
       icon: Users,
-      gradient: "from-violet-600 to-indigo-500",
+      gradient: "from-blue-600 to-blue-500",
     },
     {
       title: "Create Issue",
@@ -170,7 +170,7 @@ const OwnerDashboard = () => {
         <div className="rounded-[32px] border border-slate-200 bg-white p-6 shadow-[0_24px_80px_-32px_rgba(15,23,42,0.22)] sm:p-8">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-indigo-50 px-3 py-1 text-sm font-medium text-indigo-700">
+              <div className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700">
                 <Sparkles className="h-4 w-4" />
                 Owner Command Center
               </div>
@@ -225,7 +225,7 @@ const OwnerDashboard = () => {
           <div className="rounded-[32px] border border-slate-200 bg-white p-6 shadow-[0_16px_45px_-24px_rgba(15,23,42,0.18)] sm:p-8 xl:col-span-2">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
               <div className="flex items-center gap-3">
-                <div className="rounded-2xl border border-indigo-100/80 bg-indigo-50 p-2.5 text-indigo-700">
+                <div className="rounded-2xl border border-blue-100/80 bg-blue-50 p-2.5 text-blue-700">
                   <BarChart3 className="h-5 w-5" aria-hidden="true" />
                 </div>
                 <div>
@@ -260,7 +260,7 @@ const OwnerDashboard = () => {
                     <XAxis dataKey="name" tick={{ fill: "#475569", fontSize: 12 }} axisLine={false} tickLine={false} />
                     <YAxis tick={{ fill: "#475569", fontSize: 12 }} allowDecimals={false} axisLine={false} tickLine={false} />
                     <Tooltip
-                      cursor={{ fill: "rgba(79,70,229,0.06)" }}
+                      cursor={{ fill: "rgba(47,82,213,0.06)" }}
                       contentStyle={{
                         borderRadius: "16px",
                         border: "1px solid #e2e8f0",
@@ -277,7 +277,7 @@ const OwnerDashboard = () => {
                 </ResponsiveContainer>
               ) : (
                 <div className="flex h-full flex-col items-center justify-center rounded-[20px] border border-dashed border-slate-200 bg-white p-6 text-center">
-                  <div className="rounded-2xl bg-indigo-50 p-3 text-indigo-600">
+                  <div className="rounded-2xl bg-blue-50 p-3 text-blue-600">
                     <CheckCircle2 className="h-6 w-6" />
                   </div>
                   <p className="mt-3 text-sm font-semibold text-slate-950">No issue activity recorded</p>
@@ -293,7 +293,7 @@ const OwnerDashboard = () => {
           <div className="rounded-[32px] border border-slate-200 bg-white p-6 shadow-[0_16px_45px_-24px_rgba(15,23,42,0.18)] sm:p-8">
             <div className="flex items-center justify-between gap-4 mb-6">
               <div className="flex items-center gap-3">
-                <div className="rounded-2xl border border-indigo-100/80 bg-indigo-50 p-2.5 text-indigo-700">
+                <div className="rounded-2xl border border-blue-100/80 bg-blue-50 p-2.5 text-blue-700">
                   <ArrowRight className="h-5 w-5" aria-hidden="true" />
                 </div>
                 <div>
@@ -312,7 +312,7 @@ const OwnerDashboard = () => {
                     key={action.title}
                     type="button"
                     onClick={() => navigate(action.path)}
-                    className="group flex w-full items-center justify-between gap-3 rounded-[24px] border border-slate-200 bg-slate-50 px-4 py-3.5 text-left transition-all duration-200 hover:border-indigo-300 hover:bg-white hover:shadow-sm"
+                    className="group flex w-full items-center justify-between gap-3 rounded-[24px] border border-slate-200 bg-slate-50 px-4 py-3.5 text-left transition-all duration-200 hover:border-blue-300 hover:bg-white hover:shadow-sm"
                   >
                     <div className="flex items-center gap-3">
                       <div className={`flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br ${action.gradient} text-white shadow-sm`}>
@@ -321,7 +321,7 @@ const OwnerDashboard = () => {
                       <span className="text-sm font-semibold text-slate-950">{action.title}</span>
                     </div>
 
-                    <ChevronRight className="h-4 w-4 text-slate-400 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-indigo-600" />
+                    <ChevronRight className="h-4 w-4 text-slate-400 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-blue-600" />
                   </button>
                 );
               })}

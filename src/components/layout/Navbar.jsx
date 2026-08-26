@@ -19,13 +19,13 @@ const Navbar = () => {
         <div className="flex items-center justify-between">
           {/* Workspace Title & Brand Indicator */}
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-md shadow-indigo-600/20 sm:hidden">
+            <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-md shadow-blue-600/20 sm:hidden">
               <Sparkles className="h-4 w-4" />
             </div>
             <div className="hidden items-center gap-2 text-sm font-medium text-slate-500 sm:flex">
               <span className="font-bold tracking-tight text-slate-900">BugFlow</span>
               <span className="text-slate-300">•</span>
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-indigo-100 bg-indigo-50/80 px-2.5 py-0.5 text-xs font-semibold text-indigo-700">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-100 bg-blue-50/80 px-2.5 py-0.5 text-xs font-semibold text-blue-700">
                 Workspace
               </span>
             </div>
@@ -39,7 +39,7 @@ const Navbar = () => {
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 className="flex items-center gap-3 rounded-full border border-slate-200/80 bg-slate-50/80 p-1.5 pr-3.5 shadow-sm transition-all duration-200 hover:border-slate-300 hover:bg-slate-100/60"
               >
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 text-xs font-bold text-white shadow-sm shadow-indigo-600/25">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white shadow-sm shadow-blue-600/25">
                   {getInitial()}
                 </div>
 
@@ -47,14 +47,14 @@ const Navbar = () => {
                   <p className="text-xs font-semibold text-slate-950">
                     {user.name || user.email}
                   </p>
-                  <p className="text-[10px] font-medium uppercase tracking-wider text-indigo-600">
+                  <p className="text-[10px] font-medium uppercase tracking-wider text-blue-600">
                     {user.role}
                   </p>
                 </div>
 
                 <ChevronDown
                   className={`h-4 w-4 text-slate-400 transition-transform duration-200 ${
-                    dropdownOpen ? 'rotate-180 text-indigo-600' : ''
+                    dropdownOpen ? 'rotate-180 text-blue-600' : ''
                   }`}
                 />
               </button>
@@ -64,7 +64,7 @@ const Navbar = () => {
                 <div className="absolute right-0 mt-2.5 w-64 rounded-2xl border border-slate-200 bg-white p-2 shadow-[0_20px_50px_-20px_rgba(15,23,42,0.22)] z-50">
                   <div className="rounded-xl border border-slate-100 bg-slate-50/80 p-3">
                     <div className="flex items-center gap-2.5">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-100 text-sm font-bold text-indigo-700">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-100 text-sm font-bold text-blue-700">
                         {getInitial()}
                       </div>
                       <div className="min-w-0 flex-1">
@@ -78,7 +78,7 @@ const Navbar = () => {
                     </div>
                     <div className="mt-2.5 flex items-center justify-between border-t border-slate-200/60 pt-2 text-xs">
                       <span className="text-slate-500">Role</span>
-                      <span className="rounded-full border border-indigo-100 bg-indigo-50 px-2.5 py-0.5 font-semibold text-indigo-700">
+                      <span className="rounded-full border border-blue-100 bg-blue-50 px-2.5 py-0.5 font-semibold text-blue-700">
                         {user.role}
                       </span>
                     </div>

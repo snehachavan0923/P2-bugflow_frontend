@@ -168,7 +168,7 @@ const PaymentHistory = () => {
         title: "Total Revenue",
         value: formatCurrency(dashboard?.totalRevenue),
         icon: IndianRupee,
-        color: "bg-indigo-500",
+        color: "bg-blue-500",
       },
 
       {
@@ -182,7 +182,7 @@ const PaymentHistory = () => {
         title: "Monthly Revenue",
         value: formatCurrency(dashboard?.monthlyRevenue),
         icon: CreditCard,
-        color: "bg-violet-500",
+        color: "bg-blue-500",
       },
 
       {
@@ -224,7 +224,7 @@ const PaymentHistory = () => {
         {/* -------------------------------- */}
 
         <div>
-          <p className="text-sm font-semibold uppercase tracking-widest text-indigo-600">
+          <p className="text-sm font-semibold uppercase tracking-widest text-blue-600">
             Platform Administration
           </p>
 
@@ -315,7 +315,7 @@ const PaymentHistory = () => {
                   setSearch(e.target.value);
                   setPage(0);
                 }}
-                className="w-full rounded-xl border border-slate-300 py-2.5 pl-11 pr-4 outline-none transition focus:border-indigo-500"
+                className="w-full rounded-xl border border-slate-300 py-2.5 pl-11 pr-4 outline-none transition focus:border-blue-500"
               />
 
             </div>
@@ -464,7 +464,7 @@ const PaymentHistory = () => {
 
                       <td className="whitespace-nowrap px-6 py-3">
 
-                        <span className="rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold text-indigo-700">
+                        <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
                           {payment.plan}
                         </span>
 

@@ -2,7 +2,7 @@ import IssueCard from "./IssueCard";
 
 const statusAccents = {
   Open: "bg-slate-500",
-  "In Progress": "bg-indigo-500",
+  "In Progress": "bg-blue-500",
   Review: "bg-amber-500",
   Done: "bg-emerald-500",
 };

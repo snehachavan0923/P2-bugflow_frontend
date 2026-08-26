@@ -3,7 +3,7 @@ import PricingPlans from '../../components/subscription/PricingPlans';
 
 const Pricing = () => {
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(79,70,229,0.10),_transparent_35%),linear-gradient(180deg,_#f8fafc_0%,_#f8fafc_100%)] px-4 py-16 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(47,82,213,0.10),_transparent_35%),linear-gradient(180deg,_#f8fafc_0%,_#f8fafc_100%)] px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
        <PricingPlans mode="public" />
 

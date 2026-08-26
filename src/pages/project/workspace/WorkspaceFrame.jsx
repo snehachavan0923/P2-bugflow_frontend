@@ -24,7 +24,7 @@ const WorkspaceFrame = ({ project, tabs }) => {
           <button
             type="button"
             onClick={() => navigate("/projects")}
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-slate-100 text-slate-700 transition duration-200 hover:border-indigo-300 hover:bg-indigo-600 hover:text-white"
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-slate-100 text-slate-700 transition duration-200 hover:border-blue-300 hover:bg-blue-600 hover:text-white"
             aria-label="Go back to projects"
           >
             <ArrowLeft size={16} />

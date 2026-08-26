@@ -57,7 +57,7 @@ const DeveloperDashboard = () => {
         <div className="rounded-[32px] border border-slate-200 bg-white p-6 shadow-[0_24px_80px_-32px_rgba(15,23,42,0.22)] sm:p-8">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-indigo-50 px-3 py-1 text-sm font-medium text-indigo-700">
+              <div className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700">
                 <Code2 className="h-4 w-4" />
                 Developer Workspace
               </div>
@@ -76,7 +76,7 @@ const DeveloperDashboard = () => {
               title="Total Projects"
               value={stats.totalProjects}
               icon={<FolderKanban className="h-5 w-5" />}
-              color="bg-indigo-100 text-indigo-700"
+              color="bg-blue-100 text-blue-700"
             />
             <StatCard
               title="Assigned Tasks"
@@ -96,7 +96,7 @@ const DeveloperDashboard = () => {
         {/* Development Focus & Workflow Card */}
         <div className="rounded-[32px] border border-slate-200 bg-white p-6 shadow-[0_16px_45px_-24px_rgba(15,23,42,0.18)] sm:p-8">
           <div className="mb-6 flex items-center gap-3">
-            <div className="rounded-2xl border border-indigo-100/80 bg-indigo-50 p-2.5 text-indigo-700">
+            <div className="rounded-2xl border border-blue-100/80 bg-blue-50 p-2.5 text-blue-700">
               <Sparkles className="h-5 w-5" />
             </div>
             <div>
@@ -109,7 +109,7 @@ const DeveloperDashboard = () => {
             <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-5">
               <h3 className="text-sm font-semibold text-slate-950">Assigned Tasks Overview</h3>
               <p className="mt-2 text-sm leading-6 text-slate-600">
-                You have <strong className="text-indigo-600">{stats.assignedTasks}</strong> active assigned issues requiring development attention. Check your project sidebar to inspect assigned issue queues.
+                You have <strong className="text-blue-600">{stats.assignedTasks}</strong> active assigned issues requiring development attention. Check your project sidebar to inspect assigned issue queues.
               </p>
             </div>
 

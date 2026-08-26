@@ -36,7 +36,7 @@ const About = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-100">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-blue-50 to-blue-100">
 
       {/* HERO */}
       <section className="py-20 px-6 text-center">
@@ -45,7 +45,7 @@ const About = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-4xl md:text-5xl font-bold text-gray-900 mb-6"
         >
-          About <span className="text-indigo-600">BugFlow</span>
+          About <span className="text-blue-600">BugFlow</span>
         </motion.h1>
 
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -135,7 +135,7 @@ const About = () => {
               'Scalable for projects of any size',
               'Secure and reliable system',
             ].map((item, i) => (
-              <div key={i} className="bg-indigo-100 text-indigo-700 p-4 rounded-lg">
+              <div key={i} className="bg-blue-100 text-blue-700 p-4 rounded-lg">
                 {item}
               </div>
             ))}
@@ -146,19 +146,19 @@ const About = () => {
       </section>
 
       {/* CTA */}
-     <section className="bg-indigo-600 text-white py-16 px-4">
+     <section className="bg-blue-600 text-white py-16 px-4">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-2xl font-bold mb-4">
             Start Using BugFlow 🚀
           </h2>
 
-          <p className="mb-6 text-indigo-100">
+          <p className="mb-6 text-blue-100">
             Simplify your workflow and manage bugs efficiently with BugFlow.
           </p>
 
           <a
             href="/signup"
-            className="bg-white text-indigo-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition"
+            className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition"
           >
             Get Started
           </a>

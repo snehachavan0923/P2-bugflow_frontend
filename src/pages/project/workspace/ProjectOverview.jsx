@@ -32,7 +32,7 @@ const ProjectOverview = () => {
       label: "Open",
       value: issueStats?.open ?? 0,
       icon: Circle,
-      tone: "bg-indigo-50 text-indigo-700",
+      tone: "bg-blue-50 text-blue-700",
     },
     {
       label: "In Progress",
@@ -59,7 +59,7 @@ const ProjectOverview = () => {
       <section className="rounded-[32px] border border-slate-200 bg-white p-6 shadow-[0_24px_80px_-32px_rgba(15,23,42,0.22)] sm:p-8">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-indigo-50 px-3 py-1 text-sm font-medium text-indigo-700">
+            <div className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700">
               <Sparkles className="h-4 w-4" />
               Executive overview
             </div>
@@ -127,7 +127,7 @@ const ProjectOverview = () => {
 const InfoCard = ({ label, value, icon: Icon }) => (
   <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-5">
     <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.16em] text-slate-500">
-      {Icon && <Icon className="h-4 w-4 text-indigo-600" />}
+      {Icon && <Icon className="h-4 w-4 text-blue-600" />}
       <span>{label}</span>
     </div>
     <p className="mt-3 break-words text-base font-semibold text-slate-950">

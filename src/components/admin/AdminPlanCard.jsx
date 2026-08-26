@@ -8,14 +8,14 @@ const accentStyles = {
     badge: 'bg-slate-900 text-white',
   },
   indigo: {
-    chip: 'bg-indigo-50 text-indigo-700',
-    ring: 'ring-indigo-200',
-    badge: 'bg-indigo-600 text-white',
+    chip: 'bg-blue-50 text-blue-700',
+    ring: 'ring-blue-200',
+    badge: 'bg-blue-600 text-white',
   },
   violet: {
-    chip: 'bg-violet-50 text-violet-700',
-    ring: 'ring-violet-200',
-    badge: 'bg-violet-600 text-white',
+    chip: 'bg-blue-50 text-blue-700',
+    ring: 'ring-blue-200',
+    badge: 'bg-blue-600 text-white',
   },
   sky: {
     chip: 'bg-sky-50 text-sky-700',
@@ -58,7 +58,7 @@ const AdminPlanCard = ({ plan, onEdit }) => {
   const hiddenCount = Math.max(0, (plan?.features || []).length - featureLimit);
 
   return (
-    <article className={`group relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-7 shadow-[0_25px_80px_-35px_rgba(15,23,42,0.35)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_30px_90px_-30px_rgba(79,70,229,0.35)] ${plan?.highlight ? 'ring-2 ' + accent.ring : ''}`}>
+    <article className={`group relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-7 shadow-[0_25px_80px_-35px_rgba(15,23,42,0.35)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_30px_90px_-30px_rgba(47,82,213,0.35)] ${plan?.highlight ? 'ring-2 ' + accent.ring : ''}`}>
       {plan?.highlight && (
         <div className={`absolute right-5 top-5 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] ${accent.badge}`}>
           <Sparkles className="h-3.5 w-3.5" />
@@ -113,7 +113,7 @@ const AdminPlanCard = ({ plan, onEdit }) => {
           </div>
           <div className="mt-3 flex items-center justify-between">
             <span className="text-sm text-slate-600 capitalize">{plan?.accentColor || 'indigo'}</span>
-            <span className={`h-3.5 w-3.5 rounded-full ${plan?.accentColor === 'slate' ? 'bg-slate-700' : plan?.accentColor === 'violet' ? 'bg-violet-600' : plan?.accentColor === 'sky' ? 'bg-sky-600' : plan?.accentColor === 'emerald' ? 'bg-emerald-600' : plan?.accentColor === 'rose' ? 'bg-rose-600' : 'bg-indigo-600'}`} />
+            <span className={`h-3.5 w-3.5 rounded-full ${plan?.accentColor === 'slate' ? 'bg-slate-700' : plan?.accentColor === 'violet' ? 'bg-blue-600' : plan?.accentColor === 'sky' ? 'bg-sky-600' : plan?.accentColor === 'emerald' ? 'bg-emerald-600' : plan?.accentColor === 'rose' ? 'bg-rose-600' : 'bg-blue-600'}`} />
           </div>
         </div>
 
@@ -140,7 +140,7 @@ const AdminPlanCard = ({ plan, onEdit }) => {
         <button
           type="button"
           onClick={() => onEdit(plan)}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-indigo-400 hover:text-indigo-600"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-blue-400 hover:text-blue-600"
         >
           <PencilLine className="h-4 w-4" />
           Edit plan

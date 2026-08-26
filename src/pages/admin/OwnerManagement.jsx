@@ -130,7 +130,7 @@ const OwnerManagement = () => {
       <div className="mx-auto max-w-7xl space-y-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-widest text-indigo-600">
+            <p className="text-sm font-semibold uppercase tracking-widest text-blue-600">
               Platform Administration
             </p>
 
@@ -154,7 +154,7 @@ const OwnerManagement = () => {
                   setPage(1);
                 }}
                 placeholder="Search owner, organization, or email"
-                className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-12 pr-4 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50"
+                className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-12 pr-4 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-50"
               />
             </div>
           </div>
@@ -307,7 +307,7 @@ const OwnerManagement = () => {
           >
             <div className="flex items-start justify-between border-b border-slate-200 px-6 py-5 sm:px-8">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-indigo-600">
+                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-blue-600">
                   Owner details
                 </p>
                 <h2 className="mt-1 text-xl font-semibold text-slate-950">
@@ -366,7 +366,7 @@ const OwnerManagement = () => {
                <div className="grid gap-4 md:grid-cols-3">
                   <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
                     <div className="flex items-center gap-3">
-                      <div className="rounded-2xl bg-indigo-50 p-2.5 text-indigo-600">
+                      <div className="rounded-2xl bg-blue-50 p-2.5 text-blue-600">
                         <UserRound className="h-5 w-5" />
                       </div>
                       <div>
@@ -397,7 +397,7 @@ const OwnerManagement = () => {
                   </div>
                   <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
                   <div className="flex items-center gap-3">
-                    <div className="rounded-2xl bg-violet-50 p-2.5 text-violet-600">
+                    <div className="rounded-2xl bg-blue-50 p-2.5 text-blue-600">
                       <Building2 className="h-5 w-5" />
                     </div>
 

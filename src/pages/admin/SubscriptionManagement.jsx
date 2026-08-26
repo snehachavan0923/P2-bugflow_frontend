@@ -124,13 +124,13 @@ const SubscriptionManagement = () => {
       <div className="mx-auto max-w-7xl space-y-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-indigo-600">Platform Administration</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">Platform Administration</p>
             <h1 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">Subscription Management</h1>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
               Review every organization subscription, track billing status, and view plan usage without leaving the admin console.
             </p>
           </div>
-          <div className="rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm font-medium text-indigo-700">
+          <div className="rounded-full border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700">
             {loading ? 'Loading subscriptions…' : `${pageInfo.totalElements} subscriptions`}
           </div>
         </div>
@@ -150,23 +150,23 @@ const SubscriptionManagement = () => {
                 value={searchTerm}
                 onChange={(event) => setSearchTerm(event.target.value)}
                 placeholder="Search organization, owner, or email"
-                className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-12 pr-4 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50"
+                className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-12 pr-4 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50"
               />
             </div>
             <div className="grid gap-3 sm:grid-cols-3">
-              <select value={planFilter} onChange={(event) => setPlanFilter(event.target.value)} className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50">
+              <select value={planFilter} onChange={(event) => setPlanFilter(event.target.value)} className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50">
                 <option value="">All plans</option>
                 <option value="FREE">Free</option>
                 <option value="STARTER">Starter</option>
                 <option value="BUSINESS">Business</option>
                 <option value="ENTERPRISE">Enterprise</option>
               </select>
-              <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50">
+              <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50">
                 <option value="">All statuses</option>
                 <option value="ACTIVE">Active</option>
                 <option value="EXPIRED">Expired</option>
               </select>
-              <select value={paymentFilter} onChange={(event) => setPaymentFilter(event.target.value)} className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50">
+              <select value={paymentFilter} onChange={(event) => setPaymentFilter(event.target.value)} className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50">
                 <option value="">All payments</option>
                 <option value="SUCCESS">Success</option>
                 <option value="PENDING">Pending</option>
@@ -229,7 +229,7 @@ const SubscriptionManagement = () => {
                       <td className="px-4 py-4 text-slate-600">{formatDate(subscription.expiryDate)}</td>
                       <td className="px-4 py-4 text-slate-600">{subscription.daysRemaining ?? '—'}</td>
                       <td className="px-4 py-4">
-                        <button type="button" onClick={() => openDetails(subscription.id)} className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:border-indigo-400 hover:text-indigo-600">
+                        <button type="button" onClick={() => openDetails(subscription.id)} className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-400 hover:text-blue-600">
                           <Eye className="h-4 w-4" /> View
                         </button>
                       </td>
@@ -246,10 +246,10 @@ const SubscriptionManagement = () => {
                 Showing page {page + 1} of {Math.max(1, pageInfo.totalPages)} • {pageInfo.totalElements} total subscriptions
               </p>
               <div className="flex items-center gap-2">
-                <button type="button" onClick={() => loadData(Math.max(0, page - 1))} disabled={page === 0} className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:border-indigo-400 hover:text-indigo-600 disabled:cursor-not-allowed disabled:opacity-50">
+                <button type="button" onClick={() => loadData(Math.max(0, page - 1))} disabled={page === 0} className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-400 hover:text-blue-600 disabled:cursor-not-allowed disabled:opacity-50">
                   <ChevronLeft className="h-4 w-4" /> Prev
                 </button>
-                <button type="button" onClick={() => loadData(page + 1)} disabled={page + 1 >= pageInfo.totalPages} className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:border-indigo-400 hover:text-indigo-600 disabled:cursor-not-allowed disabled:opacity-50">
+                <button type="button" onClick={() => loadData(page + 1)} disabled={page + 1 >= pageInfo.totalPages} className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-400 hover:text-blue-600 disabled:cursor-not-allowed disabled:opacity-50">
                   Next <ChevronRight className="h-4 w-4" />
                 </button>
               </div>

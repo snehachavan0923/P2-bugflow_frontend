@@ -14,7 +14,7 @@ const buttonBase =
   "inline-flex items-center justify-center rounded-2xl px-3.5 py-2.5 text-sm font-semibold transition duration-200 disabled:cursor-not-allowed disabled:opacity-60";
 
 const inputClassName =
-  "w-full rounded-2xl border border-slate-200 bg-slate-50/80 px-3.5 py-2.75 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-100";
+  "w-full rounded-2xl border border-slate-200 bg-slate-50/80 px-3.5 py-2.75 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100";
 
 const IssueBoard = ({ onCreateIssue }) => {
   const { projectId } = useParams();
@@ -95,7 +95,7 @@ const IssueBoard = ({ onCreateIssue }) => {
             <button
               type="button"
               onClick={onCreateIssue}
-              className="inline-flex h-9 items-center justify-center gap-2 rounded-2xl bg-indigo-600 px-3.5 text-sm font-semibold text-white shadow-[0_10px_30px_-12px_rgba(79,70,229,0.55)] transition hover:-translate-y-0.5 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-100"
+              className="inline-flex h-9 items-center justify-center gap-2 rounded-2xl bg-blue-600 px-3.5 text-sm font-semibold text-white shadow-[0_10px_30px_-12px_rgba(47,82,213,0.55)] transition hover:-translate-y-0.5 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-100"
             >
               <Plus className="h-3.5 w-3.5" />
               Create Issue
@@ -112,7 +112,7 @@ const IssueBoard = ({ onCreateIssue }) => {
                 onClick={() => setViewMode(mode)}
                 className={`rounded-xl px-3 text-sm font-semibold transition ${
                   viewMode === mode
-                    ? "bg-indigo-600 text-white shadow-sm"
+                    ? "bg-blue-600 text-white shadow-sm"
                     : "text-slate-600 hover:bg-slate-50"
                 }`}
               >
@@ -142,7 +142,7 @@ const IssueBoard = ({ onCreateIssue }) => {
                   onClick={() => setActiveTab(tab)}
                   className={`rounded-xl px-3 py-1.5 text-sm font-semibold transition ${
                     activeTab === tab
-                      ? "bg-indigo-600 text-white shadow-sm"
+                      ? "bg-blue-600 text-white shadow-sm"
                       : "text-slate-600 hover:bg-slate-50"
                   }`}
                 >
@@ -219,7 +219,7 @@ const IssueBoard = ({ onCreateIssue }) => {
                             {issue.imageUrl ? (
                               <button
                                 type="button"
-                                className={`${buttonBase} bg-indigo-50 text-indigo-700 hover:bg-indigo-100`}
+                                className={`${buttonBase} bg-blue-50 text-blue-700 hover:bg-blue-100`}
                                 onClick={() =>
                                   setImagePreview(issue.imageUrl)
                                 }
@@ -436,7 +436,7 @@ const IssueBoard = ({ onCreateIssue }) => {
                       setModalTitle("Bug Image");
                       setModalImage(editModal.imageUrl);
                     }}
-                    className="rounded-2xl bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700"
+                    className="rounded-2xl bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
                   >
                     View
                   </button>
@@ -446,7 +446,7 @@ const IssueBoard = ({ onCreateIssue }) => {
 
             <button
               type="button"
-              className={`${buttonBase} bg-indigo-600 text-white hover:bg-indigo-700`}
+              className={`${buttonBase} bg-blue-600 text-white hover:bg-blue-700`}
               onClick={handleEditSubmit}
             >
               Save Changes
@@ -566,7 +566,7 @@ const LabeledField = ({ label, children }) => (
                 issue.imageUrl
               )
             }
-            className="rounded-2xl bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700"
+            className="rounded-2xl bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
           >
             View
           </button>
@@ -595,7 +595,7 @@ const LabeledField = ({ label, children }) => (
                 issue.resolutionImageUrl
               )
             }
-            className="rounded-2xl bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700"
+            className="rounded-2xl bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
           >
             View
           </button>

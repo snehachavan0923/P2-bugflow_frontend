@@ -49,8 +49,8 @@
 .issue-group input:focus,
 .issue-group textarea:focus,
 .issue-group select:focus {
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+  border-color: #2f52d5;
+  box-shadow: 0 0 0 3px rgba(47, 82, 213, 0.2);
 }
 
 /* File input */
@@ -62,7 +62,7 @@
 }
 
 .file-input:hover {
-  border-color: #6366f1;
+  border-color: #2f52d5;
 }
 
 /* Button */
@@ -72,7 +72,7 @@
   padding: 12px;
   border: none;
   border-radius: 12px;
-  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  background: #2f52d5;
   color: white;
   font-weight: 500;
   font-size: 14px;
@@ -82,7 +82,7 @@
 
 .issue-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 10px 20px rgba(47, 82, 213, 0.3);
 }
 .loader {
   border: 2px solid #fff;

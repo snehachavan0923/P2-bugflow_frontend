@@ -151,7 +151,7 @@ const activity = currentActivity();
     <aside className={`${containerClass} shadow-sm sm:shadow-none`}>
       <div className="flex items-start justify-between gap-4 border-b border-slate-200 px-6 py-5">
         <div className="min-w-0">
-          <div className="inline-flex items-center rounded-full border border-indigo-100 bg-indigo-50 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-indigo-700">
+          <div className="inline-flex items-center rounded-full border border-blue-100 bg-blue-50 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-blue-700">
             Issue Details
           </div>
           <h2 className="mt-2 text-xl font-semibold leading-7 text-slate-950">
@@ -234,7 +234,7 @@ const activity = currentActivity();
               <button
                 type="button"
                 onClick={() => onOpenImage("Bug Image", issue.imageUrl)}
-                className="rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white transition hover:bg-indigo-700"
+                className="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-semibold text-white transition hover:bg-blue-700"
               >
                 View
               </button>
@@ -256,7 +256,7 @@ const activity = currentActivity();
               <button
                 type="button"
                 onClick={() => onOpenImage("Resolution Proof", issue.resolutionImageUrl)}
-                className="rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white transition hover:bg-indigo-700"
+                className="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-semibold text-white transition hover:bg-blue-700"
               >
                 View
               </button>
@@ -309,7 +309,7 @@ const activity = currentActivity();
               <button
                 type="button"
                 onClick={() => onMoveIssue(issue, "In Progress")}
-                className={`${actionButtonClassName} bg-indigo-600 text-white hover:bg-indigo-700`}
+                className={`${actionButtonClassName} bg-blue-600 text-white hover:bg-blue-700`}
               >
                 <Play className="h-4 w-4" aria-hidden="true" />
                 Start Work

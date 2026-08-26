@@ -18,7 +18,7 @@ const SubscriptionDetailModal = ({ isOpen, onClose, subscription }) => {
       <div className="max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-3xl border border-slate-200 bg-white shadow-2xl">
         <div className="flex items-center justify-between border-b border-slate-200 px-6 py-5">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-indigo-600">Subscription Details</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">Subscription Details</p>
             <h2 className="mt-1 text-2xl font-semibold text-slate-950">{subscription.organizationName || 'Subscription'}</h2>
           </div>
           <button

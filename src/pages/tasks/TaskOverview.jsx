@@ -84,7 +84,7 @@ const TaskOverview = () => {
         <div className="rounded-[32px] border border-slate-200 bg-white p-6 shadow-[0_24px_80px_-32px_rgba(15,23,42,0.22)] sm:p-8">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-indigo-50 px-3 py-1 text-sm font-medium text-indigo-700">
+              <div className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700">
                 <Sparkles className="h-4 w-4" />
                 Issue tracking & operations
               </div>
@@ -101,7 +101,7 @@ const TaskOverview = () => {
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-5 transition-all duration-200 hover:border-slate-300 hover:bg-slate-100/50">
               <div className="flex items-center gap-3">
-                <div className="rounded-2xl bg-indigo-100 p-2.5 text-indigo-700">
+                <div className="rounded-2xl bg-blue-100 p-2.5 text-blue-700">
                   <FolderKanban className="h-5 w-5" aria-hidden="true" />
                 </div>
                 <div>
@@ -159,14 +159,14 @@ const TaskOverview = () => {
                 placeholder="Search issues by title..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 py-2.5 pl-11 pr-4 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50/80 placeholder:text-slate-400"
+                className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 py-2.5 pl-11 pr-4 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50/80 placeholder:text-slate-400"
               />
             </div>
 
             <select
               value={projectFilter}
               onChange={(e) => setProjectFilter(e.target.value)}
-              className="cursor-pointer rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm font-medium text-slate-700 outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50/80"
+              className="cursor-pointer rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm font-medium text-slate-700 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50/80"
             >
               {projects.map((project) => (
                 <option key={project} value={project}>
@@ -178,7 +178,7 @@ const TaskOverview = () => {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="cursor-pointer rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm font-medium text-slate-700 outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50/80"
+              className="cursor-pointer rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm font-medium text-slate-700 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50/80"
             >
               <option value="All">All Statuses</option>
               <option value="Open">Open</option>
@@ -193,7 +193,7 @@ const TaskOverview = () => {
         <div className="rounded-[32px] border border-slate-200 bg-white p-4 shadow-[0_16px_45px_-24px_rgba(15,23,42,0.18)] sm:p-6">
           {issues.length === 0 ? (
             <div className="mx-auto flex max-w-md flex-col items-center justify-center rounded-[24px] border border-slate-200 bg-slate-50 p-10 text-center shadow-sm my-4">
-              <div className="rounded-2xl border border-slate-200/80 bg-white p-3.5 text-indigo-600 shadow-sm">
+              <div className="rounded-2xl border border-slate-200/80 bg-white p-3.5 text-blue-600 shadow-sm">
                 <FolderKanban className="h-7 w-7" aria-hidden="true" />
               </div>
               <h2 className="mt-4 text-xl font-semibold text-slate-950">
@@ -205,7 +205,7 @@ const TaskOverview = () => {
             </div>
           ) : filteredIssues.length === 0 ? (
             <div className="mx-auto flex max-w-md flex-col items-center justify-center rounded-[24px] border border-slate-200 bg-slate-50 p-10 text-center shadow-sm my-4">
-              <div className="rounded-2xl border border-slate-200/80 bg-white p-3.5 text-indigo-600 shadow-sm">
+              <div className="rounded-2xl border border-slate-200/80 bg-white p-3.5 text-blue-600 shadow-sm">
                 <Search className="h-7 w-7" aria-hidden="true" />
               </div>
               <h2 className="mt-4 text-xl font-semibold text-slate-950">
@@ -250,7 +250,7 @@ const TaskOverview = () => {
                       >
                         <td className="whitespace-nowrap px-6 py-4">
                           <div className="flex items-center gap-2.5 font-semibold text-slate-950">
-                            <div className="rounded-xl bg-indigo-50 p-1.5 text-indigo-600">
+                            <div className="rounded-xl bg-blue-50 p-1.5 text-blue-600">
                               <FolderKanban className="h-4 w-4" />
                             </div>
                             {issue.projectName}
@@ -278,7 +278,7 @@ const TaskOverview = () => {
 
                         <td className="whitespace-nowrap px-6 py-4">
                           <div className="flex items-center gap-3">
-                            <div className="flex h-8 w-8 items-center justify-center rounded-2xl bg-indigo-100 text-xs font-bold text-indigo-700 shadow-sm">
+                            <div className="flex h-8 w-8 items-center justify-center rounded-2xl bg-blue-100 text-xs font-bold text-blue-700 shadow-sm">
                               {(
                                 issue.assignedToName?.charAt(0) || "U"
                               ).toUpperCase()}
@@ -301,7 +301,7 @@ const TaskOverview = () => {
                                 : issue.status === "Review"
                                   ? "border-amber-200/60 bg-amber-50 text-amber-700"
                                   : issue.status === "In Progress"
-                                    ? "border-indigo-200/60 bg-indigo-50 text-indigo-700"
+                                    ? "border-blue-200/60 bg-blue-50 text-blue-700"
                                     : "border-blue-200/60 bg-blue-50 text-blue-700"
                               }`}
                           >
@@ -312,7 +312,7 @@ const TaskOverview = () => {
                         <td className="whitespace-nowrap px-6 py-4">
                           <button
                             onClick={() => setDetailsIssue(issue)}
-                            className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-slate-700 shadow-sm transition-all duration-200 hover:border-slate-300 hover:bg-slate-50 hover:text-indigo-600"
+                            className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-slate-700 shadow-sm transition-all duration-200 hover:border-slate-300 hover:bg-slate-50 hover:text-blue-600"
                           >
                             <Eye className="h-4 w-4 text-slate-400" />
                             Details
@@ -351,7 +351,7 @@ const Dialog = ({ title, children, onClose }) => (
     >
       <div className="flex items-center justify-between border-b border-slate-100 pb-5">
         <div className="flex items-center gap-3">
-          <div className="rounded-2xl border border-indigo-100/80 bg-indigo-50 p-2.5 text-indigo-700">
+          <div className="rounded-2xl border border-blue-100/80 bg-blue-50 p-2.5 text-blue-700">
             <FolderKanban className="h-5 w-5" />
           </div>
           <div>

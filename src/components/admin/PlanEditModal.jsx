@@ -89,7 +89,7 @@ const PlanEditModal = ({ isOpen, onClose, plan, onSave, saving }) => {
       <div className="max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-3xl border border-slate-200 bg-white shadow-2xl">
         <div className="flex items-center justify-between border-b border-slate-200 px-6 py-5">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-indigo-600">Plan Editor</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">Plan Editor</p>
             <h2 className="mt-1 text-2xl font-semibold text-slate-950">{plan.displayName || plan.name}</h2>
           </div>
           <button
@@ -112,7 +112,7 @@ const PlanEditModal = ({ isOpen, onClose, plan, onSave, saving }) => {
                   step="0.01"
                   value={formData.price}
                   onChange={(event) => setFormData((current) => ({ ...current, price: event.target.value }))}
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50"
+                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50"
                 />
               </div>
 
@@ -122,7 +122,7 @@ const PlanEditModal = ({ isOpen, onClose, plan, onSave, saving }) => {
                   rows="4"
                   value={formData.description}
                   onChange={(event) => setFormData((current) => ({ ...current, description: event.target.value }))}
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50"
+                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50"
                 />
               </div>
 
@@ -133,7 +133,7 @@ const PlanEditModal = ({ isOpen, onClose, plan, onSave, saving }) => {
                     type="text"
                     value={formData.billingPeriod}
                     onChange={(event) => setFormData((current) => ({ ...current, billingPeriod: event.target.value }))}
-                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50"
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50"
                     placeholder="month"
                   />
                 </div>
@@ -144,7 +144,7 @@ const PlanEditModal = ({ isOpen, onClose, plan, onSave, saving }) => {
                     min="0"
                     value={formData.durationDays}
                     onChange={(event) => setFormData((current) => ({ ...current, durationDays: event.target.value }))}
-                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50"
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50"
                   />
                 </div>
               </div>
@@ -159,7 +159,7 @@ const PlanEditModal = ({ isOpen, onClose, plan, onSave, saving }) => {
                     min="0"
                     value={formData.projectLimit}
                     onChange={(event) => setFormData((current) => ({ ...current, projectLimit: event.target.value }))}
-                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50"
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50"
                   />
                 </div>
                 <div>
@@ -169,7 +169,7 @@ const PlanEditModal = ({ isOpen, onClose, plan, onSave, saving }) => {
                     min="0"
                     value={formData.memberLimit}
                     onChange={(event) => setFormData((current) => ({ ...current, memberLimit: event.target.value }))}
-                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50"
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50"
                   />
                 </div>
                 <div>
@@ -179,7 +179,7 @@ const PlanEditModal = ({ isOpen, onClose, plan, onSave, saving }) => {
                     min="0"
                     value={formData.issueLimit}
                     onChange={(event) => setFormData((current) => ({ ...current, issueLimit: event.target.value }))}
-                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50"
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50"
                   />
                 </div>
               </div>
@@ -191,7 +191,7 @@ const PlanEditModal = ({ isOpen, onClose, plan, onSave, saving }) => {
                     type="checkbox"
                     checked={formData.highlight}
                     onChange={(event) => setFormData((current) => ({ ...current, highlight: event.target.checked }))}
-                    className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                    className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
                   />
                 </label>
               </div>
@@ -201,7 +201,7 @@ const PlanEditModal = ({ isOpen, onClose, plan, onSave, saving }) => {
                 <select
                   value={formData.accentColor}
                   onChange={(event) => setFormData((current) => ({ ...current, accentColor: event.target.value }))}
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-50"
+                  className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50"
                 >
                   {accentOptions.map((option) => (
                     <option key={option.value} value={option.value}>{option.label}</option>
@@ -223,12 +223,12 @@ const PlanEditModal = ({ isOpen, onClose, plan, onSave, saving }) => {
                   value={featureInput}
                   onChange={(event) => setFeatureInput(event.target.value)}
                   placeholder="Add a feature"
-                  className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 sm:w-64"
+                  className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-50 sm:w-64"
                 />
                 <button
                   type="button"
                   onClick={handleFeatureAdd}
-                  className="inline-flex items-center gap-2 rounded-2xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700"
+                  className="inline-flex items-center gap-2 rounded-2xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
                 >
                   <Plus className="h-4 w-4" /> Add
                 </button>
@@ -281,7 +281,7 @@ const PlanEditModal = ({ isOpen, onClose, plan, onSave, saving }) => {
             <button
               type="submit"
               disabled={saving}
-              className="rounded-2xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-70"
+              className="rounded-2xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70"
             >
               {saving ? 'Saving...' : 'Save changes'}
             </button>

@@ -175,7 +175,7 @@ const Subscription = () => {
         <div className="rounded-[32px] border border-slate-200 bg-white p-6 shadow-[0_24px_80px_-32px_rgba(15,23,42,0.22)] sm:p-8">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-indigo-50 px-3 py-1 text-sm font-medium text-indigo-700">
+              <div className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700">
                 <Sparkles className="h-4 w-4" />
                 Organization Billing & Plan
               </div>
@@ -209,7 +209,7 @@ const Subscription = () => {
           <div className="rounded-[32px] border border-slate-200 bg-white p-6 shadow-[0_16px_45px_-24px_rgba(15,23,42,0.18)] sm:p-8">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="rounded-2xl border border-indigo-100/80 bg-indigo-50 p-2.5 text-indigo-700">
+                <div className="rounded-2xl border border-blue-100/80 bg-blue-50 p-2.5 text-blue-700">
                   <Building2 className="h-5 w-5" aria-hidden="true" />
                 </div>
                 <div>
@@ -217,7 +217,7 @@ const Subscription = () => {
                   <p className="text-xs font-medium text-slate-500">Current plan subscription details</p>
                 </div>
               </div>
-              <span className="rounded-full bg-indigo-600 px-3.5 py-1 text-xs font-semibold text-white shadow-sm">
+              <span className="rounded-full bg-blue-600 px-3.5 py-1 text-xs font-semibold text-white shadow-sm">
                 {planName}
               </span>
             </div>
@@ -270,7 +270,7 @@ const Subscription = () => {
                     </div>
                     <div className="h-2.5 overflow-hidden rounded-full border border-slate-200/60 bg-white p-0.5">
                       <div
-                        className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-emerald-500 transition-all duration-300"
+                        className="h-full rounded-full bg-gradient-to-r from-blue-500 to-emerald-500 transition-all duration-300"
                         style={{ width: `${item.percent}%` }}
                       />
                     </div>
@@ -284,7 +284,7 @@ const Subscription = () => {
         {/* Payment History Section */}
         <div className="rounded-[32px] border border-slate-200 bg-white p-6 shadow-[0_16px_45px_-24px_rgba(15,23,42,0.18)] sm:p-8">
           <div className="mb-6 flex items-center gap-3">
-            <div className="rounded-2xl border border-indigo-100/80 bg-indigo-50 p-2.5 text-indigo-700">
+            <div className="rounded-2xl border border-blue-100/80 bg-blue-50 p-2.5 text-blue-700">
               <CreditCard className="h-5 w-5" aria-hidden="true" />
             </div>
             <div>
@@ -376,7 +376,7 @@ const Subscription = () => {
           <div className="w-full max-w-md rounded-[32px] border border-slate-200 bg-white p-6 shadow-2xl sm:p-8">
             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
               <div className="flex items-center gap-3">
-                <div className="rounded-2xl border border-indigo-100/80 bg-indigo-50 p-2.5 text-indigo-700">
+                <div className="rounded-2xl border border-blue-100/80 bg-blue-50 p-2.5 text-blue-700">
                   <CreditCard className="h-5 w-5" />
                 </div>
                 <h2 className="text-xl font-semibold text-slate-950">Confirm Purchase</h2>
@@ -403,7 +403,7 @@ const Subscription = () => {
               </div>
               <div className="flex items-center justify-between py-2.5">
                 <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Amount</span>
-                <span className="text-sm font-bold text-indigo-600">
+                <span className="text-sm font-bold text-blue-600">
                   {selectedPlan.name === 'ENTERPRISE'
                     ? 'Contact Sales'
                     : formatAmount(selectedPlan.price, selectedPlan.currency)}
@@ -428,7 +428,7 @@ const Subscription = () => {
                 type="button"
                 onClick={handlePayment}
                 disabled={paymentProcessing}
-                className="inline-flex min-w-28 items-center justify-center rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-70"
+                className="inline-flex min-w-28 items-center justify-center rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70"
               >
                 {paymentProcessing ? (
                   <>

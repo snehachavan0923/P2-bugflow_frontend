@@ -98,7 +98,7 @@ const IssueCard = ({ issue, isSelected, mode, onClick, onEdit, onDelete }) => {
           handleCardClick();
         }
       }}
-      className={`relative w-full cursor-pointer rounded-[24px] border bg-white px-3.5 py-3.5 text-left shadow-[0_14px_34px_-24px_rgba(15,23,42,0.24)] outline-none transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-[0_20px_44px_-24px_rgba(15,23,42,0.3)] focus-visible:ring-2 focus-visible:ring-indigo-500 ${isSelected ? "border-indigo-400 ring-2 ring-indigo-100" : "border-slate-200 ring-2 ring-transparent"}`}
+      className={`relative w-full cursor-pointer rounded-[24px] border bg-white px-3.5 py-3.5 text-left shadow-[0_14px_34px_-24px_rgba(15,23,42,0.24)] outline-none transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-[0_20px_44px_-24px_rgba(15,23,42,0.3)] focus-visible:ring-2 focus-visible:ring-blue-500 ${isSelected ? "border-blue-400 ring-2 ring-blue-100" : "border-slate-200 ring-2 ring-transparent"}`}
     >
       <div className="absolute right-3 top-3">
         <button
@@ -108,7 +108,7 @@ const IssueCard = ({ issue, isSelected, mode, onClick, onEdit, onDelete }) => {
             event.stopPropagation();
             setMenuOpen((open) => !open);
           }}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 transition hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 transition hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           aria-haspopup="true"
           aria-expanded={menuOpen}
           aria-label="Open issue actions"
@@ -179,7 +179,7 @@ const IssueCard = ({ issue, isSelected, mode, onClick, onEdit, onDelete }) => {
         </span>
 
         <div className="flex min-w-0 items-center gap-2 text-xs font-medium text-slate-500">
-          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-indigo-50 font-semibold text-indigo-700">
+          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-blue-50 font-semibold text-blue-700">
             {(issue.assignedToName || "U").charAt(0).toUpperCase()}
           </div>
           <span className="truncate">{issue.assignedToName || "Unassigned"}</span>

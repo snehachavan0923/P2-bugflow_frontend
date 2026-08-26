@@ -117,7 +117,7 @@ const TeamManagement = () => {
         <div className="rounded-[32px] border border-slate-200 bg-white p-6 shadow-[0_24px_80px_-32px_rgba(15,23,42,0.22)] sm:p-8">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-indigo-50 px-3 py-1 text-sm font-medium text-indigo-700">
+              <div className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700">
                 <Sparkles className="h-4 w-4" />
                 Team operations
               </div>
@@ -131,7 +131,7 @@ const TeamManagement = () => {
 
             <button
               onClick={() => setShowModal(true)}
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-100 transition-all duration-200 hover:-translate-y-0.5 hover:bg-indigo-700"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-100 transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-700"
             >
               <Plus className="h-4 w-4" />
               Add Member
@@ -141,7 +141,7 @@ const TeamManagement = () => {
           <div className="mt-8 grid gap-4 md:grid-cols-2">
             <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-5">
               <div className="flex items-center gap-3">
-                <div className="rounded-2xl bg-indigo-100 p-2 text-indigo-700">
+                <div className="rounded-2xl bg-blue-100 p-2 text-blue-700">
                   <Users className="h-5 w-5" />
                 </div>
                 <div>
