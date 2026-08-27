@@ -140,7 +140,11 @@ const AppRoutes = () => {
 
         <Route
           path="profile"
-          element={<Profile />}
+          element={
+            <PrivateRoute allowedRoles={["Owner"]}>
+              <Profile />
+            </PrivateRoute>
+          }
         />
 
         {/* OWNER ONLY */}

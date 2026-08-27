@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronDown, LogOut, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 const Navbar = () => {
@@ -85,6 +86,17 @@ const Navbar = () => {
                   </div>
 
                   <div className="mt-1 pt-1">
+                    {user.role === 'Owner' && (
+                      <div className="px-2">
+                        <Link
+                          to="/profile"
+                          onClick={() => setDropdownOpen(false)}
+                          className="block rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                        >
+                          Profile
+                        </Link>
+                      </div>
+                    )}
                     <button
                       type="button"
                       onClick={() => {

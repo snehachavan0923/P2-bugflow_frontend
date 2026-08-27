@@ -14,3 +14,8 @@ export const logoutUser = async () => {
   const response = await axios.post('/auth/logout');
   return response.data;
 };
+
+export const changeCurrentUserPassword = async (data) => {
+  const response = await axios.put('/users/profile/password', data);
+  return response.data;
+};
