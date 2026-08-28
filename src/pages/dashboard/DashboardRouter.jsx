@@ -7,7 +7,9 @@ import TesterDashboard from "./TesterDashboard";
 import ViewerDashboard from "./ViewerDashboard";
 
 const DashboardRouter = () => {
-  const { role } = useAuth();
+  const { role, token, user } = useAuth();
+
+  console.debug('[AUTH FLOW] DashboardRouter rendered:', { role, token: !!token, user: !!user });
 
   switch (role) {
     case "Owner":

@@ -18,8 +18,11 @@ const OrganizationGuard = ({
   children
 }) => {
 
-  const { role } =
+  const location = useLocation();
+  const { role, token, user } =
     useAuth();
+
+  console.debug('[AUTH FLOW] OrganizationGuard rendered:', { role, token: !!token, user: !!user, pathname: location.pathname });
 
   const {
     organization,
@@ -29,9 +32,6 @@ const [organizationError, setOrganizationError] = useState(false);
   const [loading,
     setLoading] =
       useState(true);
-      
-const location =
-  useLocation();
 
   useEffect(() => {
 
@@ -89,6 +89,7 @@ const location =
     !organization &&
     location.pathname !== "/create-organization"
 ) {
+    console.debug('[AUTH FLOW] OrganizationGuard redirect:', { to: '/create-organization', role, hasOrganization: !!organization, organizationError });
     return (
         <Navigate
             to="/create-organization"
@@ -96,6 +97,8 @@ const location =
         />
     );
 }
+
+console.debug('[AUTH FLOW] final pathname:', location.pathname);
 
   return children;
 };

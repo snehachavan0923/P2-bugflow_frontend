@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AlertCircle, ArrowRight, Bug, CheckCircle2, Eye, EyeOff, LockKeyhole, Mail, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useAuth0 } from '@auth0/auth0-react';
 import { validation } from '../utils/validation';
 import { alertSuccess, alertApiError } from '../utils/alerts';
 import PublicNavbar from '../components/layout/PublicNavbar';
@@ -14,7 +15,11 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const { login, role, loading } = useAuth();
+  const { loginWithRedirect, isAuthenticated: isAuth0Authenticated, isLoading: isAuth0Loading } = useAuth0();
   const navigate = useNavigate();
+
+  // Removed automatic Auth0 exchange from Login page. Auth0Handler will perform exchange
+  // only when the login flow was explicitly initiated by the user (see Continue with Google button).
 
   const validateField = (name, value) => {
     const newErrors = { ...errors };
@@ -96,6 +101,44 @@ const Login = () => {
                 <div className="flex items-center justify-between pt-1 text-sm"><label className="flex cursor-pointer items-center gap-2 text-slate-600"><input type="checkbox" className="h-4 w-4 rounded border-blue-200 text-blue-600 focus:ring-blue-500" />Remember me</label><button type="button" onClick={() => navigate('/forgot-password')} className="font-semibold text-blue-700 transition hover:text-blue-800">Forgot password?</button></div>
                 <button type="submit" disabled={loading || Object.keys(errors).length > 0} className="group mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-blue-600/35 disabled:cursor-not-allowed disabled:translate-y-0 disabled:bg-blue-400">{loading ? 'Logging in...' : 'Log in'}<ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" /></button>
               </form>
+              {/* Auth0 Google button - Phase 2 only (frontend-only) */}
+              <div className="mt-4">
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center" aria-hidden>
+                    <div className="w-full border-t border-blue-50" />
+                  </div>
+                  <div className="relative flex justify-center text-xs text-slate-400">Or continue with</div>
+                </div>
+                <div className="mt-3">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        console.debug('Login: Continue with Google clicked - setting auth0LoginInitiated');
+                        try { localStorage.setItem('auth0LoginInitiated', '1'); } catch (e) {}
+                        // remove any leftover logout flag when user intentionally logs in
+                        try { localStorage.removeItem('auth0Logout'); } catch (e) {}
+                        // Initiate Auth0 redirect directly to the Google connection so the
+                        // Auth0 Universal Login page is skipped and the Google account chooser
+                        // appears immediately.
+                        loginWithRedirect({
+                          authorizationParams: {
+                            connection: 'google-oauth2',
+                            audience: process.env.REACT_APP_AUTH0_AUDIENCE,
+                            scope: 'openid profile email',
+                          },
+                        });
+                      }}
+                      disabled={isAuth0Loading}
+                      className="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50"
+                    >
+                      Continue with Google
+                    </button>
+                </div>
+                {/* Temporary dev indicator for Auth0 auth state */}
+                {!isAuth0Loading && isAuth0Authenticated && (
+                    <div className="mt-3 text-center text-sm font-medium text-green-700">Authenticated with Auth0</div>
+                )}
+              </div>
               <p className="mt-6 text-center text-sm text-slate-500">New to BugFlow? <button type="button" onClick={() => navigate('/signup')} className="font-semibold text-blue-700 hover:text-blue-800">Create an account</button></p>
               <div className="mt-6 flex items-center justify-center gap-2 border-t border-blue-50 pt-5 text-xs font-medium text-slate-400"><ShieldCheck className="h-4 w-4 text-blue-500" />Secure access for your whole team</div>
             </div>

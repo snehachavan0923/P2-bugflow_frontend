@@ -19,3 +19,8 @@ export const changeCurrentUserPassword = async (data) => {
   const response = await axios.put('/users/profile/password', data);
   return response.data;
 };
+
+export const exchangeAuth0Token = async (accessToken) => {
+  const response = await axios.post('/auth/auth0', { accessToken });
+  return response.data;
+};
