@@ -12,6 +12,7 @@ import About from "../pages/public/About";
 
 import Login from "../auth/Login";
 import Signup from "../auth/Signup";
+import InvitationAccept from "../pages/invitations/InvitationAccept";
 
 import ProjectList from "../pages/project/ProjectList";
 import CreateProject from "../pages/project/CreateProject";
@@ -90,6 +91,7 @@ const AppRoutes = () => {
 
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
+      <Route path="/invitations/accept" element={<InvitationAccept />} />
 
         <Route
           path="create-organization"

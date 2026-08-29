@@ -55,3 +55,22 @@ export const changeTeamMemberPassword = async (
 
   return response.data;
 };
+
+export const createInvitation = async (projectId, invitation) => {
+  const response = await axios.post(
+    `/projects/${projectId}/invitations`,
+    invitation
+  );
+
+  return response.data;
+};
+
+export const getInvitationInfo = async (token) => {
+  const response = await axios.get(`/invitations/info?token=${encodeURIComponent(token)}`);
+  return response.data;
+};
+
+export const acceptInvitation = async (payload) => {
+  const response = await axios.post(`/invitations/accept`, payload);
+  return response.data;
+};

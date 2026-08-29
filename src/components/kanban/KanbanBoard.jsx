@@ -8,7 +8,7 @@ import {
   rejectIssue,
   resolveIssue,
 } from "../../api/issueApi";
-import { alertApiError, alertSuccess, confirmAction } from "../../utils/alerts";
+import { alertApiError, alertSuccess, confirmAction, alertValidationError } from "../../utils/alerts";
 import IssueDetailsDrawer from "./IssueDetailsDrawer";
 import KanbanColumn from "./KanbanColumn";
 
@@ -195,6 +195,13 @@ const KanbanBoard = ({
     if (!proofFile) {
       const { alertValidationError } = await import('../../utils/alerts');
       alertValidationError('Resolution Proof', 'Please upload proof to resolve this issue.');
+      return;
+    }
+
+    // Defensive check: ensure file is within size limit before sending
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    if (proofFile && proofFile.size > maxSize) {
+      alertValidationError('Resolution Proof', 'File size must be 10 MB or less.');
       return;
     }
 
@@ -470,7 +477,17 @@ const KanbanBoard = ({
                     <input
                       type="file"
                       className={fieldClassName}
-                      onChange={(event) => setProofFile(event.target.files[0])}
+                      onChange={(event) => {
+                        const file = event.target.files[0];
+                        if (file) {
+                          const maxSize = 10 * 1024 * 1024; // 10MB
+                          if (file.size > maxSize) {
+                            alertValidationError('Resolution Proof', 'File size must be 10 MB or less.');
+                            return;
+                          }
+                        }
+                        setProofFile(event.target.files[0]);
+                      }}
                     />
                   </label>
                 </div>

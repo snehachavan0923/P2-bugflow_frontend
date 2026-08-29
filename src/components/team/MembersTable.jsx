@@ -39,7 +39,7 @@ const MembersTable = ({
               <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
                 Joined
               </th>
-              <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+              <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 w-56">
                 Actions
               </th>
             </tr>
@@ -54,9 +54,6 @@ const MembersTable = ({
               <tr>
                 <td colSpan="5" className="px-6 py-16">
                   <div className="mx-auto flex max-w-md flex-col items-center justify-center rounded-[24px] border border-slate-200 bg-slate-50 p-10 text-center shadow-sm">
-                    <div className="rounded-2xl bg-white p-3 shadow-sm">
-                      <span className="text-xl font-semibold text-slate-900">+</span>
-                    </div>
                     <h2 className="mt-4 text-xl font-semibold text-slate-950">
                       No members yet
                     </h2>
@@ -96,7 +93,7 @@ const MembersTable = ({
                     </td>
 
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-700">
-                      <div className="flex flex-wrap items-center gap-2">
+                      <div className="flex items-center gap-2 whitespace-nowrap">
                         <button
                           onClick={() => onChangePassword(member)}
                           className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-blue-600 transition hover:bg-blue-50"

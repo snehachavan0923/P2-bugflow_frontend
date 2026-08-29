@@ -175,6 +175,7 @@ const TeamManagement = () => {
 
       {showModal && (
         <InviteMemberModal
+          projectId={projectId}
           onClose={() => setShowModal(false)}
           onInvite={handleAddMember}
         />
