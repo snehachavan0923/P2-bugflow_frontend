@@ -6,6 +6,7 @@ import { ProjectProvider } from './context/ProjectContext';
 import { OrganizationProvider } from './context/OrganizationContext';
 import SubscriptionExpiredModal from './components/subscription/SubscriptionExpiredModal';
 import Auth0Handler from './auth/Auth0Handler';
+import ScrollToTop from './components/layout/ScrollToTop';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <OrganizationProvider>
         <ProjectProvider>
           <BrowserRouter>
+            <ScrollToTop />
             <Auth0Handler />
             <AppRoutes />
             <SubscriptionExpiredModal />
