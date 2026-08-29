@@ -98,7 +98,9 @@ const Login = () => {
                   <button type="button" onClick={() => setShowPassword((prev) => !prev)} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-slate-400 transition hover:text-blue-700" aria-label={showPassword ? 'Hide password' : 'Show password'}>{showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}</button>
                 </AuthField>
                 {errors.password && touched.password && <ErrorMessage>{errors.password}</ErrorMessage>}
-                <div className="flex items-center justify-between pt-1 text-sm"><label className="flex cursor-pointer items-center gap-2 text-slate-600"><input type="checkbox" className="h-4 w-4 rounded border-blue-200 text-blue-600 focus:ring-blue-500" />Remember me</label><button type="button" onClick={() => navigate('/forgot-password')} className="font-semibold text-blue-700 transition hover:text-blue-800">Forgot password?</button></div>
+                <div className="flex justify-end pt-1 text-sm">
+                  <button type="button" onClick={() => navigate('/forgot-password')} className="font-semibold text-blue-700 transition hover:text-blue-800">Forgot password?</button>
+                </div>
                 <button type="submit" disabled={loading || Object.keys(errors).length > 0} className="group mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-blue-600/35 disabled:cursor-not-allowed disabled:translate-y-0 disabled:bg-blue-400">{loading ? 'Logging in...' : 'Log in'}<ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" /></button>
               </form>
               {/* Auth0 Google button - Phase 2 only (frontend-only) */}

@@ -12,6 +12,8 @@ import About from "../pages/public/About";
 
 import Login from "../auth/Login";
 import Signup from "../auth/Signup";
+import ForgotPassword from "../auth/ForgotPassword";
+import ResetPassword from "../auth/ResetPassword";
 import InvitationAccept from "../pages/invitations/InvitationAccept";
 
 import ProjectList from "../pages/project/ProjectList";
@@ -91,6 +93,8 @@ const AppRoutes = () => {
 
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/invitations/accept" element={<InvitationAccept />} />
 
         <Route
@@ -143,7 +147,7 @@ const AppRoutes = () => {
         <Route
           path="profile"
           element={
-            <PrivateRoute allowedRoles={["Owner"]}>
+            <PrivateRoute allowedRoles={["Owner", "Developer", "Tester", "Viewer"]}>
               <Profile />
             </PrivateRoute>
           }
